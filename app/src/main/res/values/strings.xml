@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">HabitsTrackerCompose</string>
+
+    <string name="type_positive">Тип: позитивная</string>
+    <string name="type_negative">Тип: негативная</string>
+
+    <string name="type_positive_for_radio_button">Позитивная</string>
+    <string name="type_negative_for_radio_button">Негативная</string>
+
+    <string name="priority_low">Приоритет: низкий</string>
+    <string name="priority_middle">Приоритет: средний</string>
+    <string name="priority_high">Приоритет: высокий</string>
+
+    <string name="priority_low_for_spinner">Низкий</string>
+    <string name="priority_middle_for_spinner">Средний</string>
+    <string name="priority_high_for_spinner">Высокий</string>
+
+    <string name="period_day">Период: день</string>
+    <string name="period_week">Период: неделя</string>
+    <string name="period_month">Период: месяц</string>
+    <string name="period_year">Период: год</string>
+
+    <string name="count_ready_habit">Выполнено: %1$s из %2$s</string>
+</resources>
