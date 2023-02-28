@@ -10,5 +10,5 @@ data class Habit(
     @StringRes val type: Int = R.string.type_negative,
     val count: Int = 0,
     val countReady: Int = 0,
-    @StringRes val period: Int = R.string.period_day
+    val period: String = ""
 )

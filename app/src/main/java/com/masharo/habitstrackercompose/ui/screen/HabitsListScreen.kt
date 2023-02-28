@@ -89,7 +89,7 @@ fun HabitItem(
                     Text(text = habit.description)
                     Text(text = stringResource(habit.priority))
                     Text(text = stringResource(habit.type))
-                    Text(text = stringResource(habit.period))
+                    Text(text = habit.period)
                     Text(
                         text = stringResource(
                             R.string.count_ready_habit,
