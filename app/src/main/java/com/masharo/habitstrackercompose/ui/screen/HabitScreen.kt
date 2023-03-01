@@ -193,13 +193,16 @@ private fun HabitColorPicker(
     sizeWindowColor: Dp = 65.dp,
     spaceItems: Dp = 10.dp,
     colors: List<Color> = listOf( //TODO("Цвета")
+        Color.White,
         Color.Red,
         Color.Blue,
-        Color.Yellow
+        Color.Yellow,
+        Color.White
     )
 ) {
     val view = LocalView.current
     val textHeight = MaterialTheme.typography.titleMedium.lineHeight.value
+    var selectColor by remember { mutableStateOf(colorBackground) }
 
     Dialog(
         onDismissRequest = { cancel() }
@@ -221,7 +224,7 @@ private fun HabitColorPicker(
                     modifier = Modifier
                         .size(sizeWindowColor)
                         .background(
-                            color = colorBackground,
+                            color = selectColor,
                             shape = RoundedCornerShape(10.dp)
                         )
                 ) //TODO("цвет фона")
@@ -239,7 +242,7 @@ private fun HabitColorPicker(
                         .padding(padding),
                     horizontalArrangement = Arrangement.spacedBy(spaceItems)
                 ) {
-                    repeat(16) {
+                    colors.forEach { color ->
                         Spacer(
                             modifier = Modifier
                                 .size(sizeWindowColor)
@@ -249,10 +252,8 @@ private fun HabitColorPicker(
                                     shape = RoundedCornerShape(10.dp)
                                 )
                                 .clickable {
-
-                                    view.drawToBitmap().getColor(100, (view.height - textHeight - padding.value * 2).toInt()).components.map { 255 * it }
-//                                        view.drawToBitmap().getColor(view.clipBounds.centerX(), 0)
-//                                        colorBackground = LocalView.current.drawToBitmap().getColor(65.dp.value, ).toArgb()
+//                                    selectColor = color
+                                    selectColor = Color(view.drawToBitmap().getColor(300, 300).toArgb())
                                 }
                         )
                     }
