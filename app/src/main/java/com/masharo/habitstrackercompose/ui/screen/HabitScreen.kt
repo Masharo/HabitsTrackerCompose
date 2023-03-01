@@ -1,29 +1,27 @@
 package com.masharo.habitstrackercompose.ui.screen
 
+import android.view.View
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.ExposedDropdownMenuDefaults.textFieldColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.PixelMap
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.layout
+import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.view.drawToBitmap
 import com.masharo.habitstrackercompose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -180,83 +178,101 @@ fun HabitScreen(
 
     //TODO("Вынести в компонуемый")
     if (isOpenColorPicker) {
-        Dialog(
-            onDismissRequest = {
-                isOpenColorPicker = false
-            }
-        ) {
-            Card(
-                modifier = Modifier
-            ) {
-                Column(
-                    modifier = Modifier
-                        .padding(10.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(text = "Цвет фона") //TODO("Вынести в ресурсы")
-                    Spacer(
-                        modifier = Modifier
-                            .size(65.dp)
-                            .background(
-                                color = colorBackground,
-                                shape = RoundedCornerShape(10.dp)
-                            )
-                    ) //TODO("цвет фона")
-                    Row(
-                        modifier = Modifier
-                            .horizontalScroll(rememberScrollState())
-                            .drawWithCache {
-                                onDrawBehind {
-                                    drawRoundRect(
-                                        brush = Brush.linearGradient(
-                                            listOf( //TODO("Цвета")
-                                                Color.Red,
-                                                Color.Yellow
-                                            )
-                                        ),
-                                        cornerRadius = CornerRadius(10.dp.toPx())
-                                    )
-                                }
-                            }
-                            .padding(10.dp),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        repeat(16) {
-                            Spacer(
-                                modifier = Modifier
-                                    .size(65.dp)
-                                    .border(
-                                        width = 2.dp,
-                                        color = Color.Gray,
-                                        shape = RoundedCornerShape(10.dp)
-                                    )
-                                    .clickable {
-                                        colorBackground = TODO("Определить цвет")
-                                    }
-                            )
-                        }
-                    }
+        HabitColorPicker(isOpenColorPicker, colorBackground, {}, {})
+    }
+}
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun HabitColorPicker(
+    isOpenColorPicker: Boolean,
+    colorBackground: Color,
+    cancel: () -> Unit,
+    save: () -> Unit,
+    padding: Dp = 10.dp,
+    sizeWindowColor: Dp = 65.dp,
+    spaceItems: Dp = 10.dp,
+    colors: List<Color> = listOf( //TODO("Цвета")
+        Color.Red,
+        Color.Blue,
+        Color.Yellow
+    )
+) {
+    val view = LocalView.current
+    val textHeight = MaterialTheme.typography.titleMedium.lineHeight.value
+
+    Dialog(
+        onDismissRequest = { cancel() }
+    ) {
+        Card(
+            modifier = Modifier
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(padding),
+                verticalArrangement = Arrangement.spacedBy(spaceItems),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Цвет фона",
+                    style = MaterialTheme.typography.titleMedium
+                ) //TODO("Вынести в ресурсы")
+                Spacer(
+                    modifier = Modifier
+                        .size(sizeWindowColor)
+                        .background(
+                            color = colorBackground,
+                            shape = RoundedCornerShape(10.dp)
+                        )
+                ) //TODO("цвет фона")
+                Row(
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .drawWithCache {
+                            onDrawBehind {
+                                drawRoundRect(
+                                    brush = Brush.linearGradient(colors),
+                                    cornerRadius = CornerRadius(10.dp.toPx())
+                                )
+                            }
+                        }
+                        .padding(padding),
+                    horizontalArrangement = Arrangement.spacedBy(spaceItems)
+                ) {
+                    repeat(16) {
+                        Spacer(
+                            modifier = Modifier
+                                .size(sizeWindowColor)
+                                .border(
+                                    width = 2.dp,
+                                    color = Color.Gray,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                                .clickable {
+
+                                    view.drawToBitmap().getColor(100, (view.height - textHeight - padding.value * 2).toInt()).components.map { 255 * it }
+//                                        view.drawToBitmap().getColor(view.clipBounds.centerX(), 0)
+//                                        colorBackground = LocalView.current.drawToBitmap().getColor(65.dp.value, ).toArgb()
+                                }
+                        )
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(60.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
+                    Button(
+                        onClick = { cancel() }
                     ) {
-                        Button(
-                            onClick = {
-                                isOpenColorPicker = false
-                            }
-                        ) {
-                            Text(text = "Отменить") //TODO("Вынести в ресурсы")
-                        }
-                        Button(
-                            onClick = {
-                                TODO("Сохранить цвет")
-                            }
-                        ) {
-                            Text(text = "Сохранить") //TODO("Вынести в ресурсы")
-                        }
+                        Text(text = "Отменить") //TODO("Вынести в ресурсы")
+                    }
+                    Button(
+                        onClick = { save() }//TODO("Сохранить цвет")
+                    ) {
+                        Text(text = "Сохранить") //TODO("Вынести в ресурсы")
                     }
                 }
             }
