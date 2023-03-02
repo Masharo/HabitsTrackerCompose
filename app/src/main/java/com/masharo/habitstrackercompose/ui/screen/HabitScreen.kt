@@ -253,7 +253,7 @@ private fun HabitColorPicker(
                                 )
                                 .clickable {
 //                                    selectColor = color
-                                    selectColor = Color(view.drawToBitmap().getColor(300, 300).toArgb())
+                                    selectColor = Color(view.drawToBitmap().getColor(300, (view.height - 145.dp.value).toInt()).toArgb())
                                 }
                         )
                     }
