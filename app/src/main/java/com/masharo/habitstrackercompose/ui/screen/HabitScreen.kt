@@ -10,10 +10,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layout
-import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -193,15 +194,11 @@ private fun HabitColorPicker(
     sizeWindowColor: Dp = 65.dp,
     spaceItems: Dp = 10.dp,
     colors: List<Color> = listOf( //TODO("Цвета")
-        Color.White,
         Color.Red,
-        Color.Blue,
-        Color.Yellow,
-        Color.White
+        Color.Yellow
     )
 ) {
-    val view = LocalView.current
-    val textHeight = MaterialTheme.typography.titleMedium.lineHeight.value
+//    val view = LocalView.current
     var selectColor by remember { mutableStateOf(colorBackground) }
 
     Dialog(
@@ -242,7 +239,12 @@ private fun HabitColorPicker(
                         .padding(padding),
                     horizontalArrangement = Arrangement.spacedBy(spaceItems)
                 ) {
-                    colors.forEach { color ->
+                    val view = LocalView.current
+                    repeat(16) {
+                        var positionGradientLine = Offset(0f, 0f)
+                        var centerGradientHeight = 0
+                        var centerGradientWidth = 0
+
                         Spacer(
                             modifier = Modifier
                                 .size(sizeWindowColor)
@@ -251,9 +253,22 @@ private fun HabitColorPicker(
                                     color = Color.Gray,
                                     shape = RoundedCornerShape(10.dp)
                                 )
-                                .clickable {
-//                                    selectColor = color
-                                    selectColor = Color(view.drawToBitmap().getColor(300, (view.height - 145.dp.value).toInt()).toArgb())
+                                .clickable { //TODO("Перенести в вм")
+                                    selectColor = Color(
+                                        view.drawToBitmap().getColor(
+                                            positionGradientLine.x.toInt() + centerGradientWidth,
+                                            positionGradientLine.y.toInt() + centerGradientHeight
+                                        ).toArgb()
+                                    )
+                                }
+                                .onGloballyPositioned { coords ->
+                                    coords.parentCoordinates?.positionInWindow()?.let { offset ->
+                                        positionGradientLine = offset
+                                    }
+                                }
+                                .onSizeChanged { sizes ->
+                                    centerGradientHeight = sizes.height / 2
+                                    centerGradientWidth = sizes.width / 2
                                 }
                         )
                     }
@@ -261,8 +276,7 @@ private fun HabitColorPicker(
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(60.dp),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Button(
