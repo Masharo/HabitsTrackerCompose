@@ -20,12 +20,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.habits
-import com.masharo.habitstrackercompose.model.Habit
+import com.masharo.habitstrackercompose.model.HabitUiState
 
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
-    habitsList: List<Habit> = habits,
+    habitsList: List<HabitUiState> = habits,
     onClickHabit: () -> Unit
 ) {
 
@@ -49,7 +49,7 @@ fun HabitsListScreen(
 @Composable
 fun HabitItem(
     modifier: Modifier = Modifier,
-    habit: Habit,
+    habit: HabitUiState,
     onClick: () -> Unit
 ) {
 
@@ -115,19 +115,19 @@ fun HabitItem(
 fun HabitsListScreenPreview() {
     HabitsListScreen(
         habitsList = listOf(
-            Habit(
+            HabitUiState(
                 title = "title1",
                 description = "description1"
             ),
-            Habit(
+            HabitUiState(
                 title = "title2",
                 description = "description2"
             ),
-            Habit(
+            HabitUiState(
                 title = "title3",
                 description = "description3"
             ),
-            Habit(
+            HabitUiState(
                 title = "title4",
                 description = "description4"
             )

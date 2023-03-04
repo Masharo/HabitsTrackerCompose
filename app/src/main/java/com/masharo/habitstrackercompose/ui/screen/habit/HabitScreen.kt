@@ -22,13 +22,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.view.drawToBitmap
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    vm: HabitViewModel = viewModel()
 ) {
+
+    val uiState by vm.uiState.collectAsState()
 
     var selectedType by remember { mutableStateOf(0) }
     var selectedPriority by remember { mutableStateOf(R.string.priority_low_for_spinner) }
@@ -58,8 +62,10 @@ fun HabitScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {},
+            value = uiState.title,
+            onValueChange = { title ->
+                vm.updateTitle(title)
+            },
             label = {
                 Text(text = stringResource(R.string.name_habit))
             }
@@ -68,8 +74,10 @@ fun HabitScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {},
+            value = uiState.description,
+            onValueChange = { description ->
+                vm.updateDescription(description)
+            },
             label = {
                 Text(text = stringResource(R.string.description_habit))
             }
@@ -136,9 +144,9 @@ fun HabitScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {
-
+            value = uiState.count,
+            onValueChange = { count ->
+                vm.updateCount(count)
             },
             label = {
                 Text(text = stringResource(R.string.need_count))
@@ -148,9 +156,9 @@ fun HabitScreen(
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
-            value = "",
-            onValueChange = {
-
+            value = uiState.period,
+            onValueChange = { period ->
+                vm.updatePeriod(period)
             },
             label = {
                 Text(text = stringResource(R.string.period_input))
