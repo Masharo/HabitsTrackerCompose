@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.ui.screen
+package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,7 +25,8 @@ import com.masharo.habitstrackercompose.model.Habit
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
-    habitsList: List<Habit> = habits
+    habitsList: List<Habit> = habits,
+    onClickHabit: () -> Unit
 ) {
 
     val habits by remember {
@@ -38,16 +38,19 @@ fun HabitsListScreen(
         verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
         items(habits) { habit ->
-            HabitItem(habit = habit)
+            HabitItem(
+                habit = habit,
+                onClick = onClickHabit
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitItem(
     modifier: Modifier = Modifier,
-    habit: Habit
+    habit: Habit,
+    onClick: () -> Unit
 ) {
 
     var isVisible by remember {
@@ -61,6 +64,7 @@ fun HabitItem(
             .fillMaxWidth()
             .padding(horizontal = 5.dp)
             .animateContentSize { initialValue, targetValue -> }
+            .clickable { onClick() }
     ) {
         Column(
             modifier = Modifier
@@ -80,7 +84,7 @@ fun HabitItem(
                         .clickable { isVisible = !isVisible }
                         .rotate(isArrowRotate),
                     painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                    contentDescription = null
+                    contentDescription = null //TODO("Описание")
                 )
             }
 
@@ -127,6 +131,7 @@ fun HabitsListScreenPreview() {
                 title = "title4",
                 description = "description4"
             )
-        )
+        ),
+        onClickHabit = {}
     )
 }

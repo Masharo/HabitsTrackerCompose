@@ -1,6 +1,5 @@
-package com.masharo.habitstrackercompose.ui.screen
+package com.masharo.habitstrackercompose.ui.screen.habit
 
-import android.view.View
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -13,11 +12,11 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -51,7 +50,7 @@ fun HabitScreen(
     //TODO("Изменить кнопку в полях ввода")
     Column(
         modifier = modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(10.dp)
             .verticalScroll(rememberScrollState())
     ) {
@@ -62,7 +61,7 @@ fun HabitScreen(
             value = "",
             onValueChange = {},
             label = {
-                Text(text = "Название привычки") //TODO("Перенести в ресурсы")
+                Text(text = stringResource(R.string.name_habit))
             }
         )
 
@@ -72,7 +71,7 @@ fun HabitScreen(
             value = "",
             onValueChange = {},
             label = {
-                Text(text = "Описание привычки") //TODO("Перенести в ресурсы")
+                Text(text = stringResource(R.string.description_habit))
             }
         )
 
@@ -167,12 +166,30 @@ fun HabitScreen(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Цвет фона") //TODO("В ресурсы")
+            Text(text = stringResource(R.string.color_background_habit))
             Spacer(
                 modifier = Modifier
                     .weight(1f)
                     .height(IntrinsicSize.Max)
                     .background(color = Color.Blue) //TODO("Должен отображаться выбраный цвет")
+            )
+        }
+
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
+
+        Button(
+            onClick = {
+                //TODO("Добавить сохранение")
+            }
+        ) {
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                text = stringResource(R.string.button_save_habit),
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -184,12 +201,11 @@ fun HabitScreen(
 }
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 private fun HabitColorPicker(
     isOpenColorPicker: Boolean,
     colorBackground: Color,
-    cancel: () -> Unit,
-    save: () -> Unit,
+    onClickCancel: () -> Unit,
+    onClickSave: () -> Unit,
     padding: Dp = 10.dp,
     sizeWindowColor: Dp = 65.dp,
     spaceItems: Dp = 10.dp,
@@ -202,7 +218,7 @@ private fun HabitColorPicker(
     var selectColor by remember { mutableStateOf(colorBackground) }
 
     Dialog(
-        onDismissRequest = { cancel() }
+        onDismissRequest = { onClickCancel() }
     ) {
         Card(
             modifier = Modifier
@@ -214,9 +230,9 @@ private fun HabitColorPicker(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Цвет фона",
+                    text = stringResource(R.string.color_background_habit),
                     style = MaterialTheme.typography.titleMedium
-                ) //TODO("Вынести в ресурсы")
+                )
                 Spacer(
                     modifier = Modifier
                         .size(sizeWindowColor)
@@ -255,16 +271,21 @@ private fun HabitColorPicker(
                                 )
                                 .clickable { //TODO("Перенести в вм")
                                     selectColor = Color(
-                                        view.drawToBitmap().getColor(
-                                            positionGradientLine.x.toInt() + centerGradientWidth,
-                                            positionGradientLine.y.toInt() + centerGradientHeight
-                                        ).toArgb()
+                                        view
+                                            .drawToBitmap()
+                                            .getColor(
+                                                positionGradientLine.x.toInt() + centerGradientWidth,
+                                                positionGradientLine.y.toInt() + centerGradientHeight
+                                            )
+                                            .toArgb()
                                     )
                                 }
                                 .onGloballyPositioned { coords ->
-                                    coords.parentCoordinates?.positionInWindow()?.let { offset ->
-                                        positionGradientLine = offset
-                                    }
+                                    coords.parentCoordinates
+                                        ?.positionInWindow()
+                                        ?.let { offset ->
+                                            positionGradientLine = offset
+                                        }
                                 }
                                 .onSizeChanged { sizes ->
                                     centerGradientHeight = sizes.height / 2
@@ -280,14 +301,14 @@ private fun HabitColorPicker(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Button(
-                        onClick = { cancel() }
+                        onClick = { onClickCancel() }
                     ) {
-                        Text(text = "Отменить") //TODO("Вынести в ресурсы")
+                        Text(text = stringResource(R.string.color_picker_cancel))
                     }
                     Button(
-                        onClick = { save() }//TODO("Сохранить цвет")
+                        onClick = { onClickSave() }//TODO("Сохранить цвет")
                     ) {
-                        Text(text = "Сохранить") //TODO("Вынести в ресурсы")
+                        Text(text = stringResource(R.string.color_picker_save))
                     }
                 }
             }

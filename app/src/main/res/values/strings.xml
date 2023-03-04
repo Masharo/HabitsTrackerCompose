@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">HabitsTrackerCompose</string>
 
+    <string name="app_bar_name_screen_list_habits">Список привычек</string>
+    <string name="app_bar_name_screen_new_habit_add">Создание привычки</string>
+    <string name="app_bar_name_screen_habit_update">Редактирование привычки</string>
+
+    <string name="button_save_habit">Сохранить</string>
+
     <string name="type_positive">Тип: позитивная</string>
     <string name="type_negative">Тип: негативная</string>
 
@@ -21,4 +27,11 @@
     <string name="priority_title">Приоритет:</string>
 
     <string name="count_ready_habit">Выполнено: %1$s из %2$s</string>
+
+    <string name="name_habit">Название привычки</string>
+    <string name="description_habit">Описание привычки</string>
+    <string name="color_background_habit">Цвет фона</string>
+
+    <string name="color_picker_cancel">Отменить</string>
+    <string name="color_picker_save">Сохранить</string>
 </resources>
