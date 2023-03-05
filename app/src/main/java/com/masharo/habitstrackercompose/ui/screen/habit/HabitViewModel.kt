@@ -1,7 +1,11 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
+import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
+import com.masharo.habitstrackercompose.model.Priority
+import com.masharo.habitstrackercompose.model.Type
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -53,6 +57,22 @@ class HabitViewModel : ViewModel() {
         _uiState.update { currentState ->
             currentState.copy(
                 period = period
+            )
+        }
+    }
+
+    fun updateType(type: Type) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                type = type
+            )
+        }
+    }
+
+    fun updatePriority(priority: Priority) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                priority = priority
             )
         }
     }

@@ -91,8 +91,8 @@ fun HabitItem(
             AnimatedVisibility(visible = isVisible) {
                 Column {
                     Text(text = habit.description)
-                    Text(text = stringResource(habit.priority))
-                    Text(text = stringResource(habit.type))
+                    Text(text = stringResource(habit.priority.stringResValue))
+                    Text(text = stringResource(habit.type.stringResValue))
                     Text(text = habit.period)
                     Text(
                         text = stringResource(
