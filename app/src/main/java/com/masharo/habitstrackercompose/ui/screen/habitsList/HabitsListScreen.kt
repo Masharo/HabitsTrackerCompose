@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -37,8 +38,9 @@ fun HabitsListScreen(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
-        items(habits) { habit ->
+        itemsIndexed(habits) { id, habit ->
             HabitItem(
+                id = id,
                 habit = habit,
                 onClick = onClickHabit
             )
@@ -49,6 +51,7 @@ fun HabitsListScreen(
 @Composable
 fun HabitItem(
     modifier: Modifier = Modifier,
+    id: Int,
     habit: HabitUiState,
     onClick: () -> Unit
 ) {
@@ -64,7 +67,9 @@ fun HabitItem(
             .fillMaxWidth()
             .padding(horizontal = 5.dp)
             .animateContentSize { initialValue, targetValue -> }
-            .clickable { onClick() }
+            .clickable {
+                onClick()
+            }
     ) {
         Column(
             modifier = Modifier
@@ -97,8 +102,8 @@ fun HabitItem(
                     Text(
                         text = stringResource(
                             R.string.count_ready_habit,
-                            habit.count,
-                            habit.countReady
+                            habit.countReady,
+                            habit.count
                         )
                     )
                 }

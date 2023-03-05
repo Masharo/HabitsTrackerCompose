@@ -1,8 +1,7 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
-import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.data.habits
 import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
@@ -10,15 +9,22 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class HabitViewModel : ViewModel() {
+class HabitViewModel(
+    private val idHabit: Int? = null
+) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HabitUiState())
+    private val _uiState = MutableStateFlow(
+        value = idHabit?.let { id -> habits[id] }
+                ?:
+                HabitUiState()
+    )
     val uiState = _uiState.asStateFlow()
 
     fun updateTitle(title: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                title = title
+                title = title,
+                isTitleError = false
             )
         }
     }
@@ -26,37 +32,45 @@ class HabitViewModel : ViewModel() {
     fun updateDescription(description: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                description = description
+                description = description,
+                isDescriptionError = false
             )
         }
     }
 
     fun updateCount(count: String) {
-        if (count.isNotEmpty() && count.toIntOrNull() == null) return
+        if (validateCount(count)) return
 
         _uiState.update { currentState ->
             currentState.copy(
-                count = count
+                count = count,
+                isCountError = false
             )
         }
     }
 
     fun updateCountReady(countReady: String) {
-        if (countReady.isNotEmpty() && countReady.toIntOrNull() == null) return
+        if (validateCount(countReady)) return
 
         countReady.toIntOrNull()?.let {
             _uiState.update { currentState ->
                 currentState.copy(
-                    count = countReady
+                    count = countReady,
+                    isCountReadyError = false
                 )
             }
         }
     }
 
+    private fun validateCount(count: String) =
+        (count.isNotEmpty() && count.toIntOrNull() == null) ||
+         count.toInt() < 0
+
     fun updatePeriod(period: String) {
         _uiState.update { currentState ->
             currentState.copy(
-                period = period
+                period = period,
+                isPeriodError = false
             )
         }
     }
@@ -74,6 +88,43 @@ class HabitViewModel : ViewModel() {
             currentState.copy(
                 priority = priority
             )
+        }
+    }
+
+    fun saveState(
+        navigateBack: () -> Unit
+    ) {
+        with(uiState.value) {
+
+            val isTitleErrorCurrent = title.isEmpty()
+            val isDescriptionErrorCurrent = description.isEmpty()
+            val isCountErrorCurrent = count.isEmpty() || count.toInt() < 0
+            val isCountReadyErrorCurrent = countReady.isEmpty() || countReady.toInt() < 0
+            val isPeriodErrorCurrent = period.isEmpty()
+
+            if (!isTitleErrorCurrent &&
+                !isDescriptionErrorCurrent &&
+                !isCountErrorCurrent &&
+                !isCountReadyErrorCurrent &&
+                !isPeriodErrorCurrent
+            ) {
+                idHabit?.let { id ->
+                    habits[id] = this
+                } ?: habits.add(this)
+
+                navigateBack()
+
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isTitleError = isTitleErrorCurrent,
+                        isDescriptionError = isDescriptionErrorCurrent,
+                        isCountError = isCountErrorCurrent,
+                        isCountReadyError = isCountReadyErrorCurrent,
+                        isPeriodError = isPeriodErrorCurrent
+                    )
+                }
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.view.drawToBitmap
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 
@@ -31,12 +32,12 @@ import com.masharo.habitstrackercompose.model.Type
 @Composable
 fun HabitScreen(
     modifier: Modifier = Modifier,
-    vm: HabitViewModel = viewModel()
+    vm: HabitViewModel = viewModel(),
+    navigateBack: () -> Unit
 ) {
 
     val uiState by vm.uiState.collectAsState()
 
-    var isExpandedPriorities by remember { mutableStateOf(false) }
     var isOpenColorPicker by remember { mutableStateOf(false) }
     var colorBackground by remember { mutableStateOf(Color.White) }
 
@@ -53,6 +54,7 @@ fun HabitScreen(
                 .fillMaxWidth(),
             value = uiState.title,
             singleLine = true,
+            isError = uiState.isTitleError,
             onValueChange = { title ->
                 vm.updateTitle(title)
             },
@@ -65,6 +67,7 @@ fun HabitScreen(
             modifier = Modifier
                 .fillMaxWidth(),
             value = uiState.description,
+            isError = uiState.isDescriptionError,
             onValueChange = { description ->
                 vm.updateDescription(description)
             },
@@ -74,68 +77,22 @@ fun HabitScreen(
         )
 
         //TODO("Вынести в отдельный компонуемый")
-        Box {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp)
-                    .clickable { isExpandedPriorities = true },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "${stringResource(R.string.priority_title)} ${stringResource(uiState.priority.stringResSpinner)}")
-                Spacer(modifier = Modifier.weight(1f))
-                Image(
-                    painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                    contentDescription = null
-                )
+        HabitSpinnerPriorities(
+            uiState = uiState,
+            onSelectPriority = { priority ->
+                vm.updatePriority(priority)
             }
-
-            DropdownMenu(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                expanded = isExpandedPriorities,
-                onDismissRequest = { isExpandedPriorities = false }
-            ) {
-                Priority.values().forEach { priority ->
-                    DropdownMenuItem(
-                        text = {
-                            Text(stringResource(priority.stringResSpinner))
-                        },
-                        onClick = {
-                            vm.updatePriority(priority)
-                            isExpandedPriorities = false
-                        }
-                    )
-                }
-            }
-        }
+        )
 
         //TODO("Вынести в отдельный компонуемый")
-        Type.values().forEach { type ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable {
-                        vm.updateType(type)
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = uiState.type == type,
-                    onClick = {
-                        vm.updateType(type)
-                    }
-                )
-                Text(text = stringResource(type.stringResRadioButton))
-            }
-        }
+        HabitTypeRadioButtons(vm, uiState)
 
-        //TODO("Должно принимать только int")
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth(),
             value = uiState.count,
             singleLine = true,
+            isError = uiState.isCountError,
             onValueChange = { count ->
                 vm.updateCount(count)
             },
@@ -149,6 +106,7 @@ fun HabitScreen(
                 .fillMaxWidth(),
             value = uiState.period,
             singleLine = true,
+            isError = uiState.isPeriodError,
             onValueChange = { period ->
                 vm.updatePeriod(period)
             },
@@ -181,7 +139,7 @@ fun HabitScreen(
 
         Button(
             onClick = {
-                //TODO("Добавить сохранение")
+                vm.saveState(navigateBack)
             }
         ) {
             Text(
@@ -196,6 +154,78 @@ fun HabitScreen(
     //TODO("Вынести в компонуемый")
     if (isOpenColorPicker) {
         HabitColorPicker(isOpenColorPicker, colorBackground, {}, {})
+    }
+}
+
+@Composable
+private fun HabitTypeRadioButtons(
+    vm: HabitViewModel,
+    uiState: HabitUiState
+) {
+    Type.values().forEach { type ->
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    vm.updateType(type)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            RadioButton(
+                selected = uiState.type == type,
+                onClick = {
+                    vm.updateType(type)
+                }
+            )
+            Text(text = stringResource(type.stringResRadioButton))
+        }
+    }
+}
+
+@Composable
+private fun HabitSpinnerPriorities(
+    modifier: Modifier = Modifier,
+    uiState: HabitUiState,
+    onSelectPriority: (priority: Priority) -> Unit
+) {
+    var isExpandedPriorities by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+                .clickable { isExpandedPriorities = true },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "${stringResource(R.string.priority_title)} ${stringResource(uiState.priority.stringResSpinner)}")
+            Spacer(modifier = Modifier.weight(1f))
+            Image(
+                painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
+                contentDescription = null
+            )
+        }
+
+        DropdownMenu(
+            modifier = Modifier
+                .fillMaxWidth(),
+            expanded = isExpandedPriorities,
+            onDismissRequest = { isExpandedPriorities = false }
+        ) {
+            Priority.values().forEach { priority ->
+                DropdownMenuItem(
+                    text = {
+                        Text(stringResource(priority.stringResSpinner))
+                    },
+                    onClick = {
+                        onSelectPriority(priority)
+                        isExpandedPriorities = false
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -320,5 +350,9 @@ private fun HabitColorPicker(
 )
 @Composable
 fun HabitScreenPreview() {
-    HabitScreen()
+    HabitScreen(
+        navigateBack = {
+
+        }
+    )
 }
