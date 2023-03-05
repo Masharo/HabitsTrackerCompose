@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.model.HabitUpdateParams
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
@@ -79,8 +80,11 @@ fun HabitsTrackerApp(
 
             composable(route = HabitsTrackerScreen.Start.name) {
                 HabitsListScreen(
-                    onClickHabit = {
-                        navController.navigate(HabitsTrackerScreen.UpdateHabit.name)
+                    onClickHabit = { idHabit ->
+                        navController.navigate(
+                            HabitsTrackerScreen.UpdateHabit.name,
+                            navigatorExtras = HabitUpdateParams(idHabit)
+                        )
                     }
                 )
             }
@@ -100,7 +104,7 @@ fun HabitsTrackerApp(
                     },
                     vm = viewModel(
                         factory = HabitViewModelFactory(
-                            idHabit = 0
+                            idHabit = 0 //TODO("Передать id")
                         )
                     )
                 )

@@ -27,7 +27,7 @@ import com.masharo.habitstrackercompose.model.HabitUiState
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
     habitsList: List<HabitUiState> = habits,
-    onClickHabit: () -> Unit
+    onClickHabit: (idHabit: Int) -> Unit
 ) {
 
     val habits by remember {
@@ -40,9 +40,12 @@ fun HabitsListScreen(
     ) {
         itemsIndexed(habits) { id, habit ->
             HabitItem(
-                id = id,
                 habit = habit,
-                onClick = onClickHabit
+                onClick = {
+                    onClickHabit(id)
+                },
+                isFirstItem = id == 0,
+                isLastItem = id == habits.lastIndex
             )
         }
     }
@@ -51,22 +54,32 @@ fun HabitsListScreen(
 @Composable
 fun HabitItem(
     modifier: Modifier = Modifier,
-    id: Int,
     habit: HabitUiState,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    isFirstItem: Boolean,
+    isLastItem: Boolean
 ) {
 
     var isVisible by remember {
         mutableStateOf(false)
     }
 
+    val sizePadding = 5.dp
+
+    val topPadding = if (isFirstItem) sizePadding else 0.dp
+    val bottomPadding = if (isLastItem) sizePadding else 0.dp
+
     val isArrowRotate by animateFloatAsState(targetValue = if (isVisible) 180f else 0f)
 
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = 5.dp)
-            .animateContentSize { initialValue, targetValue -> }
+            .padding(
+                start = sizePadding,
+                end = sizePadding,
+                top = topPadding,
+                bottom = bottomPadding
+            )
             .clickable {
                 onClick()
             }
