@@ -12,15 +12,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.model.HabitUpdateParams
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
+
+const val ID_HABIT_PARAM_NAME = "idHabit"
 
 enum class HabitsTrackerScreen(
     @StringRes val screenTitle: Int,
@@ -47,9 +50,12 @@ fun HabitsTrackerApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
+    val route = backStackEntry?.destination?.route?.replace(Regex("""/.*"""), "")
 
     val currentScreen = HabitsTrackerScreen.valueOf(
-        backStackEntry?.destination?.route ?: HabitsTrackerScreen.Start.name
+        value = route
+                ?:
+                HabitsTrackerScreen.Start.name
     )
 
     Scaffold(
@@ -72,6 +78,7 @@ fun HabitsTrackerApp(
             )
         }
     ) { contentPadding ->
+        //TODO("Вынести навигацию")
         NavHost(
             navController = navController,
             startDestination = HabitsTrackerScreen.Start.name,
@@ -81,10 +88,7 @@ fun HabitsTrackerApp(
             composable(route = HabitsTrackerScreen.Start.name) {
                 HabitsListScreen(
                     onClickHabit = { idHabit ->
-                        navController.navigate(
-                            HabitsTrackerScreen.UpdateHabit.name,
-                            navigatorExtras = HabitUpdateParams(idHabit)
-                        )
+                        navController.navigate("${HabitsTrackerScreen.UpdateHabit.name}/${idHabit}")
                     }
                 )
             }
@@ -97,14 +101,19 @@ fun HabitsTrackerApp(
                 )
             }
 
-            composable(route = HabitsTrackerScreen.UpdateHabit.name) {
+            composable(
+                route = "${HabitsTrackerScreen.UpdateHabit.name}/{$ID_HABIT_PARAM_NAME}",
+                arguments = listOf(navArgument("idHabit") {
+                    type = NavType.IntType
+                })
+            ) { backStackEntry ->
                 HabitScreen(
                     navigateBack = {
                         navController.navigate(HabitsTrackerScreen.Start.name)
                     },
                     vm = viewModel(
                         factory = HabitViewModelFactory(
-                            idHabit = 0 //TODO("Передать id")
+                            idHabit = backStackEntry.arguments?.getInt(ID_HABIT_PARAM_NAME)
                         )
                     )
                 )
