@@ -1,5 +1,7 @@
 package com.masharo.habitstrackercompose.model
 
+import androidx.compose.ui.graphics.Color
+
 data class HabitUiState(
     val title: String = "",
     val description: String = "",
@@ -8,6 +10,7 @@ data class HabitUiState(
     val count: String = "",
     val countReady: String = "0",
     val period: String = "",
+    val color: Color = Color.White,
 
     val isTitleError: Boolean = false,
     val isDescriptionError: Boolean = false,

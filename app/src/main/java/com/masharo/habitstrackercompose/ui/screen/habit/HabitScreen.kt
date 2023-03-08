@@ -39,7 +39,6 @@ fun HabitScreen(
     val uiState by vm.uiState.collectAsState()
 
     var isOpenColorPicker by remember { mutableStateOf(false) }
-    var colorBackground by remember { mutableStateOf(Color.White) }
 
     //TODO("Изменить кнопку в полях ввода")
     Column(
@@ -153,7 +152,11 @@ fun HabitScreen(
 
     //TODO("Вынести в компонуемый")
     if (isOpenColorPicker) {
-        HabitColorPicker(isOpenColorPicker, colorBackground, {}, {})
+        HabitColorPicker(
+            uiState = uiState,
+            onClickSave = {},
+            onClickCancel = {}
+        )
     }
 }
 
@@ -224,122 +227,6 @@ private fun HabitSpinnerPriorities(
                         isExpandedPriorities = false
                     }
                 )
-            }
-        }
-    }
-}
-
-@Composable
-private fun HabitColorPicker(
-    isOpenColorPicker: Boolean,
-    colorBackground: Color,
-    onClickCancel: () -> Unit,
-    onClickSave: () -> Unit,
-    padding: Dp = 10.dp,
-    sizeWindowColor: Dp = 65.dp,
-    spaceItems: Dp = 10.dp,
-    colors: List<Color> = listOf( //TODO("Цвета")
-        Color.Red,
-        Color.Yellow
-    )
-) {
-//    val view = LocalView.current
-    var selectColor by remember { mutableStateOf(colorBackground) }
-
-    Dialog(
-        onDismissRequest = { onClickCancel() }
-    ) {
-        Card(
-            modifier = Modifier
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(padding),
-                verticalArrangement = Arrangement.spacedBy(spaceItems),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = stringResource(R.string.color_background_habit),
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(
-                    modifier = Modifier
-                        .size(sizeWindowColor)
-                        .background(
-                            color = selectColor,
-                            shape = RoundedCornerShape(10.dp)
-                        )
-                ) //TODO("цвет фона")
-                Row(
-                    modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
-                        .drawWithCache {
-                            onDrawBehind {
-                                drawRoundRect(
-                                    brush = Brush.linearGradient(colors),
-                                    cornerRadius = CornerRadius(10.dp.toPx())
-                                )
-                            }
-                        }
-                        .padding(padding),
-                    horizontalArrangement = Arrangement.spacedBy(spaceItems)
-                ) {
-                    val view = LocalView.current
-                    repeat(16) {
-                        var positionGradientLine = Offset(0f, 0f)
-                        var centerGradientHeight = 0
-                        var centerGradientWidth = 0
-
-                        Spacer(
-                            modifier = Modifier
-                                .size(sizeWindowColor)
-                                .border(
-                                    width = 2.dp,
-                                    color = Color.Gray,
-                                    shape = RoundedCornerShape(10.dp)
-                                )
-                                .clickable { //TODO("Перенести в вм")
-                                    selectColor = Color(
-                                        view
-                                            .drawToBitmap()
-                                            .getColor(
-                                                positionGradientLine.x.toInt() + centerGradientWidth,
-                                                positionGradientLine.y.toInt() + centerGradientHeight
-                                            )
-                                            .toArgb()
-                                    )
-                                }
-                                .onGloballyPositioned { coords ->
-                                    coords.parentCoordinates
-                                        ?.positionInWindow()
-                                        ?.let { offset ->
-                                            positionGradientLine = offset
-                                        }
-                                }
-                                .onSizeChanged { sizes ->
-                                    centerGradientHeight = sizes.height / 2
-                                    centerGradientWidth = sizes.width / 2
-                                }
-                        )
-                    }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    Button(
-                        onClick = { onClickCancel() }
-                    ) {
-                        Text(text = stringResource(R.string.color_picker_cancel))
-                    }
-                    Button(
-                        onClick = { onClickSave() }//TODO("Сохранить цвет")
-                    ) {
-                        Text(text = stringResource(R.string.color_picker_save))
-                    }
-                }
             }
         }
     }
