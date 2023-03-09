@@ -1,5 +1,6 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
+import android.graphics.Color.HSVToColor
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,6 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.core.view.drawToBitmap
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
@@ -41,6 +44,8 @@ internal fun HabitColorPicker(
     )
 ) {
     var selectColor by remember { mutableStateOf(uiState.color) }
+    var widthGradient = 0
+    val scrollStateGradient = rememberScrollState()
 
     Dialog(
         onDismissRequest = { onClickCancel() }
@@ -68,14 +73,21 @@ internal fun HabitColorPicker(
                 ) //TODO("цвет фона")
                 Row(
                     modifier = Modifier
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(scrollStateGradient)
                         .drawWithCache {
                             onDrawBehind {
                                 drawRoundRect(
-                                    brush = Brush.linearGradient(colors),
+//                                    brush = Brush.linearGradient(colors),
+                                    brush = createColorMap(
+                                        hues = floatArrayOf(1f, 2f, 3f, 40f, 41f, 100f, 101f, 102f),
+                                        saturation = 1f
+                                    ),
                                     cornerRadius = CornerRadius(10.dp.toPx())
                                 )
                             }
+                        }
+                        .onSizeChanged {
+                            widthGradient = it.width
                         }
                         .padding(padding),
                     horizontalArrangement = Arrangement.spacedBy(spaceItems)
@@ -96,14 +108,25 @@ internal fun HabitColorPicker(
                                 )
                                 .clickable { //TODO("Перенести в вм")
                                     selectColor = Color(
-                                        view
-                                            .drawToBitmap()
-                                            .getColor(
-                                                positionGradientLine.x.toInt() + centerGradientWidth,
-                                                positionGradientLine.y.toInt() + centerGradientHeight
+                                        HSVToColor(
+                                            floatArrayOf(
+                                                (scrollStateGradient.value + positionGradientLine.x
+                                                + centerGradientWidth - padding.value) / widthGradient * 360f,
+                                                1f,
+                                                1f
                                             )
-                                            .toArgb()
+                                        )
                                     )
+
+//                                    selectColor = Color(
+//                                        view
+//                                            .drawToBitmap()
+//                                            .getColor(
+//                                                positionGradientLine.x.toInt() + centerGradientWidth,
+//                                                positionGradientLine.y.toInt() + centerGradientHeight
+//                                            )
+//                                            .toArgb()
+//                                    )
                                 }
                                 .onGloballyPositioned { coords ->
                                     coords.parentCoordinates
@@ -139,4 +162,30 @@ internal fun HabitColorPicker(
             }
         }
     }
+}
+
+//hues in range 1..360
+//saturation in range 0..1
+fun createColorMap(
+    hues: FloatArray,
+    saturation: Float,
+    lightness: Float = 1f
+): Brush {
+    val colors = mutableListOf<Color>()
+
+    repeat(360) { hue ->
+        val hsv = HSVToColor(
+            floatArrayOf(
+                hue.toFloat(),
+                saturation,
+                lightness
+            )
+        )
+
+        colors.add(
+            Color(hsv)
+        )
+    }
+
+    return Brush.horizontalGradient(colors)
 }
