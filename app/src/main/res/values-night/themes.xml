@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.HabitsTrackerCompose" parent="android:Theme.Material.Light.NoActionBar" >
-        <item name="android:statusBarColor">@color/md_theme_light_primary</item>
-        <item name="android:windowLightStatusBar">true</item>-->
+        <item name="android:statusBarColor">@color/md_theme_dark_primary</item>
     </style>
 </resources>

@@ -32,6 +32,6 @@
     <string name="description_habit">Описание привычки</string>
     <string name="color_background_habit">Цвет фона</string>
 
-    <string name="color_picker_cancel">Отменить</string>
+    <string name="color_picker_default_color">По умолчанию</string>
     <string name="color_picker_save">Сохранить</string>
 </resources>
