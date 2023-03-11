@@ -1,7 +1,5 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
-import android.graphics.Color.HSVToColor
-import androidx.annotation.FloatRange
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,8 +20,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
 
@@ -99,7 +95,7 @@ internal fun HabitColorPicker(
                                     val widthLocateClick = scrollStateGradient.value + positionGradientLine.x
                                     + centerGradientWidth - padding.value
                                     selectColor = Color.hsv(
-                                        hue = widthLocateClick / widthGradient * 10f,
+                                        hue = widthLocateClick / widthGradient * 360f,
                                         saturation = 1f,
                                         value = 1f
                                     )
@@ -126,12 +122,20 @@ internal fun HabitColorPicker(
                     TextButton(
                         onClick = { onClickDefaultColor() }
                     ) {
-                        Text(text = stringResource(R.string.color_picker_default_color))
+                        Text(
+                            text = stringResource(R.string.color_picker_default_color),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                     TextButton(
                         onClick = { onClickSave() }//TODO("Сохранить цвет")
                     ) {
-                        Text(text = stringResource(R.string.color_picker_save))
+                        Text(
+                            text = stringResource(R.string.color_picker_save),
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
                     }
                 }
             }
@@ -145,7 +149,7 @@ private fun createColorMap(
 ): Brush {
     val colors = mutableListOf<Color>()
 
-    repeat(10) { hue ->
+    repeat(360) { hue ->
         colors.add(
             Color.hsv(
                 hue = hue.toFloat(),
