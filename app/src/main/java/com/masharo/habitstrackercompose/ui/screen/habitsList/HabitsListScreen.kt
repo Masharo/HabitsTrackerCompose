@@ -72,13 +72,6 @@ fun HabitItem(
     val isArrowRotate by animateFloatAsState(
         targetValue = if (isVisibleOptional) 180f else 0f
     )
-    var sizeCard by remember {
-        mutableStateOf(0)
-    }
-
-    var sizeBottom by remember {
-        mutableStateOf(0)
-    }
 
     Card(
         modifier = modifier
@@ -92,9 +85,6 @@ fun HabitItem(
             .clickable {
                 onClick()
             }
-            .onSizeChanged {
-                sizeCard = it.height
-            }
         ,
         elevation = cardElevation(
             defaultElevation = 5.dp
@@ -104,8 +94,8 @@ fun HabitItem(
             habit.color?.let { color ->
                 Spacer(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .width(8.dp)
+                        .fillMaxWidth()
+                        .height(10.dp)
                         .background(
                             color = color,
                             shape = RoundedCornerShape(
@@ -160,6 +150,21 @@ fun HabitItem(
             }
         }
     }
+}
+
+@Preview(
+    showBackground = true
+)
+@Composable
+fun HabitItemPreview() {
+    HabitItem(
+        habit = habits[0],
+        onClick = {
+
+        },
+        isFirstItem = false,
+        isLastItem = false
+    )
 }
 
 @Preview(
