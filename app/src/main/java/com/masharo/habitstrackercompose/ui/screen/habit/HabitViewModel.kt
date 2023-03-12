@@ -1,5 +1,6 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.masharo.habitstrackercompose.data.habits
 import com.masharo.habitstrackercompose.model.HabitUiState
@@ -91,6 +92,14 @@ class HabitViewModel(
         }
     }
 
+    fun updateColor(color: Color?) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                color = color
+            )
+        }
+    }
+
     fun saveState(
         navigateBack: () -> Unit
     ) {
@@ -102,19 +111,12 @@ class HabitViewModel(
             val isCountReadyErrorCurrent = countReady.isEmpty() || countReady.toInt() < 0
             val isPeriodErrorCurrent = period.isEmpty()
 
-            if (!isTitleErrorCurrent &&
-                !isDescriptionErrorCurrent &&
-                !isCountErrorCurrent &&
-                !isCountReadyErrorCurrent &&
-                !isPeriodErrorCurrent
+            if (isTitleErrorCurrent ||
+                isDescriptionErrorCurrent ||
+                isCountErrorCurrent ||
+                isCountReadyErrorCurrent ||
+                isPeriodErrorCurrent
             ) {
-                idHabit?.let { id ->
-                    habits[id] = this
-                } ?: habits.add(this)
-
-                navigateBack()
-
-            } else {
                 _uiState.update { currentState ->
                     currentState.copy(
                         isTitleError = isTitleErrorCurrent,
@@ -124,6 +126,12 @@ class HabitViewModel(
                         isPeriodError = isPeriodErrorCurrent
                     )
                 }
+            } else {
+                idHabit?.let { id ->
+                    habits[id] = this
+                } ?: habits.add(this)
+
+                navigateBack()
             }
         }
     }

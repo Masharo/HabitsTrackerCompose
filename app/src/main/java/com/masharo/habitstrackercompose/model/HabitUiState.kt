@@ -10,7 +10,7 @@ data class HabitUiState(
     val count: String = "",
     val countReady: String = "0",
     val period: String = "",
-    val color: Color = Color.White,
+    val color: Color? = null,
 
     val isTitleError: Boolean = false,
     val isDescriptionError: Boolean = false,

@@ -3,7 +3,10 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -15,7 +18,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,8 +28,8 @@ import com.masharo.habitstrackercompose.model.HabitUiState
 @Composable
 internal fun HabitColorPicker(
     uiState: HabitUiState,
-    onClickDefaultColor: () -> Unit,
-    onClickSave: () -> Unit,
+    dialogClose: () -> Unit,
+    onClickSave: (Color?) -> Unit,
     padding: Dp = 10.dp,
     sizeWindowColor: Dp = 65.dp,
     spaceItems: Dp = 10.dp
@@ -38,7 +40,9 @@ internal fun HabitColorPicker(
     val colorMap = createColorMap()
 
     Dialog(
-        onDismissRequest = { onClickDefaultColor() }
+        onDismissRequest = {
+            dialogClose()
+        }
     ) {
         Card(
             modifier = Modifier
@@ -57,7 +61,7 @@ internal fun HabitColorPicker(
                     modifier = Modifier
                         .size(sizeWindowColor)
                         .background(
-                            color = selectColor,
+                            color = selectColor ?: MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(10.dp)
                         )
                 )
@@ -78,7 +82,6 @@ internal fun HabitColorPicker(
                         .padding(padding),
                     horizontalArrangement = Arrangement.spacedBy(spaceItems)
                 ) {
-                    val view = LocalView.current
                     repeat(16) {
                         var positionGradientLine = Offset(0f, 0f)
                         var centerGradientWidth = 0
@@ -120,7 +123,9 @@ internal fun HabitColorPicker(
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     TextButton(
-                        onClick = { onClickDefaultColor() }
+                        onClick = {
+                            selectColor = null
+                        }
                     ) {
                         Text(
                             text = stringResource(R.string.color_picker_default_color),
@@ -129,7 +134,10 @@ internal fun HabitColorPicker(
                         )
                     }
                     TextButton(
-                        onClick = { onClickSave() }//TODO("Сохранить цвет")
+                        onClick = {
+                            onClickSave(selectColor)
+                            dialogClose()
+                        }//TODO("Сохранить цвет")
                     ) {
                         Text(
                             text = stringResource(R.string.color_picker_save),

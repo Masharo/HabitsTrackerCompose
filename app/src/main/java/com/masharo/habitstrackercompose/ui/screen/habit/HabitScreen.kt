@@ -1,12 +1,13 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
@@ -20,7 +21,7 @@ import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun HabitScreen(
     modifier: Modifier = Modifier,
@@ -29,45 +30,37 @@ fun HabitScreen(
 ) {
 
     val uiState by vm.uiState.collectAsState()
-
-    var isOpenColorPicker by remember { mutableStateOf(false) }
+    var isOpenColorPicker by rememberSaveable { mutableStateOf(false) }
+    var colorHeight by rememberSaveable { mutableStateOf(0) }
 
     //TODO("Изменить кнопку в полях ввода")
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(10.dp)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+        OutlineTextFieldHabit(
             value = uiState.title,
-            singleLine = true,
+            onValueChange = {
+                vm.updateTitle(it)
+            },
             isError = uiState.isTitleError,
-            onValueChange = { title ->
-                vm.updateTitle(title)
-            },
-            label = {
-                Text(text = stringResource(R.string.name_habit))
-            }
+            label = R.string.title_habit
         )
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+        OutlineTextFieldHabit(
             value = uiState.description,
-            isError = uiState.isDescriptionError,
-            onValueChange = { description ->
-                vm.updateDescription(description)
+            onValueChange = {
+                vm.updateDescription(it)
             },
-            label = {
-                Text(text = stringResource(R.string.description_habit))
-            }
+            isError = uiState.isDescriptionError,
+            label = R.string.description_habit,
+            singleLine = false
         )
 
-        //TODO("Вынести в отдельный компонуемый")
         HabitSpinnerPriorities(
             uiState = uiState,
             onSelectPriority = { priority ->
@@ -75,35 +68,24 @@ fun HabitScreen(
             }
         )
 
-        //TODO("Вынести в отдельный компонуемый")
         HabitTypeRadioButtons(vm, uiState)
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+        OutlineTextFieldHabit(
             value = uiState.count,
-            singleLine = true,
-            isError = uiState.isCountError,
-            onValueChange = { count ->
-                vm.updateCount(count)
+            onValueChange = {
+                vm.updateCount(it)
             },
-            label = {
-                Text(text = stringResource(R.string.need_count))
-            }
+            isError = uiState.isCountError,
+            label = R.string.need_count
         )
 
-        OutlinedTextField(
-            modifier = Modifier
-                .fillMaxWidth(),
+        OutlineTextFieldHabit(
             value = uiState.period,
-            singleLine = true,
-            isError = uiState.isPeriodError,
-            onValueChange = { period ->
-                vm.updatePeriod(period)
+            onValueChange = {
+                vm.updatePeriod(it)
             },
-            label = {
-                Text(text = stringResource(R.string.period_input))
-            }
+            isError = uiState.isPeriodError,
+            label = R.string.period_input
         )
 
         Row(
@@ -114,13 +96,21 @@ fun HabitScreen(
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = stringResource(R.string.color_background_habit))
-            Spacer(
+            Text(
                 modifier = Modifier
-                    .weight(1f)
-                    .height(IntrinsicSize.Max)
-                    .background(color = Color.Blue) //TODO("Должен отображаться выбраный цвет")
+                    .onSizeChanged { size ->
+                        colorHeight = size.height
+                    },
+                text = stringResource(R.string.color_background_habit)
             )
+            uiState.color?.let { color ->
+                Spacer(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height((colorHeight / LocalDensity.current.density).dp)
+                        .background(color = color)
+                )
+            }
         }
 
         Spacer(
@@ -142,12 +132,15 @@ fun HabitScreen(
         }
     }
 
-    //TODO("Вынести в компонуемый")
     if (isOpenColorPicker) {
         HabitColorPicker(
             uiState = uiState,
-            onClickSave = {},
-            onClickDefaultColor = {}
+            onClickSave = { color ->
+                vm.updateColor(color)
+            },
+            dialogClose = {
+                isOpenColorPicker = false
+            }
         )
     }
 }
@@ -222,6 +215,32 @@ private fun HabitSpinnerPriorities(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OutlineTextFieldHabit(
+    modifier: Modifier = Modifier,
+    value: String,
+    isError: Boolean,
+    onValueChange: (String) -> Unit,
+    @StringRes label: Int,
+    singleLine: Boolean = true
+) {
+    OutlinedTextField(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(0.dp),
+        value = value,
+        singleLine = singleLine,
+        isError = isError,
+        onValueChange = {
+            onValueChange(it)
+        },
+        label = {
+            Text(text = stringResource(label))
+        }
+    )
 }
 
 @Preview(

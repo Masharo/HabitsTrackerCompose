@@ -1,20 +1,23 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,16 +63,22 @@ fun HabitItem(
     isLastItem: Boolean
 ) {
 
-    var isVisible by remember {
+    var isVisibleOptional by remember {
         mutableStateOf(false)
     }
 
-    val sizePadding = 5.dp
+    val sizePadding = 10.dp
 
-    val topPadding = if (isFirstItem) sizePadding else 0.dp
-    val bottomPadding = if (isLastItem) sizePadding else 0.dp
+    val isArrowRotate by animateFloatAsState(
+        targetValue = if (isVisibleOptional) 180f else 0f
+    )
+    var sizeCard by remember {
+        mutableStateOf(0)
+    }
 
-    val isArrowRotate by animateFloatAsState(targetValue = if (isVisible) 180f else 0f)
+    var sizeBottom by remember {
+        mutableStateOf(0)
+    }
 
     Card(
         modifier = modifier
@@ -77,48 +86,76 @@ fun HabitItem(
             .padding(
                 start = sizePadding,
                 end = sizePadding,
-                top = topPadding,
-                bottom = bottomPadding
+                top = if (isFirstItem) sizePadding else 0.dp,
+                bottom = if (isLastItem) sizePadding else 0.dp
             )
             .clickable {
                 onClick()
             }
+            .onSizeChanged {
+                sizeCard = it.height
+            }
+        ,
+        elevation = cardElevation(
+            defaultElevation = 5.dp
+        )
     ) {
-        Column(
-            modifier = Modifier
-                .padding(10.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = habit.title
-                )
+        Box {
+            habit.color?.let { color ->
                 Spacer(
-                    modifier = Modifier.weight(1f)
-                )
-                Image(
                     modifier = Modifier
-                        .clickable { isVisible = !isVisible }
-                        .rotate(isArrowRotate),
-                    painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                    contentDescription = null //TODO("Описание")
+                        .fillMaxHeight()
+                        .width(8.dp)
+                        .background(
+                            color = color,
+                            shape = RoundedCornerShape(
+                                10.dp
+                            )
+                        )
                 )
             }
-
-            AnimatedVisibility(visible = isVisible) {
-                Column {
-                    Text(text = habit.description)
-                    Text(text = stringResource(habit.priority.stringResValue))
-                    Text(text = stringResource(habit.type.stringResValue))
-                    Text(text = habit.period)
+            Column(
+                modifier = Modifier
+                    .padding(
+                        vertical = 12.dp,
+                        horizontal = 10.dp
+                    ),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        text = stringResource(
-                            R.string.count_ready_habit,
-                            habit.countReady,
-                            habit.count
-                        )
+                        text = habit.title
                     )
+                    Spacer(
+                        modifier = Modifier.weight(1f)
+                    )
+                    Image(
+                        modifier = Modifier
+                            .clickable { isVisibleOptional = !isVisibleOptional }
+                            .rotate(isArrowRotate),
+                        painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
+                        contentDescription = null //TODO("Описание")
+                    )
+                }
+
+                AnimatedVisibility(
+                    visible = isVisibleOptional
+                ) {
+                    Column {
+                        Text(text = habit.description)
+                        Text(text = stringResource(habit.priority.stringResValue))
+                        Text(text = stringResource(habit.type.stringResValue))
+                        Text(text = habit.period)
+                        Text(
+                            text = stringResource(
+                                R.string.count_ready_habit,
+                                habit.countReady,
+                                habit.count
+                            )
+                        )
+                    }
                 }
             }
         }
@@ -147,7 +184,8 @@ fun HabitsListScreenPreview() {
             ),
             HabitUiState(
                 title = "title4",
-                description = "description4"
+                description = "description4",
+                color = Color.Red
             )
         ),
         onClickHabit = {}
