@@ -126,7 +126,7 @@ fun HabitItem(
                             .clickable { isVisibleOptional = !isVisibleOptional }
                             .rotate(isArrowRotate),
                         painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                        contentDescription = null //TODO("Описание")
+                        contentDescription = stringResource(R.string.dropdown_habit_description)
                     )
                 }
 

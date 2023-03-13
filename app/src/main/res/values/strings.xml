@@ -30,8 +30,11 @@
 
     <string name="title_habit">Название привычки</string>
     <string name="description_habit">Описание привычки</string>
-    <string name="color_background_habit">Цвет фона</string>
+    <string name="color_background_habit">Цвет</string>
 
     <string name="color_picker_default_color">По умолчанию</string>
     <string name="color_picker_save">Сохранить</string>
+
+    <string name="dropdown_habit_description">Получить дополнительную информацию о привычке</string>
+    <string name="create_habit">Создать привычку</string>
 </resources>

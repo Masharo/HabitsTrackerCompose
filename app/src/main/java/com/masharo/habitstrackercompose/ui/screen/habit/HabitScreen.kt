@@ -3,6 +3,9 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -12,6 +15,8 @@ import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -75,6 +80,7 @@ fun HabitScreen(
             onValueChange = {
                 vm.updateCount(it)
             },
+            keyboardType = KeyboardType.Number,
             isError = uiState.isCountError,
             label = R.string.need_count
         )
@@ -84,6 +90,7 @@ fun HabitScreen(
             onValueChange = {
                 vm.updatePeriod(it)
             },
+            imeAction = ImeAction.Done,
             isError = uiState.isPeriodError,
             label = R.string.period_input
         )
@@ -100,15 +107,24 @@ fun HabitScreen(
                 modifier = Modifier
                     .onSizeChanged { size ->
                         colorHeight = size.height
-                    },
+                    }
+                    .padding(
+                        horizontal = 25.dp,
+                        vertical = 5.dp
+                    ),
                 text = stringResource(R.string.color_background_habit)
             )
             uiState.color?.let { color ->
                 Spacer(
                     modifier = Modifier
-                        .weight(1f)
-                        .height((colorHeight / LocalDensity.current.density).dp)
-                        .background(color = color)
+                        .fillMaxWidth()
+                        .height(
+                            (colorHeight / LocalDensity.current.density).dp
+                        )
+                        .background(
+                            color = color,
+                            shape = RoundedCornerShape(5.dp)
+                        )
                 )
             }
         }
@@ -223,6 +239,8 @@ fun OutlineTextFieldHabit(
     modifier: Modifier = Modifier,
     value: String,
     isError: Boolean,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    imeAction: ImeAction = ImeAction.Next,
     onValueChange: (String) -> Unit,
     @StringRes label: Int,
     singleLine: Boolean = true
@@ -237,6 +255,10 @@ fun OutlineTextFieldHabit(
         onValueChange = {
             onValueChange(it)
         },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = keyboardType,
+            imeAction = imeAction
+        ),
         label = {
             Text(text = stringResource(label))
         }

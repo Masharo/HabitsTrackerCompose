@@ -67,7 +67,7 @@ fun HabitsTrackerApp(
                     }) {
                     Image(
                         painter = painterResource(R.drawable.ic_baseline_add_24),
-                        contentDescription = null //TODO("Добавить описание)
+                        contentDescription = stringResource(R.string.create_habit)
                     )
                 }
             }

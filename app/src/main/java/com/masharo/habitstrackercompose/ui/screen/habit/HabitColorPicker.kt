@@ -65,6 +65,11 @@ internal fun HabitColorPicker(
                             shape = RoundedCornerShape(10.dp)
                         )
                 )
+                Row() {
+                    //TODO()
+                    Text(stringResource(R.string.rgb_template)) //rgb
+                    Text() //hsv
+                }
                 Row(
                     modifier = Modifier
                         .horizontalScroll(scrollStateGradient)
@@ -95,8 +100,9 @@ internal fun HabitColorPicker(
                                     shape = RoundedCornerShape(10.dp)
                                 )
                                 .clickable { //TODO("Перенести в вм")
-                                    val widthLocateClick = scrollStateGradient.value + positionGradientLine.x
-                                    + centerGradientWidth - padding.value
+                                    val widthLocateClick =
+                                        scrollStateGradient.value + positionGradientLine.x
+                                    +centerGradientWidth - padding.value
                                     selectColor = Color.hsv(
                                         hue = widthLocateClick / widthGradient * 360f,
                                         saturation = 1f,
