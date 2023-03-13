@@ -37,4 +37,8 @@
 
     <string name="dropdown_habit_description">Получить дополнительную информацию о привычке</string>
     <string name="create_habit">Создать привычку</string>
+
+    <string name="rgb_template">RGB(%1$s, %2$s, %3$s)</string>
+    <string name="hsv_template">HSV(%1$s, %2$s, %3$s)</string>
+    <string name="not_color">Цветовое выделение отсутствует</string>
 </resources>

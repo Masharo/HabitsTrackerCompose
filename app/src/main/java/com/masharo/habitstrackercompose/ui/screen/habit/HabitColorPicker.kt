@@ -38,6 +38,13 @@ internal fun HabitColorPicker(
     var widthGradient = 0
     val scrollStateGradient = rememberScrollState()
     val colorMap = createColorMap()
+    val modifierSelectColor = selectColor?.let { color ->
+        Modifier
+            .background(
+                color = color ,
+                shape = RoundedCornerShape(10.dp)
+            )
+    } ?: Modifier
 
     Dialog(
         onDismissRequest = {
@@ -58,17 +65,44 @@ internal fun HabitColorPicker(
                     style = MaterialTheme.typography.titleMedium
                 )
                 Spacer(
-                    modifier = Modifier
+                    modifier = modifierSelectColor
                         .size(sizeWindowColor)
-                        .background(
-                            color = selectColor ?: MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10.dp)
-                        )
                 )
                 Row() {
                     //TODO()
-                    Text(stringResource(R.string.rgb_template)) //rgb
-                    Text() //hsv
+                    selectColor?.let { color ->
+                        val hsv = FloatArray(3)
+                        android.graphics.Color.colorToHSV(
+                            android.graphics.Color.valueOf(
+                                color.red,
+                                color.green,
+                                color.blue
+                            ).toArgb(),
+                            hsv
+                        )
+
+                        //rgb
+                        Text(
+                            stringResource(
+                                R.string.rgb_template,
+                                (color.red * 255).toInt(),
+                                (color.green * 255).toInt(),
+                                (color.blue * 255).toInt()
+                            )
+                        )
+
+                        //hsv
+                        Text(
+                            stringResource(
+                                R.string.hsv_template,
+                                hsv[0].toInt(),
+                                hsv[1],
+                                hsv[2]
+                            )
+                        )
+                    } ?: run {
+                        Text(stringResource(R.string.not_color))
+                    }
                 }
                 Row(
                     modifier = Modifier
