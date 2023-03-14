@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -25,6 +24,8 @@ import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
+import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
+import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
 
 
 @Composable
@@ -118,7 +119,7 @@ fun HabitScreen(
                 Spacer(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(
+                        .height(//TODO("Поправить")
                             (colorHeight / LocalDensity.current.density).dp
                         )
                         .background(
@@ -149,14 +150,18 @@ fun HabitScreen(
     }
 
     if (isOpenColorPicker) {
-        HabitColorPicker(
-            uiState = uiState,
+        ColorPickerDialogScreen(
             onClickSave = { color ->
                 vm.updateColor(color)
             },
             dialogClose = {
                 isOpenColorPicker = false
-            }
+            },
+            vm = viewModel(
+                factory = ColorPickerViewModelFactory(
+                    color = uiState.color
+                )
+            )
         )
     }
 }

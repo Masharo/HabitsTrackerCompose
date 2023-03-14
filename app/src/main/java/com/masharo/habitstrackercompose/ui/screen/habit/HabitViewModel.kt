@@ -1,5 +1,6 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.masharo.habitstrackercompose.data.habits
