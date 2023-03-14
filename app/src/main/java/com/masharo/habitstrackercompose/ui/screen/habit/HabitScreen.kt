@@ -26,20 +26,29 @@ import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
-
+import kotlinx.coroutines.launch
 
 @Composable
 fun HabitScreen(
     modifier: Modifier = Modifier,
     vm: HabitViewModel = viewModel(),
-    navigateBack: () -> Unit
+    navigateBack: () -> Unit,
+    snackbarHostState: SnackbarHostState
 ) {
-
     val uiState by vm.uiState.collectAsState()
     var isOpenColorPicker by rememberSaveable { mutableStateOf(false) }
     var colorHeight by rememberSaveable { mutableStateOf(0) }
+    val scope = rememberCoroutineScope()
 
-    //TODO("Изменить кнопку в полях ввода")
+    if (uiState.isError) {
+        scope.launch {
+            snackbarHostState.showSnackbar(
+                message = "Заполните обязательные поля",
+                actionLabel = "OK"
+            )
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -278,6 +287,7 @@ fun HabitScreenPreview() {
     HabitScreen(
         navigateBack = {
 
-        }
+        },
+        snackbarHostState = SnackbarHostState()
     )
 }

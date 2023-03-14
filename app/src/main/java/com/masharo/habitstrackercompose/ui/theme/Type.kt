@@ -61,7 +61,7 @@ val Typography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Bold,
-        fontSize = 22.sp
+        fontSize = 18.sp
     ),
     bodyMedium = TextStyle(
         fontFamily = Rubik,
@@ -76,16 +76,16 @@ val Typography = Typography(
     labelLarge = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Bold,
-        fontSize = 35.sp
+        fontSize = 22.sp
     ),
     labelMedium = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Normal,
-        fontSize = 25.sp
+        fontSize = 20.sp
     ),
     labelSmall = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Bold,
-        fontSize = 20.sp
+        fontSize = 18.sp
     )
 )

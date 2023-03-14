@@ -93,6 +93,14 @@ class HabitViewModel(
         }
     }
 
+    fun updateIsError(value: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                isError = value
+            )
+        }
+    }
+
     fun updateColor(color: Color?) {
         _uiState.update { currentState ->
             currentState.copy(
@@ -124,7 +132,8 @@ class HabitViewModel(
                         isDescriptionError = isDescriptionErrorCurrent,
                         isCountError = isCountErrorCurrent,
                         isCountReadyError = isCountReadyErrorCurrent,
-                        isPeriodError = isPeriodErrorCurrent
+                        isPeriodError = isPeriodErrorCurrent,
+                        isError = true
                     )
                 }
             } else {

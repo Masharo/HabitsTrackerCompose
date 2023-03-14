@@ -2,14 +2,18 @@ package com.masharo.habitstrackercompose.ui.screen
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -22,6 +26,7 @@ import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
+import kotlinx.coroutines.launch
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
@@ -58,20 +63,22 @@ fun HabitsTrackerApp(
                 HabitsTrackerScreen.Start.name
     )
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         floatingActionButton = {
-            if (currentScreen.isNeedFabAddHabit) {
-                FloatingActionButton(
-                    onClick = {
-                        navController.navigate(HabitsTrackerScreen.AddNewHabit.name)
-                    }) {
-                    Image(
-                        painter = painterResource(R.drawable.ic_baseline_add_24),
-                        contentDescription = stringResource(R.string.create_habit)
-                    )
+            FabHabit(
+                currentScreen = currentScreen,
+                onClick = {
+                    navController.navigate(HabitsTrackerScreen.AddNewHabit.name)
                 }
-            }
+            )
         },
+        snackbarHost = {
+            SnackbarHostHabit(
+                snackbarHostState = snackbarHostState
+            )
+       },
         topBar = {
             HabitsTrackerAppBar(
                 currentScreen = currentScreen
@@ -97,7 +104,8 @@ fun HabitsTrackerApp(
                 HabitScreen(
                     navigateBack = {
                         navController.navigate(HabitsTrackerScreen.Start.name)
-                    }
+                    },
+                    snackbarHostState = snackbarHostState
                 )
             }
 
@@ -115,10 +123,53 @@ fun HabitsTrackerApp(
                         factory = HabitViewModelFactory(
                             idHabit = backStackEntry.arguments?.getInt(ID_HABIT_PARAM_NAME)
                         )
-                    )
+                    ),
+                    snackbarHostState = snackbarHostState
                 )
             }
 
+        }
+    }
+}
+
+@Composable
+fun FabHabit(
+    currentScreen: HabitsTrackerScreen,
+    onClick: () -> Unit
+) {
+    if (currentScreen.isNeedFabAddHabit) {
+        FloatingActionButton(
+            onClick = onClick
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_baseline_add_24),
+                contentDescription = stringResource(R.string.create_habit)
+            )
+        }
+    }
+}
+
+@Composable
+fun SnackbarHostHabit(
+    snackbarHostState: SnackbarHostState
+) {
+    SnackbarHost(snackbarHostState) { data ->
+        Snackbar(
+            modifier = Modifier
+                .padding(12.dp),
+            action = {
+                TextButton(
+                    onClick = {
+                        data.dismiss()
+                    }
+                ) {
+                    Text(
+                        text = data.visuals.actionLabel ?: ""
+                    )
+                }
+            }
+        ) {
+            Text(data.visuals.message)
         }
     }
 }

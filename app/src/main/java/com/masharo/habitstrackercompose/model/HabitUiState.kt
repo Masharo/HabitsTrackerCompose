@@ -16,5 +16,7 @@ data class HabitUiState(
     val isDescriptionError: Boolean = false,
     val isCountError: Boolean = false,
     val isCountReadyError: Boolean = false,
-    val isPeriodError: Boolean = false
+    val isPeriodError: Boolean = false,
+
+    val isError: Boolean = false
 )

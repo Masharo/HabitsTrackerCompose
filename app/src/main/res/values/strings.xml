@@ -40,5 +40,4 @@
 
     <string name="rgb_template">RGB(%1$s)</string>
     <string name="hsv_template">HSV(%1$s)</string>
-    <string name="not_color">Цветовое выделение отсутствует</string>
 </resources>
