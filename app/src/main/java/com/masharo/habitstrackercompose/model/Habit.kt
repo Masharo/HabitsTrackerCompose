@@ -2,7 +2,7 @@ package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
 
-data class HabitUiState(
+data class Habit(
     val title: String = "",
     val description: String = "",
     val priority: Priority = Priority.MIDDLE,
@@ -10,18 +10,10 @@ data class HabitUiState(
     val count: String = "",
     val countReady: String = "0",
     val period: String = "",
-    val color: Color? = null,
-
-    val isTitleError: Boolean = false,
-    val isDescriptionError: Boolean = false,
-    val isCountError: Boolean = false,
-    val isCountReadyError: Boolean = false,
-    val isPeriodError: Boolean = false,
-
-    val isError: Boolean = false
+    val color: Color? = null
 )
 
-fun HabitUiState.toHabit() = Habit(
+fun Habit.toHabitUiState() = HabitUiState(
     title = title,
     description = description,
     priority = priority,
@@ -29,5 +21,13 @@ fun HabitUiState.toHabit() = Habit(
     count = count,
     countReady = countReady,
     period = period,
-    color = color
+    color = color,
+
+    isTitleError = false,
+    isDescriptionError = false,
+    isCountError = false,
+    isCountReadyError = false,
+    isPeriodError = false,
+
+    isError = false
 )

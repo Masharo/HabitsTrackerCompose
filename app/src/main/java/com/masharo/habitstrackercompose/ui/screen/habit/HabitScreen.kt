@@ -26,7 +26,6 @@ import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
-import kotlinx.coroutines.launch
 
 @Composable
 fun HabitScreen(
@@ -37,15 +36,22 @@ fun HabitScreen(
 ) {
     val uiState by vm.uiState.collectAsState()
     var isOpenColorPicker by rememberSaveable { mutableStateOf(false) }
-    var colorHeight by rememberSaveable { mutableStateOf(0) }
 
     if (uiState.isError) {
+        val message = stringResource(R.string.error_message_input_habit_data)
+        val okButton = stringResource(R.string.error_message_ok)
+
         LaunchedEffect(snackbarHostState) {
-            snackbarHostState.showSnackbar(
-                message = "Заполните обязательные поля",
-                actionLabel = "OK",
+            val snackbarResult = snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = okButton,
                 duration = SnackbarDuration.Short
             )
+
+            when (snackbarResult) {
+                SnackbarResult.Dismissed -> vm.updateIsError(false)
+                SnackbarResult.ActionPerformed -> vm.updateIsError(false)
+            }
         }
     }
 
@@ -110,14 +116,12 @@ fun HabitScreen(
                 .fillMaxWidth()
                 .clickable {
                     isOpenColorPicker = true
-                },
+                }
+                .height(IntrinsicSize.Min),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier
-                    .onSizeChanged { size ->
-                        colorHeight = size.height
-                    }
                     .padding(
                         horizontal = 25.dp,
                         vertical = 5.dp
@@ -127,10 +131,7 @@ fun HabitScreen(
             uiState.color?.let { color ->
                 Spacer(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(//TODO("Поправить")
-                            (colorHeight / LocalDensity.current.density).dp
-                        )
+                        .fillMaxSize()
                         .background(
                             color = color,
                             shape = RoundedCornerShape(5.dp)

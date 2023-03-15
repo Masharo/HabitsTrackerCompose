@@ -38,6 +38,11 @@
     <string name="dropdown_habit_description">Получить дополнительную информацию о привычке</string>
     <string name="create_habit">Создать привычку</string>
 
+    <string name="period_title">Период: %1$s</string>
+
     <string name="rgb_template">RGB(%1$s)</string>
     <string name="hsv_template">HSV(%1$s)</string>
+
+    <string name="error_message_input_habit_data">Заполните обязательные поля</string>
+    <string name="error_message_ok">OK</string>
 </resources>

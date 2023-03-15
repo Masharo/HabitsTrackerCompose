@@ -3,12 +3,13 @@ package com.masharo.habitstrackercompose.ui.screen
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -151,14 +152,21 @@ fun FabHabit(
 
 @Composable
 fun SnackbarHostHabit(
+    modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState
 ) {
     SnackbarHost(snackbarHostState) { data ->
         Snackbar(
-            modifier = Modifier
-                .padding(12.dp),
-            action = {
+            modifier = modifier
+                .padding(15.dp)
+                .height(60.dp),
+            dismissAction = {
                 TextButton(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = 10.dp
+                        )
+                        .fillMaxHeight(),
                     onClick = {
                         data.dismiss()
                     }

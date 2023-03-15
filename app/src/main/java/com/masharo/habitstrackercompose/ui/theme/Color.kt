@@ -2,7 +2,7 @@ package com.masharo.habitstrackercompose.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val md_theme_light_primary = Color(0xFF9BD67F)
+val md_theme_light_primary = Color(0xFF63A246)
 val md_theme_light_onPrimary = Color(0xFFFFFFFF)
 val md_theme_light_primaryContainer = Color(0xFFB6F398)
 val md_theme_light_onPrimaryContainer = Color(0xFF062100)
