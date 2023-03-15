@@ -84,7 +84,7 @@ class ColorPickerViewModel(
 
     private fun colorToRgb(color: Color?) =
         color?.run {
-            "${red.toInt() * 255}, ${green.toInt() * 255}, ${blue.toInt() * 255}"
+            "${(red * 255).toInt()}, ${(green * 255).toInt()}, ${(blue * 255).toInt()}"
         } ?: ""
 
     fun createColorMap(): Brush {

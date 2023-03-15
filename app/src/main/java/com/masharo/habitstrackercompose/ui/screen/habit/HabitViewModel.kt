@@ -26,7 +26,8 @@ class HabitViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 title = title,
-                isTitleError = false
+                isTitleError = false,
+                isError = false
             )
         }
     }
@@ -35,7 +36,8 @@ class HabitViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 description = description,
-                isDescriptionError = false
+                isDescriptionError = false,
+                isError = false
             )
         }
     }
@@ -46,7 +48,8 @@ class HabitViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 count = count,
-                isCountError = false
+                isCountError = false,
+                isError = false
             )
         }
     }
@@ -58,7 +61,8 @@ class HabitViewModel(
             _uiState.update { currentState ->
                 currentState.copy(
                     count = countReady,
-                    isCountReadyError = false
+                    isCountReadyError = false,
+                    isError = false
                 )
             }
         }
@@ -72,7 +76,8 @@ class HabitViewModel(
         _uiState.update { currentState ->
             currentState.copy(
                 period = period,
-                isPeriodError = false
+                isPeriodError = false,
+                isError = false
             )
         }
     }

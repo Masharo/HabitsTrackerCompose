@@ -38,13 +38,13 @@ fun HabitScreen(
     val uiState by vm.uiState.collectAsState()
     var isOpenColorPicker by rememberSaveable { mutableStateOf(false) }
     var colorHeight by rememberSaveable { mutableStateOf(0) }
-    val scope = rememberCoroutineScope()
 
     if (uiState.isError) {
-        scope.launch {
+        LaunchedEffect(snackbarHostState) {
             snackbarHostState.showSnackbar(
                 message = "Заполните обязательные поля",
-                actionLabel = "OK"
+                actionLabel = "OK",
+                duration = SnackbarDuration.Short
             )
         }
     }

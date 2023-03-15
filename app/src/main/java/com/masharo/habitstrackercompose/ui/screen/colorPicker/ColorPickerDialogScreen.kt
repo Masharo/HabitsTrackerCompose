@@ -70,10 +70,16 @@ internal fun ColorPickerDialogScreen(
                 )
                 Row {
                     //rgb
-                    Text(stringResource(R.string.rgb_template, uiState.rgbText))
+                    Text(
+                        text = stringResource(R.string.rgb_template, uiState.rgbText),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                     Spacer(Modifier.weight(1f))
                     //hsv
-                    Text(stringResource(R.string.hsv_template, uiState.hsvText))
+                    Text(
+                        text = stringResource(R.string.hsv_template, uiState.hsvText),
+                        style = MaterialTheme.typography.bodySmall
+                    )
                 }
 
                 GradientLine(
