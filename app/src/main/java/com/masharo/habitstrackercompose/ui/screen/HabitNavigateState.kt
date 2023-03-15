@@ -1,53 +1,22 @@
 package com.masharo.habitstrackercompose.ui.screen
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
-import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
-import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
-import kotlinx.coroutines.launch
-
-const val ID_HABIT_PARAM_NAME = "idHabit"
-
-enum class HabitsTrackerScreen(
-    @StringRes val screenTitle: Int,
-    val isNeedFabAddHabit: Boolean
-) {
-    Start(
-        screenTitle = R.string.app_bar_name_screen_list_habits,
-        isNeedFabAddHabit = true
-    ),
-    AddNewHabit(
-        screenTitle = R.string.app_bar_name_screen_new_habit_add,
-        isNeedFabAddHabit = false
-    ),
-    UpdateHabit(
-        screenTitle = R.string.app_bar_name_screen_habit_update,
-        isNeedFabAddHabit = false
-    )
-}
+import com.masharo.habitstrackercompose.navigate.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,14 +25,7 @@ fun HabitsTrackerApp(
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val route = backStackEntry?.destination?.route?.replace(Regex("""/.*"""), "")
-
-    val currentScreen = HabitsTrackerScreen.valueOf(
-        value = route
-                ?:
-                HabitsTrackerScreen.Start.name
-    )
-
+    val currentScreen = habitNavigateState(backStackEntry?.destination?.route)
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -71,7 +33,7 @@ fun HabitsTrackerApp(
             FabHabit(
                 currentScreen = currentScreen,
                 onClick = {
-                    navController.navigate(HabitsTrackerScreen.AddNewHabit.name)
+                    navController.navigate(HabitNavigateState.AddNewHabit.name)
                 }
             )
         },
@@ -86,48 +48,25 @@ fun HabitsTrackerApp(
             )
         }
     ) { contentPadding ->
-        //TODO("Вынести навигацию")
         NavHost(
             navController = navController,
-            startDestination = HabitsTrackerScreen.Start.name,
+            startDestination = HabitNavigateState.Start.name,
             modifier = modifier.padding(contentPadding)
         ) {
 
-            composable(route = HabitsTrackerScreen.Start.name) {
-                HabitsListScreen(
-                    onClickHabit = { idHabit ->
-                        navController.navigate("${HabitsTrackerScreen.UpdateHabit.name}/${idHabit}")
-                    }
-                )
-            }
+            navigateToStartScreen(
+                navController = navController
+            )
 
-            composable(route = HabitsTrackerScreen.AddNewHabit.name) {
-                HabitScreen(
-                    navigateBack = {
-                        navController.navigateUp()
-                    },
-                    snackbarHostState = snackbarHostState
-                )
-            }
+            navigateToUpdateHabitScreen(
+                navController = navController,
+                snackbarHostState = snackbarHostState
+            )
 
-            composable(
-                route = "${HabitsTrackerScreen.UpdateHabit.name}/{$ID_HABIT_PARAM_NAME}",
-                arguments = listOf(navArgument("idHabit") {
-                    type = NavType.IntType
-                })
-            ) { backStackEntry ->
-                HabitScreen(
-                    navigateBack = {
-                        navController.navigateUp()
-                    },
-                    vm = viewModel(
-                        factory = HabitViewModelFactory(
-                            idHabit = backStackEntry.arguments?.getInt(ID_HABIT_PARAM_NAME)
-                        )
-                    ),
-                    snackbarHostState = snackbarHostState
-                )
-            }
+            navigateToAddNewHabit(
+                navController = navController,
+                snackbarHostState = snackbarHostState
+            )
 
         }
     }
@@ -135,7 +74,7 @@ fun HabitsTrackerApp(
 
 @Composable
 fun FabHabit(
-    currentScreen: HabitsTrackerScreen,
+    currentScreen: HabitNavigateState,
     onClick: () -> Unit
 ) {
     if (currentScreen.isNeedFabAddHabit) {
@@ -186,7 +125,7 @@ fun SnackbarHostHabit(
 @Composable
 fun HabitsTrackerAppBar(
     modifier: Modifier = Modifier,
-    currentScreen: HabitsTrackerScreen
+    currentScreen: HabitNavigateState
 ) {
     TopAppBar(
         modifier = modifier,
