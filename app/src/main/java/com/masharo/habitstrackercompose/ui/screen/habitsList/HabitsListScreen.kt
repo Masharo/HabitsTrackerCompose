@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -22,16 +23,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.data.habits
+import com.masharo.habitstrackercompose.data.habitsFlow
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
-import com.masharo.habitstrackercompose.model.toHabitListItemUiState
 
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
     vm: HabitListViewModel = viewModel(
         factory = HabitListViewModelFactory(
-            habits
+            habitsFlow
         )
     ),
     onClickHabit: (idHabit: Int) -> Unit
@@ -49,7 +49,7 @@ fun HabitsListScreen(
                     onClickHabit(id)
                 },
                 isFirstItem = id == 0,
-                isLastItem = id == habits.lastIndex
+                isLastItem = id == uiState.habits.lastIndex
             )
         }
     }
@@ -63,7 +63,7 @@ fun HabitItem(
     isFirstItem: Boolean,
     isLastItem: Boolean
 ) {
-    var isVisibleOptional by remember {
+    var isVisibleOptional by rememberSaveable {
         mutableStateOf(false)
     }
 
@@ -152,20 +152,20 @@ fun HabitItem(
     }
 }
 
-@Preview(
-    showBackground = true
-)
-@Composable
-fun HabitItemPreview() {
-    HabitItem(
-        habit = habits[0].toHabitListItemUiState(),
-        onClick = {
-
-        },
-        isFirstItem = false,
-        isLastItem = false
-    )
-}
+//@Preview(
+//    showBackground = true
+//)
+//@Composable
+//fun HabitItemPreview() {
+//    HabitItem(
+//        habit = habits.value[0].toHabitListItemUiState(),
+//        onClick = {
+//
+//        },
+//        isFirstItem = false,
+//        isLastItem = false
+//    )
+//}
 
 @Preview(
     showBackground = true,

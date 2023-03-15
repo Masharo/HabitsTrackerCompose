@@ -2,7 +2,9 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.masharo.habitstrackercompose.data.habits
+import com.masharo.habitstrackercompose.data.addHabit
+import com.masharo.habitstrackercompose.data.habitsFlow
+import com.masharo.habitstrackercompose.data.updateHabit
 import com.masharo.habitstrackercompose.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +15,7 @@ class HabitViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        value = idHabit?.let { id -> habits[id].toHabitUiState() }
+        value = idHabit?.let { id -> habitsFlow.value[id].toHabitUiState() }
                 ?:
                 HabitUiState()
     )
@@ -140,8 +142,8 @@ class HabitViewModel(
                 }
             } else {
                 idHabit?.let { id ->
-                    habits[id] = this.toHabit()
-                } ?: habits.add(this.toHabit())
+                    updateHabit(id, this.toHabit())
+                } ?: addHabit(this.toHabit())
 
                 navigateBack()
             }

@@ -104,7 +104,7 @@ fun HabitsTrackerApp(
             composable(route = HabitsTrackerScreen.AddNewHabit.name) {
                 HabitScreen(
                     navigateBack = {
-                        navController.navigate(HabitsTrackerScreen.Start.name)
+                        navController.navigateUp()
                     },
                     snackbarHostState = snackbarHostState
                 )
@@ -118,7 +118,7 @@ fun HabitsTrackerApp(
             ) { backStackEntry ->
                 HabitScreen(
                     navigateBack = {
-                        navController.navigate(HabitsTrackerScreen.Start.name)
+                        navController.navigateUp()
                     },
                     vm = viewModel(
                         factory = HabitViewModelFactory(
