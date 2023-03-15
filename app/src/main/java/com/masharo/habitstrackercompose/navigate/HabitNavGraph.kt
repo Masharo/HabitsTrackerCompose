@@ -31,9 +31,11 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
 ) {
     composable(
         route = "${HabitNavigateState.UpdateHabit.name}/{$ID_HABIT_PARAM_NAME}",
-        arguments = listOf(navArgument(ID_HABIT_PARAM_NAME) {
-            type = NavType.IntType
-        })
+        arguments = listOf(
+            navArgument(ID_HABIT_PARAM_NAME) {
+                type = NavType.IntType
+            }
+        )
     ) { backStackEntry ->
         HabitScreen(
             navigateBack = {
