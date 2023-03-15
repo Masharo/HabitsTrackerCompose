@@ -16,32 +16,33 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.habits
-import com.masharo.habitstrackercompose.model.HabitUiState
+import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import com.masharo.habitstrackercompose.model.toHabitListItemUiState
 
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
-    habitsList: List<HabitUiState> = habits,
+    vm: HabitListViewModel = viewModel(
+        factory = HabitListViewModelFactory(
+            habits
+        )
+    ),
     onClickHabit: (idHabit: Int) -> Unit
 ) {
-
-    val habits by remember {
-        mutableStateOf(habitsList)
-    }
+    val uiState by vm.uiState.collectAsState()
 
     LazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
-        itemsIndexed(habits) { id, habit ->
+        itemsIndexed(uiState.habits) { id, habit ->
             HabitItem(
                 habit = habit,
                 onClick = {
@@ -57,19 +58,18 @@ fun HabitsListScreen(
 @Composable
 fun HabitItem(
     modifier: Modifier = Modifier,
-    habit: HabitUiState,
+    habit: HabitListItemUiState,
     onClick: () -> Unit,
     isFirstItem: Boolean,
     isLastItem: Boolean
 ) {
-
     var isVisibleOptional by remember {
         mutableStateOf(false)
     }
 
     val sizePadding = 10.dp
 
-    val isArrowRotate by animateFloatAsState(
+    val arrowRotate by animateFloatAsState(
         targetValue = if (isVisibleOptional) 180f else 0f
     )
 
@@ -124,7 +124,7 @@ fun HabitItem(
                     Image(
                         modifier = Modifier
                             .clickable { isVisibleOptional = !isVisibleOptional }
-                            .rotate(isArrowRotate),
+                            .rotate(arrowRotate),
                         painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
                         contentDescription = stringResource(R.string.dropdown_habit_description)
                     )
@@ -158,7 +158,7 @@ fun HabitItem(
 @Composable
 fun HabitItemPreview() {
     HabitItem(
-        habit = habits[0],
+        habit = habits[0].toHabitListItemUiState(),
         onClick = {
 
         },
@@ -173,26 +173,26 @@ fun HabitItemPreview() {
 )
 @Composable
 fun HabitsListScreenPreview() {
-    HabitsListScreen(
-        habitsList = listOf(
-            HabitUiState(
-                title = "title1",
-                description = "description1"
-            ),
-            HabitUiState(
-                title = "title2",
-                description = "description2"
-            ),
-            HabitUiState(
-                title = "title3",
-                description = "description3"
-            ),
-            HabitUiState(
-                title = "title4",
-                description = "description4",
-                color = Color.Red
-            )
-        ),
-        onClickHabit = {}
-    )
+//    HabitsListScreen(
+//        habitsList = listOf(
+//            Habit(
+//                title = "title1",
+//                description = "description1"
+//            ),
+//            Habit(
+//                title = "title2",
+//                description = "description2"
+//            ),
+//            Habit(
+//                title = "title3",
+//                description = "description3"
+//            ),
+//            Habit(
+//                title = "title4",
+//                description = "description4",
+//                color = Color.Red
+//            )
+//        ),
+//        onClickHabit = {}
+//    )
 }

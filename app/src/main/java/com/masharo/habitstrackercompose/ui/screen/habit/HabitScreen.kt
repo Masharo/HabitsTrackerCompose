@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.annotation.StringRes
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.painterResource
@@ -207,7 +209,10 @@ private fun HabitSpinnerPriorities(
     uiState: HabitUiState,
     onSelectPriority: (priority: Priority) -> Unit
 ) {
-    var isExpandedPriorities by remember { mutableStateOf(false) }
+    var isExpandedPriorities by rememberSaveable { mutableStateOf(false) }
+    val arrowRotate by animateFloatAsState(
+        targetValue = if (isExpandedPriorities) 180f else 0f
+    )
 
     Box(
         modifier = modifier
@@ -216,12 +221,16 @@ private fun HabitSpinnerPriorities(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
-                .clickable { isExpandedPriorities = true },
+                .clickable {
+                    isExpandedPriorities = true
+                },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(text = "${stringResource(R.string.priority_title)} ${stringResource(uiState.priority.stringResSpinner)}")
             Spacer(modifier = Modifier.weight(1f))
             Image(
+                modifier = Modifier
+                    .rotate(arrowRotate),
                 painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
                 contentDescription = null
             )

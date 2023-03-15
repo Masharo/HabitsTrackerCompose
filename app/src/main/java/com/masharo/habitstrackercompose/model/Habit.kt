@@ -31,3 +31,18 @@ fun Habit.toHabitUiState() = HabitUiState(
 
     isError = false
 )
+
+fun Habit.toHabitListItemUiState() = HabitListItemUiState(
+    title = title,
+    description = description,
+    priority = priority,
+    type = type,
+    count = count,
+    countReady = countReady,
+    period = period,
+    color = color
+)
+
+fun List<Habit>.toHabitListUiState() = HabitListUiState(
+    habits = map { it.toHabitListItemUiState() }
+)
