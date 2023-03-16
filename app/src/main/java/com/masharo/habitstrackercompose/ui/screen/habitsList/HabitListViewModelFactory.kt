@@ -6,7 +6,7 @@ import com.masharo.habitstrackercompose.model.Habit
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class HabitListViewModelFactory(
-    val habits: MutableStateFlow<List<Habit>>
+    val habits: MutableStateFlow<MutableList<Habit>>
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>) =
         HabitListViewModel(

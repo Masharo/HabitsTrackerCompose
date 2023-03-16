@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 val habitsFlow = MutableStateFlow(
-    listOf<Habit>()
+    mutableListOf<Habit>()
 )
 
 fun updateHabit(

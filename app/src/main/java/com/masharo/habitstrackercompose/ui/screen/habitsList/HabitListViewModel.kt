@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
-    private val habits: MutableStateFlow<List<Habit>>
+    private val habits: MutableStateFlow<MutableList<Habit>>
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
