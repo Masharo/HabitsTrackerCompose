@@ -69,7 +69,11 @@ class HabitViewModel(
 
     //Фильтруем ситуации ввода отрицательных чисел и не числовых значений
     private fun validateCount(count: String) =
-        count.isNotEmpty() && (count.toIntOrNull() == null || count.toInt() < 0)
+        count.isNotEmpty() && (
+            count.toIntOrNull() == null ||
+            count.toInt() < 0 ||
+            count.matches(Regex("""^0.*"""))
+        )
 
     fun updatePeriod(period: String) {
         _uiState.update { currentState ->

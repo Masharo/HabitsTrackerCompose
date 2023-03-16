@@ -12,14 +12,3 @@ data class HabitListItemUiState(
     val period: String = "",
     val color: Color? = null
 )
-
-fun HabitListItemUiState.toHabit() = Habit(
-    title = title,
-    description = description,
-    priority = priority,
-    type = type,
-    count = count,
-    countReady = countReady,
-    period = period,
-    color = color,
-)

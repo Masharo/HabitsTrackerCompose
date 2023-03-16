@@ -34,7 +34,7 @@ fun Habit.toHabitUiState() = HabitUiState(
 
 fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     title = title,
-    description = description,
+    description = "${description.substring(0, 60)}${if (description.length > 60) "..." else ""}",
     priority = priority,
     type = type,
     count = count,
