@@ -45,4 +45,7 @@
 
     <string name="error_message_input_habit_data">Заполните обязательные поля</string>
     <string name="error_message_ok">OK</string>
+
+    <string name="page_positive">Положительные</string>
+    <string name="page_negative">Негативные</string>
 </resources>

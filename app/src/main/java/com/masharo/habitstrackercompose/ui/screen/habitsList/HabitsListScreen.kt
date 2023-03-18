@@ -2,21 +2,25 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.material3.*
 import androidx.compose.material3.CardDefaults.cardElevation
-import androidx.compose.material3.Text
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +29,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.habitsFlow
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
@@ -37,20 +43,51 @@ fun HabitsListScreen(
     onClickHabit: (idHabit: Int) -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()
+    val pagerState = rememberPagerState()
+    val scope = rememberCoroutineScope()
 
-    LazyColumn(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(7.dp)
-    ) {
-        itemsIndexed(uiState.habits) { id, habit ->
-            HabitItem(
-                habit = habit,
-                onClick = {
-                    onClickHabit(id)
-                },
-                isFirstItem = id == 0,
-                isLastItem = id == uiState.habits.lastIndex
-            )
+    Column {
+        TabRow(
+            selectedTabIndex = pagerState.currentPage,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ) {
+            uiState.pages.forEachIndexed { index, title ->
+                Tab(
+                    selected = pagerState.currentPage == index,
+                    onClick = {
+                        scope.launch {
+                            pagerState.scrollToPage(index)
+                        }
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(title),
+                            style = MaterialTheme.typography.labelLarge
+                        )
+                    }
+                )
+            }
+        }
+
+        HorizontalPager(
+            modifier = modifier,
+            state = pagerState,
+            pageCount = uiState.countPage
+        ) {
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(7.dp)
+            ) {
+                itemsIndexed(uiState.habits) { id, habit ->
+                    HabitItem(
+                        habit = habit,
+                        onClick = {
+                            onClickHabit(id)
+                        },
+                        isFirstItem = id == 0,
+                        isLastItem = id == uiState.habits.lastIndex
+                    )
+                }
+            }
         }
     }
 }

@@ -34,7 +34,7 @@ fun Habit.toHabitUiState() = HabitUiState(
 
 fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     title = title,
-    description = description,
+    _description = description,
     priority = priority,
     type = type,
     count = count,
@@ -43,6 +43,11 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     color = color
 )
 
-fun List<Habit>.toHabitListUiState() = HabitListUiState(
-    habits = map { it.toHabitListItemUiState() }
+fun List<Habit>.toHabitListUiState(
+    countPage: Int,
+    pages: Iterable<Int>
+) = HabitListUiState(
+    habits = map { it.toHabitListItemUiState() },
+    countPage = countPage,
+    pages = pages
 )

@@ -4,11 +4,13 @@ import androidx.compose.ui.graphics.Color
 
 data class HabitListItemUiState(
     val title: String = "",
-    val description: String = "",
+    private val _description: String = "",
     val priority: Priority = Priority.MIDDLE,
     val type: Type = Type.POSITIVE,
     val count: String = "",
     val countReady: String = "0",
     val period: String = "",
     val color: Color? = null
-)
+) {
+    val description = if (_description.length < 50) _description else "${_description.substring(0, 50)}..."
+}

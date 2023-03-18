@@ -1,12 +1,15 @@
 package com.masharo.habitstrackercompose.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,46 +31,102 @@ fun HabitsTrackerApp(
     val currentScreen = habitNavigateState(backStackEntry?.destination?.route)
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(
-        floatingActionButton = {
-            FabHabit(
-                currentScreen = currentScreen,
-                onClick = {
-                    navController.navigate(HabitNavigateState.AddNewHabit.name)
+    val drawerState = rememberDrawerState(DrawerValue.Closed) //optional
+
+    ModalNavigationDrawer(
+        drawerContent = {
+            ModalDrawerSheet(
+                modifier = Modifier
+                    .width(IntrinsicSize.Min)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(
+                                vertical = 14.dp
+                            ),
+                        text = "Menu",
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                            .height(2.dp)
+                            .fillMaxWidth()
+                    )
+                    Spacer(
+                        modifier = Modifier
+                            .height(20.dp)
+                    )
+                    TextButton(
+                        onClick = {
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(
+                            text = "Домашний экран"
+                        )
+                    }
+                    TextButton(
+                        onClick = {
+                            /*TODO*/
+                        }
+                    ) {
+                        Text(
+                            text = "О прилажении"
+                        )
+                    }
                 }
-            )
-        },
-        snackbarHost = {
-            SnackbarHostHabit(
-                snackbarHostState = snackbarHostState
-            )
-       },
-        topBar = {
-            HabitsTrackerAppBar(
-                currentScreen = currentScreen
-            )
+            }
         }
-    ) { contentPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = HabitNavigateState.Start.name,
-            modifier = modifier.padding(contentPadding)
-        ) {
-
-            navigateToStartScreen(
-                navController = navController
-            )
-
-            navigateToUpdateHabitScreen(
+    ) {
+        Scaffold(
+            floatingActionButton = {
+                FabHabit(
+                    currentScreen = currentScreen,
+                    onClick = {
+                        navController.navigate(HabitNavigateState.AddNewHabit.name)
+                    }
+                )
+            },
+            snackbarHost = {
+                SnackbarHostHabit(
+                    snackbarHostState = snackbarHostState
+                )
+            },
+            topBar = {
+                HabitsTrackerAppBar(
+                    currentScreen = currentScreen
+                )
+            }
+        ) { contentPadding ->
+            NavHost(
                 navController = navController,
-                snackbarHostState = snackbarHostState
-            )
+                startDestination = HabitNavigateState.Start.name,
+                modifier = modifier.padding(contentPadding)
+            ) {
 
-            navigateToAddNewHabit(
-                navController = navController,
-                snackbarHostState = snackbarHostState
-            )
+                navigateToStartScreen(
+                    navController = navController
+                )
 
+                navigateToUpdateHabitScreen(
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
+                )
+
+                navigateToAddNewHabit(
+                    navController = navController,
+                    snackbarHostState = snackbarHostState
+                )
+
+            }
         }
     }
 }
