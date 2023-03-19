@@ -14,16 +14,13 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.material3.CardDefaults.cardElevation
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
@@ -73,18 +70,23 @@ fun HabitsListScreen(
             modifier = modifier,
             state = pagerState,
             pageCount = uiState.countPage
-        ) {
+        ) { page ->
+            val habitsPage = when (page) {
+                0 -> uiState.habitsPositive
+                else -> uiState.habitsNegative
+            }
+
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                itemsIndexed(uiState.habits) { id, habit ->
+                itemsIndexed(habitsPage) { id, habit ->
                     HabitItem(
                         habit = habit,
                         onClick = {
                             onClickHabit(id)
                         },
                         isFirstItem = id == 0,
-                        isLastItem = id == uiState.habits.lastIndex
+                        isLastItem = id == habitsPage.lastIndex
                     )
                 }
             }

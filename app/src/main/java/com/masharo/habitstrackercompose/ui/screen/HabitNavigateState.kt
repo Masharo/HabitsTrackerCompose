@@ -49,7 +49,7 @@ fun HabitsTrackerApp(
                             .padding(
                                 vertical = 14.dp
                             ),
-                        text = "Menu",
+                        text = "Menu",//TODO("Вынести в ресурсы")
                         style = MaterialTheme.typography.labelLarge
                     )
                     Spacer(
@@ -70,7 +70,7 @@ fun HabitsTrackerApp(
                         }
                     ) {
                         Text(
-                            text = "Домашний экран"
+                            text = "Домашний экран"//TODO("Вынести в ресурсы")
                         )
                     }
                     TextButton(
@@ -79,7 +79,7 @@ fun HabitsTrackerApp(
                         }
                     ) {
                         Text(
-                            text = "О прилажении"
+                            text = "О прилажении"//TODO("Вынести в ресурсы")
                         )
                     }
                 }
@@ -193,7 +193,7 @@ fun HabitsTrackerAppBar(
                 text = stringResource(currentScreen.screenTitle)
             )
         },
-        colors = TopAppBarDefaults.smallTopAppBarColors(
+        colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         )
     )

@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
+import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 
 data class Habit(
     val title: String = "",
@@ -43,11 +44,16 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     color = color
 )
 
+fun List<Habit>.toHabitListItemUiState(
+    filter: (Habit) -> Boolean
+) = this.filter { filter(it) }.map { it.toHabitListItemUiState() }
+
 fun List<Habit>.toHabitListUiState(
-    countPage: Int,
-    pages: Iterable<Int>
+    pages: Iterable<Int>,
+    countPage: Int
 ) = HabitListUiState(
-    habits = map { it.toHabitListItemUiState() },
+    pages = pages,
     countPage = countPage,
-    pages = pages
+    habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
+    habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }
 )
