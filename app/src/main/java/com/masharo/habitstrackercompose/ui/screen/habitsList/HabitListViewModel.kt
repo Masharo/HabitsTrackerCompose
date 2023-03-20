@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
-    private val habits: MutableStateFlow<MutableList<Habit>>
+    private val habits: MutableStateFlow<List<Habit>>
 ) : ViewModel() {
 
     private val countPage = Page.values().size

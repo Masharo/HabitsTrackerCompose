@@ -37,7 +37,7 @@ fun HabitsListScreen(
             habitsFlow
         )
     ),
-    onClickHabit: (idHabit: Int) -> Unit
+    onClickHabit: (idHabit: Long) -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()
     val pagerState = rememberPagerState()
@@ -53,7 +53,7 @@ fun HabitsListScreen(
                     selected = pagerState.currentPage == index,
                     onClick = {
                         scope.launch {
-                            pagerState.scrollToPage(index)
+                            pagerState.animateScrollToPage(index)
                         }
                     },
                     text = {
@@ -77,16 +77,18 @@ fun HabitsListScreen(
             }
 
             LazyColumn(
+                modifier = Modifier
+                    .fillMaxHeight(),
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
-                itemsIndexed(habitsPage) { id, habit ->
+                itemsIndexed(habitsPage) { index, habit ->
                     HabitItem(
                         habit = habit,
                         onClick = {
-                            onClickHabit(id)
+                            onClickHabit(habit.id)
                         },
-                        isFirstItem = id == 0,
-                        isLastItem = id == habitsPage.lastIndex
+                        isFirstItem = index == 0,
+                        isLastItem = index == habitsPage.lastIndex
                     )
                 }
             }

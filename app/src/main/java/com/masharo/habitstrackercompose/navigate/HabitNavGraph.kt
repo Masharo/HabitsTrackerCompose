@@ -43,7 +43,7 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
             },
             vm = viewModel(
                 factory = HabitViewModelFactory(
-                    idHabit = backStackEntry.arguments?.getInt(ID_HABIT_PARAM_NAME)
+                    idHabit = backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME)
                 )
             ),
             snackbarHostState = snackbarHostState

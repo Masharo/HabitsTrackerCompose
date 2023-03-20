@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 
 data class Habit(
+    val _id: Long,
     val title: String = "",
     val description: String = "",
     val priority: Priority = Priority.MIDDLE,
@@ -34,6 +35,7 @@ fun Habit.toHabitUiState() = HabitUiState(
 )
 
 fun Habit.toHabitListItemUiState() = HabitListItemUiState(
+    id = _id,
     title = title,
     _description = description,
     priority = priority,

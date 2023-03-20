@@ -3,6 +3,7 @@ package com.masharo.habitstrackercompose.model
 import androidx.compose.ui.graphics.Color
 
 data class HabitListItemUiState(
+    val id: Long,
     val title: String = "",
     private val _description: String = "",
     val priority: Priority = Priority.MIDDLE,
