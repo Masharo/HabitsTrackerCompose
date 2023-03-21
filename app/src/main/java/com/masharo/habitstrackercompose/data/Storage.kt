@@ -3,7 +3,6 @@ package com.masharo.habitstrackercompose.data
 import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.Type
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 
 val habitsFlow = MutableStateFlow(
@@ -30,9 +29,11 @@ fun updateHabit(
     id: Long,
     habit: Habit
 ) {
-    habitsFlow.update { habits ->
-        val newHabits = mutableListOf(*habits.toTypedArray())
-        newHabits.filter { it._id == id }.map { habit }
+    habitsFlow.update { currentHabits ->
+        currentHabits.map { currentHabit ->
+            if (currentHabit._id == id) habit.copy(_id = id)
+            else currentHabit
+        }
     }
 }
 

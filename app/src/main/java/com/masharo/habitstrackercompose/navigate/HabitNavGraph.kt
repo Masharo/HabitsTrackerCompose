@@ -33,7 +33,7 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
         route = "${HabitNavigateState.UpdateHabit.name}/{$ID_HABIT_PARAM_NAME}",
         arguments = listOf(
             navArgument(ID_HABIT_PARAM_NAME) {
-                type = NavType.IntType
+                type = NavType.LongType
             }
         )
     ) { backStackEntry ->
