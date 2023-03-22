@@ -36,7 +36,20 @@ fun HabitsTrackerApp(
                 modifier = Modifier
                     .width(IntrinsicSize.Min)
             ) {
-                HabitDrawer(navController)
+                HabitDrawer(
+                    topHabitScreen = currentScreen,
+                    navigateBackToStart = {
+                        navController.popBackStack(
+                            route = HabitNavigateState.Start.name,
+                            inclusive = false
+                        )
+                    },
+                    navigateToApplicationInfo = {
+                        navController.navigate(
+                            route = HabitNavigateState.ApplicationInfo.name
+                        )
+                    }
+                )
             }
         }
     ) {
@@ -89,18 +102,19 @@ fun HabitsTrackerApp(
     }
 }
 
+//Нельзя создать более одного экрана для каждого пункта меню.
+//Нельзя вернуться на побочные экраны.
 @Composable
-private fun HabitDrawer(navController: NavHostController) {
-    val isBackStackHaveInfoScreen = navController.backQueue.firstOrNull { entry ->
-        entry.destination.route == HabitNavigateState.ApplicationInfo.name
-    } != null
+private fun HabitDrawer(
+    modifier: Modifier = Modifier,
+    topHabitScreen: HabitNavigateState,
+    navigateBackToStart: () -> Unit,
+    navigateToApplicationInfo: () -> Unit
+) {
+    val isBackStackHaveInfoScreen = topHabitScreen == HabitNavigateState.ApplicationInfo
 
-    navController.popBackStack(
-        route = HabitNavigateState.Start.name,
-        inclusive = false
-    )
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -127,9 +141,7 @@ private fun HabitDrawer(navController: NavHostController) {
         TextButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {
-                navController.navigateUp()
-            },
+            onClick = navigateBackToStart,
             enabled = isBackStackHaveInfoScreen
         ) {
             Text(
@@ -139,9 +151,7 @@ private fun HabitDrawer(navController: NavHostController) {
         TextButton(
             modifier = Modifier
                 .fillMaxWidth(),
-            onClick = {
-                navController.navigate(HabitNavigateState.ApplicationInfo.name)
-            },
+            onClick = navigateToApplicationInfo,
             enabled = !isBackStackHaveInfoScreen
         ) {
             Text(
