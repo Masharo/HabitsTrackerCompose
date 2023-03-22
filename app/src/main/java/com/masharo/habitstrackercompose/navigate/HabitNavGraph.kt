@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInfoScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
@@ -62,5 +63,13 @@ fun NavGraphBuilder.navigateToAddNewHabit(
             },
             snackbarHostState = snackbarHostState
         )
+    }
+}
+
+fun NavGraphBuilder.navigateToApplicationInfo(
+    navController: NavHostController
+) {
+    composable(route = HabitNavigateState.ApplicationInfo.name) {
+        ApplicationInfoScreen()
     }
 }

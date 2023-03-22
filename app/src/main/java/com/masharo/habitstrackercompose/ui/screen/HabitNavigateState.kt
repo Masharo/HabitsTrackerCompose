@@ -36,50 +36,7 @@ fun HabitsTrackerApp(
                 modifier = Modifier
                     .width(IntrinsicSize.Min)
             ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        modifier = Modifier
-                            .padding(
-                                vertical = 14.dp
-                            ),
-                        text = stringResource(R.string.title_drawer),
-                        style = MaterialTheme.typography.labelLarge
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.secondary
-                            )
-                            .height(2.dp)
-                            .fillMaxWidth()
-                    )
-                    Spacer(
-                        modifier = Modifier
-                            .height(20.dp)
-                    )
-                    TextButton(
-                        onClick = {
-                            /*TODO*/
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.home_screen)
-                        )
-                    }
-                    TextButton(
-                        onClick = {
-                            /*TODO*/
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.application_info)
-                        )
-                    }
-                }
+                HabitDrawer(navController)
             }
         }
     ) {
@@ -123,7 +80,73 @@ fun HabitsTrackerApp(
                     snackbarHostState = snackbarHostState
                 )
 
+                navigateToApplicationInfo(
+                    navController = navController
+                )
+
             }
+        }
+    }
+}
+
+@Composable
+private fun HabitDrawer(navController: NavHostController) {
+    val isBackStackHaveInfoScreen = navController.backQueue.firstOrNull { entry ->
+        entry.destination.route == HabitNavigateState.ApplicationInfo.name
+    } != null
+
+    navController.popBackStack(
+        route = HabitNavigateState.Start.name,
+        inclusive = false
+    )
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(
+                    vertical = 14.dp
+                ),
+            text = stringResource(R.string.title_drawer),
+            style = MaterialTheme.typography.labelLarge
+        )
+        Spacer(
+            modifier = Modifier
+                .background(
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                .height(2.dp)
+                .fillMaxWidth()
+        )
+        Spacer(
+            modifier = Modifier
+                .height(20.dp)
+        )
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = {
+                navController.navigateUp()
+            },
+            enabled = isBackStackHaveInfoScreen
+        ) {
+            Text(
+                text = stringResource(R.string.home_screen)
+            )
+        }
+        TextButton(
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = {
+                navController.navigate(HabitNavigateState.ApplicationInfo.name)
+            },
+            enabled = !isBackStackHaveInfoScreen
+        ) {
+            Text(
+                text = stringResource(R.string.application_info)
+            )
         }
     }
 }
