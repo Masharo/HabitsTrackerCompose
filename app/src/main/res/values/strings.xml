@@ -48,4 +48,8 @@
 
     <string name="page_positive">Положительные</string>
     <string name="page_negative">Негативные</string>
+
+    <string name="home_screen">Домашний экран</string>
+    <string name="application_info">О приложении</string>
+    <string name="title_drawer">Меню</string>
 </resources>

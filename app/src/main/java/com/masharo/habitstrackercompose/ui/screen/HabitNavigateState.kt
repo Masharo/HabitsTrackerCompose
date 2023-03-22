@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,8 +30,6 @@ fun HabitsTrackerApp(
     val currentScreen = habitNavigateState(backStackEntry?.destination?.route)
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val drawerState = rememberDrawerState(DrawerValue.Closed) //optional
-
     ModalNavigationDrawer(
         drawerContent = {
             ModalDrawerSheet(
@@ -49,7 +46,7 @@ fun HabitsTrackerApp(
                             .padding(
                                 vertical = 14.dp
                             ),
-                        text = "Menu",//TODO("Вынести в ресурсы")
+                        text = stringResource(R.string.title_drawer),
                         style = MaterialTheme.typography.labelLarge
                     )
                     Spacer(
@@ -70,7 +67,7 @@ fun HabitsTrackerApp(
                         }
                     ) {
                         Text(
-                            text = "Домашний экран"//TODO("Вынести в ресурсы")
+                            text = stringResource(R.string.home_screen)
                         )
                     }
                     TextButton(
@@ -79,7 +76,7 @@ fun HabitsTrackerApp(
                         }
                     ) {
                         Text(
-                            text = "О прилажении"//TODO("Вынести в ресурсы")
+                            text = stringResource(R.string.application_info)
                         )
                     }
                 }
