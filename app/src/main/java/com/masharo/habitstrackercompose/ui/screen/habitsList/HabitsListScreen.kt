@@ -71,8 +71,8 @@ fun HabitsListScreen(
             state = pagerState,
             pageCount = uiState.countPage
         ) { page ->
-            val habitsPage = when (page) {
-                0 -> uiState.habitsPositive
+            val habitsPage = when (Page.values()[page]) {
+                Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
                 else -> uiState.habitsNegative
             }
 

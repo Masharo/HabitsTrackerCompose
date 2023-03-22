@@ -41,19 +41,6 @@ class HabitListViewModel(
     }
 
     val uiState = _uiState.asStateFlow()
-
-//    fun updatePage(numberPage: Int) {
-//        val pageInput = Page.values()[numberPage]
-//        if (pageInput != page) {
-//            _uiState.update { habitsCurrent ->
-//                habitsCurrent.copy(
-//                    habits = habits.value.filter { pageInput.filter(it) }
-//                        .map { it.toHabitListItemUiState() }
-//                )
-//            }
-//            page = pageInput
-//        }
-//    }
 }
 
 enum class Page(
