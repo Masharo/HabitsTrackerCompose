@@ -66,3 +66,6 @@ val md_theme_dark_scrim = Color(0xFF000000)
 
 
 val seed = Color(0xFF8D9A83)
+val BGBusinessCardLines = Color(0xFF868686)
+val GreenBusinessCard = Color(0xFF3ddc84)
+val BGBusinessCard = Color(0xFF012c40)

@@ -52,5 +52,12 @@
     <string name="home_screen">Домашний экран</string>
     <string name="application_info">О приложении</string>
     <string name="title_drawer">Меню</string>
+
     <string name="application_info_title">О приложении</string>
+    <string name="phone_number">8\-919\-594\-50\-29</string>
+    <string name="phone_number_desc">Phone number</string>
+    <string name="share">\@Masharo</string>
+    <string name="share_desc">Share</string>
+    <string name="mail">naronwaz0\@gmail.com</string>
+    <string name="mail_desc">Mail</string>
 </resources>

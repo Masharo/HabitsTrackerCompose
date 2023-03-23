@@ -2,4 +2,6 @@
 <resources>
     <color name="md_theme_dark_primary">#FF3D4B36</color>
     <color name="md_theme_light_primary">#FFD8E7CB</color>
+
+    <color name="top_bar">#001723</color>
 </resources>
