@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">HabitsTrackerCompose</string>
+    <string name="app_name">Habits Tracker</string>
 
     <string name="app_bar_name_screen_list_habits">Список привычек</string>
     <string name="app_bar_name_screen_new_habit_add">Создание привычки</string>
@@ -60,4 +60,7 @@
     <string name="share_desc">Share</string>
     <string name="mail">naronwaz0\@gmail.com</string>
     <string name="mail_desc">Mail</string>
+
+    <string name="name_application_info">Nikita Tokarev</string>
+    <string name="body_application_info">¯\\_(ツ)_/¯</string>
 </resources>

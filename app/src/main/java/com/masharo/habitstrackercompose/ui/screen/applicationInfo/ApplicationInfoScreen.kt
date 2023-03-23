@@ -1,17 +1,16 @@
 package com.masharo.habitstrackercompose.ui.screen.applicationInfo
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -22,70 +21,19 @@ import com.masharo.habitstrackercompose.model.Contact
 import com.masharo.habitstrackercompose.ui.theme.BGBusinessCard
 import com.masharo.habitstrackercompose.ui.theme.BGBusinessCardLines
 import com.masharo.habitstrackercompose.ui.theme.GreenBusinessCard
-import com.masharo.habitstrackercompose.ui.theme.md_theme_light_primaryContainer
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ApplicationInfoScreen() {
-    BusinessCardBody(
-        name = "Nikita",
-        profession = "profession"
-    )
-}
-
-@Composable
-fun BusinessCardBody(
-    modifier: Modifier = Modifier,
-    name: String,
-    profession: String
+fun ApplicationInfoScreen(
+    modifier: Modifier = Modifier
 ) {
-    Box(
+    Column(
         modifier = modifier
             .background(
                 color = BGBusinessCard
             )
     ) {
-        Person(
-            name = name,
-            profession = profession
-        )
-        ContactsData(
-            contacts = listOf(
-                Contact(
-                    img = painterResource(
-                        id = R.drawable.ic_baseline_phone_24
-                    ),
-                    value = stringResource(
-                        id = R.string.phone_number
-                    ),
-                    desc = stringResource(
-                        id = R.string.phone_number_desc
-                    )
-                ),
-                Contact(
-                    img = painterResource(
-                        id = R.drawable.ic_baseline_share_24
-                    ),
-                    value = stringResource(
-                        id = R.string.share
-                    ),
-                    desc = stringResource(
-                        id = R.string.share_desc
-                    )
-                ),
-                Contact(
-                    img = painterResource(
-                        id = R.drawable.ic_baseline_mail_24
-                    ),
-                    value = stringResource(
-                        id = R.string.mail
-                    ),
-                    desc = stringResource(
-                        id = R.string.mail_desc
-                    )
-                )
-            )
-        )
-        Box(
+        Spacer(
             modifier = Modifier
                 .background(
                     color = MaterialTheme.colorScheme.secondaryContainer,
@@ -97,9 +45,80 @@ fun BusinessCardBody(
                 .fillMaxWidth()
                 .height(10.dp)
         )
+        HorizontalPager(
+            modifier = Modifier,
+            pageCount = 2
+        ) { page ->
+            when (page) {
+                0 -> {
+                    Text(
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        text = ""
+                    )
+                }
+                1 -> {
+                    BusinessCardBody(
+                        name = stringResource(R.string.name_application_info),
+                        profession = stringResource(R.string.body_application_info)
+                    )
+                }
+            }
+        }
     }
+}
 
-
+@Composable
+fun BusinessCardBody(
+    modifier: Modifier = Modifier,
+    name: String,
+    profession: String
+) {
+    Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .verticalScroll(
+                state = rememberScrollState()
+            )
+    ) {
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
+        Person(
+            name = name,
+            profession = profession
+        )
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    bottom = 30.dp
+                ),
+            verticalArrangement = Arrangement.Bottom,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ContactHabit(
+                image = R.drawable.ic_baseline_phone_24,
+                data = R.string.phone_number,
+                description = R.string.phone_number_desc
+            )
+            ContactHabit(
+                image = R.drawable.ic_baseline_share_24,
+                data = R.string.share,
+                description = R.string.share_desc
+            )
+            ContactHabit(
+                image = R.drawable.ic_baseline_mail_24,
+                data = R.string.mail,
+                description = R.string.mail_desc
+            )
+        }
+    }
 }
 
 @Composable
@@ -109,13 +128,13 @@ fun Person(
 ) {
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxWidth(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
             modifier = Modifier
-                .fillMaxWidth(0.30f)
+                .fillMaxWidth(0.80f)
                 .padding(0.dp),
             painter = painterResource(
                 id = R.drawable.android_logo
@@ -141,35 +160,10 @@ fun Person(
 }
 
 @Composable
-fun ContactsData(
-    contacts: List<Contact>
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                bottom = 30.dp
-            ),
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-
-        contacts.forEach { contact ->
-            ContactData(
-                image = contact.img,
-                description = contact.desc,
-                data = contact.value
-            )
-        }
-
-    }
-}
-
-@Composable
-fun ContactData(
-    image: Painter,
-    description: String,
-    data: String
+fun ContactHabit(
+    @DrawableRes image: Int,
+    @StringRes description: Int,
+    @StringRes data: Int
 ) {
     Column {
 
@@ -193,15 +187,15 @@ fun ContactData(
             horizontalArrangement = Arrangement.Start
         ) {
             Image(
-                painter = image,
-                contentDescription = description
+                painter = painterResource(image),
+                contentDescription = stringResource(description)
             )
             Spacer(
                 modifier = Modifier
                     .width(18.dp)
             )
             Text(
-                text = data,
+                text = stringResource(data),
                 color = Color.White,
                 fontSize = 16.sp
             )
