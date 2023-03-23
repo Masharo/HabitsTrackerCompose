@@ -6,23 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 val habitsFlow = MutableStateFlow(
-    listOf<Habit>(
-        Habit(
-            _id = 0,
-            title = "positive",
-            description = "123",
-            count = "12",
-            period = "day"
-        ),
-        Habit(
-            _id = 1,
-            title = "negative",
-            description = "123",
-            type = Type.NEGATIVE,
-            count = "12",
-            period = "day"
-        )
-    )
+    listOf<Habit>()
 )
 
 fun updateHabit(

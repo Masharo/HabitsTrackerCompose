@@ -1,7 +1,6 @@
 package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
-import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 
 data class Habit(
     val _id: Long,

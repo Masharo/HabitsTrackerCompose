@@ -51,11 +51,7 @@ fun ApplicationInfoScreen(
         ) { page ->
             when (page) {
                 0 -> {
-                    Text(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        text = ""
-                    )
+                    AppDescription()
                 }
                 1 -> {
                     BusinessCardBody(
@@ -65,6 +61,48 @@ fun ApplicationInfoScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AppDescription(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(
+                state = rememberScrollState()
+            )
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
+        Image(
+            modifier = Modifier
+                .fillMaxWidth(0.80f)
+                .padding(0.dp),
+            painter = painterResource(R.drawable.habit_tracker_logo),
+            contentDescription = null,
+        )
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
+        Text(
+            modifier = Modifier
+                .padding(top = 40.dp),
+            text = stringResource(R.string.app_name),
+            style = MaterialTheme.typography.titleLarge
+        )
+        Text(
+            modifier = Modifier
+                .padding(vertical = 20.dp),
+            text = stringResource(R.string.application_description)
+        )
     }
 }
 

@@ -93,9 +93,7 @@ fun HabitsTrackerApp(
                     snackbarHostState = snackbarHostState
                 )
 
-                navigateToApplicationInfo(
-                    navController = navController
-                )
+                navigateToApplicationInfo()
 
             }
         }

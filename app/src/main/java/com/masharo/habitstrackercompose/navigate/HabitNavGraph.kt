@@ -66,9 +66,7 @@ fun NavGraphBuilder.navigateToAddNewHabit(
     }
 }
 
-fun NavGraphBuilder.navigateToApplicationInfo(
-    navController: NavHostController
-) {
+fun NavGraphBuilder.navigateToApplicationInfo() {
     composable(route = HabitNavigateState.ApplicationInfo.name) {
         ApplicationInfoScreen()
     }

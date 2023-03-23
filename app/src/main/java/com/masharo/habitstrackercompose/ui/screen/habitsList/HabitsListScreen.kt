@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.habitsFlow
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import com.masharo.habitstrackercompose.model.Page
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
