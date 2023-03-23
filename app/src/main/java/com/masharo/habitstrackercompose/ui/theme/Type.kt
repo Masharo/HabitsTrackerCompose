@@ -16,7 +16,7 @@ val Typography = Typography(
     displayLarge = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Bold,
-        fontSize = 62.sp
+        fontSize = 42.sp
     ),
     displayMedium = TextStyle(
         fontFamily = Rubik,

@@ -96,7 +96,7 @@ fun AppDescription(
             modifier = Modifier
                 .padding(top = 40.dp),
             text = stringResource(R.string.app_name),
-            style = MaterialTheme.typography.titleLarge
+            style = MaterialTheme.typography.displayLarge
         )
         Text(
             modifier = Modifier
