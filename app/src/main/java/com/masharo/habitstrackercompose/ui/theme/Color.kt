@@ -69,3 +69,6 @@ val seed = Color(0xFF8D9A83)
 val BGBusinessCardLines = Color(0xFF868686)
 val GreenBusinessCard = Color(0xFF3ddc84)
 val BGBusinessCard = Color(0xFF012c40)
+
+val BGSplashScreenDark = Color(0xFF001a1a)
+val BGSplashScreen = Color(0xFFb2d4d4)
