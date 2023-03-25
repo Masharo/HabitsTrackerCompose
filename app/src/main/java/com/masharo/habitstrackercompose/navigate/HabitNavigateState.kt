@@ -4,10 +4,11 @@ import androidx.annotation.StringRes
 import com.masharo.habitstrackercompose.R
 
 enum class HabitNavigateState(
-    @StringRes val screenTitle: Int,
+    @StringRes val screenTitle: Int? = null,
     val isNeedFabAddHabit: Boolean = false
 ) {
-    Start(
+    Splash,
+    HabitsList(
         screenTitle = R.string.app_bar_name_screen_list_habits,
         isNeedFabAddHabit = true
     ),
@@ -27,5 +28,5 @@ fun habitNavigateState(state: String?) =
     HabitNavigateState.valueOf(
         value = state?.replace(Regex("""/.*"""), "")
                 ?:
-                HabitNavigateState.Start.name
+                HabitNavigateState.HabitsList.name
     )

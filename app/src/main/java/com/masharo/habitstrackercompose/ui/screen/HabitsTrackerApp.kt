@@ -40,7 +40,7 @@ fun HabitsTrackerApp(
                     topHabitScreen = currentScreen,
                     navigateBackToStart = {
                         navController.popBackStack(
-                            route = HabitNavigateState.Start.name,
+                            route = HabitNavigateState.HabitsList.name,
                             inclusive = false
                         )
                     },
@@ -75,7 +75,7 @@ fun HabitsTrackerApp(
         ) { contentPadding ->
             NavHost(
                 navController = navController,
-                startDestination = HabitNavigateState.Start.name,
+                startDestination = HabitNavigateState.Splash.name,
                 modifier = modifier.padding(contentPadding)
             ) {
 
@@ -94,6 +94,10 @@ fun HabitsTrackerApp(
                 )
 
                 navigateToApplicationInfo()
+
+                navigateToSplash(
+                    navController = navController
+                )
 
             }
         }
@@ -217,9 +221,9 @@ fun HabitsTrackerAppBar(
     TopAppBar(
         modifier = modifier,
         title = {
-            Text(
-                text = stringResource(currentScreen.screenTitle)
-            )
+            currentScreen.screenTitle?.let { title ->
+                Text(text = stringResource(title))
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer

@@ -11,13 +11,14 @@ import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInf
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
+import com.masharo.habitstrackercompose.ui.screen.splash.SplashScreenHabit
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
 fun NavGraphBuilder.navigateToStartScreen(
     navController: NavHostController
 ) {
-    composable(route = HabitNavigateState.Start.name) {
+    composable(route = HabitNavigateState.HabitsList.name) {
         HabitsListScreen(
             onClickHabit = { idHabit ->
                 navController.navigate("${HabitNavigateState.UpdateHabit.name}/${idHabit}")
@@ -69,5 +70,18 @@ fun NavGraphBuilder.navigateToAddNewHabit(
 fun NavGraphBuilder.navigateToApplicationInfo() {
     composable(route = HabitNavigateState.ApplicationInfo.name) {
         ApplicationInfoScreen()
+    }
+}
+
+fun NavGraphBuilder.navigateToSplash(
+    navController: NavHostController
+) {
+    composable(route = HabitNavigateState.Splash.name) {
+        SplashScreenHabit(
+            navigateToNextScreen = {
+                navController.popBackStack()
+                navController.navigate(HabitNavigateState.HabitsList.name)
+            }
+        )
     }
 }
