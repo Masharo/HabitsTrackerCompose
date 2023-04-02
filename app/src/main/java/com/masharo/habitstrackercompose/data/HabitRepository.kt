@@ -7,7 +7,7 @@ interface HabitRepository {
 
     fun getAllHabits(): Flow<List<Habit>>
 
-    fun getHabitById(id: Long): Flow<Habit?>
+    fun getHabitById(id: Long): Habit?
 
     suspend fun update(habit: Habit)
 

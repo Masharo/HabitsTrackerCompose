@@ -30,5 +30,17 @@ fun HabitUiState.toHabit() = Habit(
     count = count,
     countReady = countReady,
     period = period,
-    color = color
+    color = color?.value?.toLong()
+)
+
+fun HabitUiState.toHabit(id: Long) = Habit(
+    id = id,
+    title = title,
+    description = description,
+    priority = priority,
+    type = type,
+    count = count,
+    countReady = countReady,
+    period = period,
+    color = color?.value?.toLong()
 )

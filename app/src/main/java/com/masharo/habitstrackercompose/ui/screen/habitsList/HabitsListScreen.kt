@@ -22,22 +22,17 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.data.habitsFlow
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import com.masharo.habitstrackercompose.model.Page
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
-    vm: HabitListViewModel = viewModel(
-        factory = HabitListViewModelFactory(
-            habitsFlow
-        )
-    ),
+    vm: HabitListViewModel = koinViewModel(),
     onClickHabit: (idHabit: Long) -> Unit
 ) {
     val uiState by vm.uiState.collectAsState()

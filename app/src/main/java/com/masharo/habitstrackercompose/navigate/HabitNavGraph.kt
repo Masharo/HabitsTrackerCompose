@@ -1,7 +1,6 @@
 package com.masharo.habitstrackercompose.navigate
 
 import androidx.compose.material3.SnackbarHostState
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -9,9 +8,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInfoScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
-import com.masharo.habitstrackercompose.ui.screen.habit.HabitViewModelFactory
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
 import com.masharo.habitstrackercompose.ui.screen.splash.SplashScreenHabit
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
@@ -43,11 +43,16 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
             navigateBack = {
                 navController.navigateUp()
             },
-            vm = viewModel(
-                factory = HabitViewModelFactory(
-                    idHabit = backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME)
-                )
+            vm = koinViewModel(
+                parameters = {
+                    parametersOf(backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME))
+                }
             ),
+//            viewModel(
+//                factory = HabitViewModelFactory(
+//                    idHabit = backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME)
+//                )
+//            ),
             snackbarHostState = snackbarHostState
         )
     }
@@ -62,6 +67,7 @@ fun NavGraphBuilder.navigateToAddNewHabit(
             navigateBack = {
                 navController.navigateUp()
             },
+            vm = koinViewModel(),
             snackbarHostState = snackbarHostState
         )
     }

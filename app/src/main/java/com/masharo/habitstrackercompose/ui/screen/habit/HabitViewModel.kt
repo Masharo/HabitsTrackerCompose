@@ -2,11 +2,12 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.*
 import com.masharo.habitstrackercompose.model.*
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class HabitViewModel(
     private val idHabit: Long? = null,
@@ -14,10 +15,21 @@ class HabitViewModel(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        value = idHabit?.let { id -> getHabitById(id).toHabitUiState() }
-                ?:
-                HabitUiState()
+        value = HabitUiState()
     )
+
+    init {
+        idHabit?.let { id ->
+            viewModelScope.launch(Dispatchers.IO) {
+                habitRepository.getHabitById(id)?.let { habit ->
+                    _uiState.update {
+                        habit.toHabitUiState()
+                    }
+                }
+            }
+        }
+    }
+
     val uiState = _uiState.asStateFlow()
 
     fun updateTitle(title: String) {
@@ -144,11 +156,14 @@ class HabitViewModel(
                     )
                 }
             } else {
-                idHabit?.let { id ->
-                    updateHabit(id, this.toHabit())
-                } ?: addHabit(this.toHabit())
+                viewModelScope.launch {
+                    idHabit?.let { id ->
+                            habitRepository.update(this@with.toHabit(id))
+                    } ?: habitRepository.insert(this@with.toHabit())
 
-                navigateBack()
+                    navigateBack()
+                }
+
             }
         }
     }

@@ -3,10 +3,12 @@ package com.masharo.habitstrackercompose.model
 import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "habits")
 data class Habit(
-    @ColumnInfo(name = "habit_id")      val id: Long = 0,
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id_habit")      val id: Long = 0,
     @ColumnInfo(name = "title")         val title: String = "",
     @ColumnInfo(name = "description")   val description: String = "",
     @ColumnInfo(name = "priority")      val priority: Priority = Priority.MIDDLE,
@@ -14,7 +16,7 @@ data class Habit(
     @ColumnInfo(name = "count")         val count: String = "",
     @ColumnInfo(name = "count_ready")   val countReady: String = "0",
     @ColumnInfo(name = "period")        val period: String = "",
-    @ColumnInfo(name = "color")         val color: Color? = null
+    @ColumnInfo(name = "color")         val color: Long? = null
 )
 
 fun Habit.toHabitUiState() = HabitUiState(
@@ -25,7 +27,7 @@ fun Habit.toHabitUiState() = HabitUiState(
     count = count,
     countReady = countReady,
     period = period,
-    color = color,
+    color = color?.let { Color(it) },
 
     isTitleError = false,
     isDescriptionError = false,
@@ -45,7 +47,7 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     count = count,
     countReady = countReady,
     period = period,
-    color = color
+    color = color?.let { Color(it) }
 )
 
 fun List<Habit>.toHabitListItemUiState(

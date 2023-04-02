@@ -9,7 +9,7 @@ class HabitRepositoryImpl(
 
     override fun getAllHabits(): Flow<List<Habit>> = habitDao.getAllHabits()
 
-    override fun getHabitById(id: Long): Flow<Habit?> = habitDao.getHabitById(id)
+    override fun getHabitById(id: Long): Habit? = habitDao.getHabitById(id)
 
     override suspend fun update(habit: Habit) = habitDao.update(habit)
 

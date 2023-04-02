@@ -28,11 +28,12 @@ import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HabitScreen(
     modifier: Modifier = Modifier,
-    vm: HabitViewModel = viewModel(),
+    vm: HabitViewModel,
     navigateBack: () -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
@@ -294,10 +295,10 @@ fun OutlineTextFieldHabit(
 )
 @Composable
 fun HabitScreenPreview() {
-    HabitScreen(
-        navigateBack = {
-
-        },
-        snackbarHostState = SnackbarHostState()
-    )
+//    HabitScreen(
+//        navigateBack = {
+//
+//        },
+//        snackbarHostState = SnackbarHostState()
+//    )
 }

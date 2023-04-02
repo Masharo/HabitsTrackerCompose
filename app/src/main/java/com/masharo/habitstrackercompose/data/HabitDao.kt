@@ -17,6 +17,6 @@ interface HabitDao {
     fun getAllHabits(): Flow<List<Habit>>
 
     @Query("SELECT * FROM habits WHERE id_habit = :id LIMIT 1")
-    fun getHabitById(id: Long): Flow<Habit?>
+    fun getHabitById(id: Long): Habit?
 
 }
