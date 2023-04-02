@@ -1,7 +1,6 @@
 package com.masharo.habitstrackercompose.data
 
 import com.masharo.habitstrackercompose.model.Habit
-import com.masharo.habitstrackercompose.model.Type
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -15,7 +14,7 @@ fun updateHabit(
 ) {
     habitsFlow.update { currentHabits ->
         currentHabits.map { currentHabit ->
-            if (currentHabit._id == id) habit.copy(_id = id)
+            if (currentHabit.id == id) habit.copy(id = id)
             else currentHabit
         }
     }
@@ -25,11 +24,11 @@ fun addHabit(
     habit: Habit
 ) {
     habitsFlow.update { habits ->
-        mutableListOf(*habits.toTypedArray(), habit.copy(_id = id))
+        mutableListOf(*habits.toTypedArray(), habit.copy(id = id))
     }
     id++
 }
 
-fun getHabitById(id: Long) = habitsFlow.value.first { it._id == id }
+fun getHabitById(id: Long) = habitsFlow.value.first { it.id == id }
 
 private var id = 2L

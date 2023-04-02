@@ -2,17 +2,15 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
-import com.masharo.habitstrackercompose.data.addHabit
-import com.masharo.habitstrackercompose.data.getHabitById
-import com.masharo.habitstrackercompose.data.habitsFlow
-import com.masharo.habitstrackercompose.data.updateHabit
+import com.masharo.habitstrackercompose.data.*
 import com.masharo.habitstrackercompose.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 class HabitViewModel(
-    private val idHabit: Long? = null
+    private val idHabit: Long? = null,
+    private val habitRepository: HabitRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(

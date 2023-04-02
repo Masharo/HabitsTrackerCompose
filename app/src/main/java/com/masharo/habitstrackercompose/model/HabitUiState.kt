@@ -22,7 +22,7 @@ data class HabitUiState(
 )
 
 fun HabitUiState.toHabit() = Habit(
-    _id = 0,
+    id = 0,
     title = title,
     description = description,
     priority = priority,
