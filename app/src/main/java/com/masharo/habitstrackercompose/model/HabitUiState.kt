@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 
 data class HabitUiState(
     val title: String = "",
@@ -30,7 +31,7 @@ fun HabitUiState.toHabit() = Habit(
     count = count,
     countReady = countReady,
     period = period,
-    color = color?.value?.toLong()
+    color = color?.toArgb()
 )
 
 fun HabitUiState.toHabit(id: Long) = Habit(
@@ -42,5 +43,5 @@ fun HabitUiState.toHabit(id: Long) = Habit(
     count = count,
     countReady = countReady,
     period = period,
-    color = color?.value?.toLong()
+    color = color?.toArgb()
 )

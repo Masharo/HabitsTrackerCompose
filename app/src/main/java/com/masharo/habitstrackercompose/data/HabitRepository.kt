@@ -5,7 +5,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface HabitRepository {
 
-    fun getAllHabits(): Flow<List<Habit>>
+    fun getAllHabitsLikeTitleOrderByPriority(title: String, isAsc: Boolean): Flow<List<Habit>>
+
+    fun getAllHabitsLikeTitleOrderById(title: String, isAsc: Boolean): Flow<List<Habit>>
+
+    fun getAllHabitsLikeTitleOrderByCount(title: String, isAsc: Boolean): Flow<List<Habit>>
 
     fun getHabitById(id: Long): Habit?
 

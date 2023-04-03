@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitSort
 
 @Entity(tableName = "habits")
 data class Habit(
@@ -16,7 +17,7 @@ data class Habit(
     @ColumnInfo(name = "count")         val count: String = "",
     @ColumnInfo(name = "count_ready")   val countReady: String = "0",
     @ColumnInfo(name = "period")        val period: String = "",
-    @ColumnInfo(name = "color")         val color: Long? = null
+    @ColumnInfo(name = "color")         val color: Int? = null
 )
 
 fun Habit.toHabitUiState() = HabitUiState(
@@ -56,10 +57,12 @@ fun List<Habit>.toHabitListItemUiState(
 
 fun List<Habit>.toHabitListUiState(
     pages: Iterable<Int>,
-    countPage: Int
+    countPage: Int,
+    habitSort: HabitSort
 ) = HabitListUiState(
     pages = pages,
     countPage = countPage,
+    habitSort = habitSort,
     habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
     habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }
 )

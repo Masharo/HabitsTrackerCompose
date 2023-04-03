@@ -12,12 +12,11 @@ import kotlinx.coroutines.launch
 
 class HabitListViewModel(
     private val habitRepository: HabitRepository
-//    private val habits: MutableStateFlow<List<Habit>>
 ) : ViewModel() {
 
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
-    private val habits = habitRepository.getAllHabits()
+    private var habits = habitRepository.getAllHabitsLikeTitleOrderById("", true)
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -27,11 +26,19 @@ class HabitListViewModel(
     private val _uiState = MutableStateFlow(
         habits.value.toHabitListUiState(
             countPage = countPage,
-            pages = pages
+            pages = pages,
+            habitSort = Id(
+                like = "",
+                isAsc = true
+            )
         )
     )
 
     init {
+        habitsObserver()
+    }
+
+    private fun habitsObserver() {
         viewModelScope.launch {
             habits.collect {
                 _uiState.update { habitsCurrent ->
@@ -45,14 +52,46 @@ class HabitListViewModel(
                     )
                 }
             }
-
         }
     }
 
     val uiState = _uiState.asStateFlow()
+
+    fun habitSortUpdate(habitSort: HabitSort) {
+        habits = habitSort.getHabits(habitRepository)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = listOf()
+            )
+    }
 
     companion object {
         const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
+sealed class HabitSort(internal val like: String, internal val isAsc: Boolean) {
+
+    abstract fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>>
+
+}
+class Priority(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+
+    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
+        habitRepository.getAllHabitsLikeTitleOrderByPriority(like, isAsc)
+
+}
+class Count(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+
+    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
+        habitRepository.getAllHabitsLikeTitleOrderByCount(like, isAsc)
+
+}
+
+class Id(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+
+    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
+        habitRepository.getAllHabitsLikeTitleOrderById(like, isAsc)
+
+}
