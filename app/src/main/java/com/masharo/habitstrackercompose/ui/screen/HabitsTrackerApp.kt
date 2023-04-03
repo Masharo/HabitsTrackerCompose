@@ -3,15 +3,15 @@ package com.masharo.habitstrackercompose.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.navigate.*
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,48 +75,83 @@ fun HabitsTrackerApp(
                 )
             }
         ) { contentPadding ->
-            NavHost(
-                navController = navController,
-                startDestination = HabitNavigateState.Splash.name,
-                modifier = modifier.padding(contentPadding)
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
             ) {
-
-                navigateToStartScreen(
-                    navController = navController
-                )
-
-                navigateToUpdateHabitScreen(
+                NavHost(
                     navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
+                    startDestination = HabitNavigateState.Splash.name,
+                    modifier = modifier
+                        .padding(contentPadding)
+                        .weight(1f)
+                ) {
 
-                navigateToAddNewHabit(
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
-
-                navigateToApplicationInfo()
-
-                navigateToSplash(
-                    navController = navController
-                )
-
-            }
-
-            ModalBottomSheet(
-                sheetState = rememberModalBottomSheetState(
-
-                ),
-                onDismissRequest = {},
-                dragHandle = {
-                    Box(
-                        modifier = Modifier
-                            .height(300.dp)
-                            .fillMaxWidth()
+                    navigateToHabitListScreen(
+                        navController = navController
                     )
+
+                    navigateToUpdateHabitScreen(
+                        navController = navController,
+                        snackbarHostState = snackbarHostState
+                    )
+
+                    navigateToAddNewHabit(
+                        navController = navController,
+                        snackbarHostState = snackbarHostState
+                    )
+
+                    navigateToApplicationInfo()
+
+                    navigateToSplash(
+                        navController = navController
+                    )
+
                 }
-            ) {
-                Text("123")
+
+                var openBottomSheet by rememberSaveable {
+                    mutableStateOf(false)
+                }
+                val skipPartiallyExpanded by remember {
+                    mutableStateOf(false)
+                }
+                val scope = rememberCoroutineScope()
+                val bottomSheetState = rememberModalBottomSheetState(
+                    skipPartiallyExpanded = skipPartiallyExpanded
+                )
+
+                Button(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onClick = {
+                        openBottomSheet = !openBottomSheet
+                    }
+                ) {
+                    Text(text = "Open")
+                }
+                if (openBottomSheet) {
+                    ModalBottomSheet(
+                        sheetState = bottomSheetState,
+                        onDismissRequest = {
+                            scope.launch {
+                                bottomSheetState.hide()
+                            }.invokeOnCompletion {
+                                if (!bottomSheetState.isVisible) {
+                                    openBottomSheet = false
+                                }
+                            }
+                        },
+                        dragHandle = {
+                            Box(
+                                modifier = Modifier
+                                    .height(300.dp)
+                                    .fillMaxWidth()
+                            )
+                        }
+                    ) {
+                        Text("123")
+                    }
+                }
             }
         }
     }

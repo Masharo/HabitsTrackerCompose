@@ -15,7 +15,7 @@ import org.koin.core.parameter.parametersOf
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
-fun NavGraphBuilder.navigateToStartScreen(
+fun NavGraphBuilder.navigateToHabitListScreen(
     navController: NavHostController
 ) {
     composable(route = HabitNavigateState.HabitsList.name) {

@@ -74,7 +74,7 @@ fun HabitsListScreen(
 
             LazyColumn(
                 modifier = Modifier
-                    .fillMaxHeight(),
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(7.dp)
             ) {
                 itemsIndexed(habitsPage) { index, habit ->
