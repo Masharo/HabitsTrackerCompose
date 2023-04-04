@@ -17,14 +17,14 @@ class HabitListViewModel(
 ) : ViewModel() {
 
     private val startSearch = ""
-    private val startIsAsc = true
+    private val typeSort = TypeSort.ASC
 
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
     private var habits = ColumnSort.ID.getHabits(
         habitRepository = habitRepository,
         search = startSearch,
-        isAsc = startIsAsc
+        isAsc = typeSort.getValue()
     ).stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -37,7 +37,7 @@ class HabitListViewModel(
             pages = pages,
             search = startSearch,
             columnSort = ColumnSort.ID,
-            isAsc = startIsAsc
+            isAsc = typeSort.getValue()
         )
     )
 
@@ -54,10 +54,10 @@ class HabitListViewModel(
         habitListUpdate()
     }
 
-    fun isAscUpdate(isAsc: Boolean) {
+    fun typeSortUpdate(typeSort: TypeSort) {
         _uiState.update { stateCurrent ->
             stateCurrent.copy(
-                isAsc = isAsc
+                typeSort = typeSort
             )
         }
         habitListUpdate()
@@ -96,7 +96,7 @@ class HabitListViewModel(
             habits = columnSort.getHabits(
                 habitRepository = habitRepository,
                 search = search,
-                isAsc = isAsc
+                isAsc = typeSort.getValue()
             ).stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -169,4 +169,24 @@ enum class ColumnSort(
        search: String,
        isAsc: Boolean
     ): Flow<List<Habit>>
+}
+
+enum class TypeSort(
+    @StringRes title: Int,
+    @StringRes selectedTitle: Int
+) {
+    ASC(
+        title = R.string.type_sort_asc_variant,
+        selectedTitle = R.string.type_sort_asc_selected
+    ) {
+        override fun getValue() = true
+    },
+    DESC(
+        title = R.string.type_sort_desc_variant,
+        selectedTitle = R.string.type_sort_desc_selected
+    ) {
+        override fun getValue() = false
+    };
+
+    abstract fun getValue(): Boolean
 }

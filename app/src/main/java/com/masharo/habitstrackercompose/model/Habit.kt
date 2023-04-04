@@ -65,7 +65,7 @@ fun List<Habit>.toHabitListUiState(
     pages = pages,
     countPage = countPage,
     search = search,
-    isAsc = isAsc,
+    typeSort = isAsc,
     columnSort = columnSort,
     habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
     habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }

@@ -71,14 +71,18 @@ fun HabitsListScreen(
                         vm.searchUpdate(it)
                     }
                 )
-                val titleTemplate = "Сортировка по:"
-                val variants = listOf("Дате создания", "Приоритету", "Количеству выполнений")
-                var stateSpinner by remember { mutableStateOf("$titleTemplate ${variants[0]}") }
                 Spinner(
                     title = stringResource(uiState.columnSort.selectedTitle),
                     items = ColumnSort.values().map { stringResource(it.title) },
                     onSelectItem = {
                         vm.columnSortUpdate(ColumnSort.values()[it])
+                    }
+                )
+                Spinner(
+                    title = "Направление сортировки",
+                    items = listOf("По возрастанию", "По убыванию"),
+                    onSelectItem = {
+
                     }
                 )
             }
