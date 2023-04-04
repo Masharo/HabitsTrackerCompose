@@ -12,15 +12,23 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.material3.CardDefaults.cardElevation
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
@@ -28,7 +36,9 @@ import com.masharo.habitstrackercompose.model.Page
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalComposeUiApi::class
+)
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
@@ -39,53 +49,89 @@ fun HabitsListScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
-    Column {
-        TabRow(
-            selectedTabIndex = pagerState.currentPage,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
+    BottomSheetScaffold(
+        sheetContent = {
+            OutlinedTextField(
+                modifier = Modifier
+                    .clearFocusOnKeyboardDismiss()
+                    .fillMaxWidth(),
+                label = {
+                    Text("Фильтр")
+                },
+                value = uiState.search,
+                keyboardOptions = KeyboardOptions.Default.copy (
+                    imeAction = ImeAction.Search
+                ),
+                onValueChange = {
+                    vm.searchUpdate(it)
+                }
+            )
+            var dropdownState by remember { mutableStateOf(false) }
+            DropdownMenu(
+                expanded = dropdownState,
+                onDismissRequest = {
+                    dropdownState = false
+                }
+            ) {
+                Text("1")
+                Text("2")
+                Text("3")
+            }
+            Text(text = "TeST")
+        }
+    ) {
+        Column(
+            modifier = modifier
+                .fillMaxHeight()
         ) {
-            uiState.pages.forEachIndexed { index, title ->
-                Tab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
+            TabRow(
+                selectedTabIndex = pagerState.currentPage,
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            ) {
+                uiState.pages.forEachIndexed { index, title ->
+                    Tab(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        text = {
+                            Text(
+                                text = stringResource(title),
+                                style = MaterialTheme.typography.labelLarge
+                            )
                         }
-                    },
-                    text = {
-                        Text(
-                            text = stringResource(title),
-                            style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            }
+
+            HorizontalPager(
+                modifier = modifier
+                    .weight(1f),
+                state = pagerState,
+                pageCount = uiState.countPage
+            ) { page ->
+                val habitsPage = when (Page.values()[page]) {
+                    Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
+                    else -> uiState.habitsNegative
+                }
+
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.spacedBy(7.dp)
+                ) {
+                    itemsIndexed(habitsPage) { index, habit ->
+                        HabitItem(
+                            habit = habit,
+                            onClick = {
+                                onClickHabit(habit.id)
+                            },
+                            isFirstItem = index == 0,
+                            isLastItem = index == habitsPage.lastIndex
                         )
                     }
-                )
-            }
-        }
-
-        HorizontalPager(
-            modifier = modifier,
-            state = pagerState,
-            pageCount = uiState.countPage
-        ) { page ->
-            val habitsPage = when (Page.values()[page]) {
-                Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
-                else -> uiState.habitsNegative
-            }
-
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(7.dp)
-            ) {
-                itemsIndexed(habitsPage) { index, habit ->
-                    HabitItem(
-                        habit = habit,
-                        onClick = {
-                            onClickHabit(habit.id)
-                        },
-                        isFirstItem = index == 0,
-                        isLastItem = index == habitsPage.lastIndex
-                    )
                 }
             }
         }
@@ -184,6 +230,31 @@ fun HabitItem(
                         )
                     }
                 }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+fun Modifier.clearFocusOnKeyboardDismiss (): Modifier = composed {
+    var isFocused by remember { mutableStateOf (false) }
+    var keyboardAppearedSinceLastFocused by remember { mutableStateOf (false) }
+    if (isFocused) {
+        val imeIsVisible = WindowInsets.isImeVisible
+        val focusManager = LocalFocusManager.current
+        LaunchedEffect (imeIsVisible) {
+            if (imeIsVisible) {
+                keyboardAppearedSinceLastFocused = true
+            } else if (keyboardAppearedSinceLastFocused) {
+                focusManager.clearFocus ()
+            }
+        }
+    }
+    onFocusEvent {
+        if (isFocused != it.isFocused) {
+            isFocused = it.isFocused
+            if (isFocused) {
+                keyboardAppearedSinceLastFocused = false
             }
         }
     }

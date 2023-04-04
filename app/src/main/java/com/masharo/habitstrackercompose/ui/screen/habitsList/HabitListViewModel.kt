@@ -14,28 +14,60 @@ class HabitListViewModel(
     private val habitRepository: HabitRepository
 ) : ViewModel() {
 
+    private val startSearch = ""
+    private val startIsAsc = true
+
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
-    private var habits = habitRepository.getAllHabitsLikeTitleOrderById("", true)
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-            initialValue = listOf()
-        )
+    private var habits = ColumnSort.ID.getHabits(
+        habitRepository = habitRepository,
+        search = startSearch,
+        isAsc = startIsAsc
+    ).stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+        initialValue = listOf()
+    )
 
     private val _uiState = MutableStateFlow(
         habits.value.toHabitListUiState(
             countPage = countPage,
             pages = pages,
-            habitSort = Id(
-                like = "",
-                isAsc = true
-            )
+            search = startSearch,
+            columnSort = ColumnSort.ID,
+            isAsc = startIsAsc
         )
     )
 
     init {
         habitsObserver()
+    }
+
+    fun searchUpdate(search: String) {
+        _uiState.update { stateCurrent ->
+            stateCurrent.copy(
+                search = search
+            )
+        }
+        habitListUpdate()
+    }
+
+    fun isAscUpdate(isAsc: Boolean) {
+        _uiState.update { stateCurrent ->
+            stateCurrent.copy(
+                isAsc = isAsc
+            )
+        }
+        habitListUpdate()
+    }
+
+    fun columnSortUpdate(columnSort: ColumnSort) {
+        _uiState.update { stateCurrent ->
+            stateCurrent.copy(
+                columnSort = columnSort
+            )
+        }
+        habitListUpdate()
     }
 
     private fun habitsObserver() {
@@ -57,13 +89,19 @@ class HabitListViewModel(
 
     val uiState = _uiState.asStateFlow()
 
-    fun habitSortUpdate(habitSort: HabitSort) {
-        habits = habitSort.getHabits(habitRepository)
-            .stateIn(
+    private fun habitListUpdate() {
+        with(_uiState.value) {
+            habits = columnSort.getHabits(
+                habitRepository = habitRepository,
+                search = search,
+                isAsc = isAsc
+            ).stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = listOf()
             )
+        }
+        habitsObserver()
     }
 
     companion object {
@@ -71,27 +109,51 @@ class HabitListViewModel(
     }
 }
 
-sealed class HabitSort(internal val like: String, internal val isAsc: Boolean) {
+enum class ColumnSort {
 
-    abstract fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>>
 
-}
-class Priority(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+    PRIORITY {
 
-    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
-        habitRepository.getAllHabitsLikeTitleOrderByPriority(like, isAsc)
+        override fun getHabits(
+            habitRepository: HabitRepository,
+            search: String,
+            isAsc: Boolean
+        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByPriority(
+            title = search,
+            isAsc = isAsc
+        )
 
-}
-class Count(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+    },
 
-    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
-        habitRepository.getAllHabitsLikeTitleOrderByCount(like, isAsc)
+    COUNT {
 
-}
+        override fun getHabits(
+            habitRepository: HabitRepository,
+            search: String,
+            isAsc: Boolean
+        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByCount(
+            title = search,
+            isAsc = isAsc
+        )
 
-class Id(like: String, isAsc: Boolean) : HabitSort(like, isAsc) {
+    },
 
-    override fun getHabits(habitRepository: HabitRepository): Flow<List<Habit>> =
-        habitRepository.getAllHabitsLikeTitleOrderById(like, isAsc)
+    ID {
 
+        override fun getHabits(
+            habitRepository: HabitRepository,
+            search: String,
+            isAsc: Boolean
+        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderById(
+            title = search,
+            isAsc = isAsc
+        )
+
+    };
+
+    abstract fun getHabits(
+        habitRepository: HabitRepository,
+       search: String,
+       isAsc: Boolean
+    ): Flow<List<Habit>>
 }

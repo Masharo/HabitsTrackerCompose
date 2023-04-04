@@ -4,7 +4,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitSort
+import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
 
 @Entity(tableName = "habits")
 data class Habit(
@@ -58,11 +58,15 @@ fun List<Habit>.toHabitListItemUiState(
 fun List<Habit>.toHabitListUiState(
     pages: Iterable<Int>,
     countPage: Int,
-    habitSort: HabitSort
+    search: String,
+    isAsc: Boolean,
+    columnSort: ColumnSort
 ) = HabitListUiState(
     pages = pages,
     countPage = countPage,
-    habitSort = habitSort,
+    search = search,
+    isAsc = isAsc,
+    columnSort = columnSort,
     habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
     habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }
 )
