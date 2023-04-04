@@ -96,11 +96,13 @@ fun AppDescription(
             modifier = Modifier
                 .padding(top = 40.dp),
             text = stringResource(R.string.app_name),
+            color = Color.White,
             style = MaterialTheme.typography.displayLarge
         )
         Text(
             modifier = Modifier
                 .padding(vertical = 20.dp),
+            color = Color.White,
             text = stringResource(R.string.application_description)
         )
     }

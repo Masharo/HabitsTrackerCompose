@@ -12,10 +12,10 @@ data class Habit(
     @ColumnInfo(name = "id_habit")      val id: Long = 0,
     @ColumnInfo(name = "title")         val title: String = "",
     @ColumnInfo(name = "description")   val description: String = "",
-    @ColumnInfo(name = "priority")      val priority: Priority = Priority.MIDDLE,
-    @ColumnInfo(name = "type")          val type: Type = Type.POSITIVE,
-    @ColumnInfo(name = "count")         val count: String = "",
-    @ColumnInfo(name = "count_ready")   val countReady: String = "0",
+    @ColumnInfo(name = "priority")      val priority: Int = 1,
+    @ColumnInfo(name = "type")          val type: Int = 0,
+    @ColumnInfo(name = "count")         val count: Int = 0,
+    @ColumnInfo(name = "count_ready")   val countReady: Int = 0,
     @ColumnInfo(name = "period")        val period: String = "",
     @ColumnInfo(name = "color")         val color: Int? = null
 )
@@ -23,10 +23,10 @@ data class Habit(
 fun Habit.toHabitUiState() = HabitUiState(
     title = title,
     description = description,
-    priority = priority,
-    type = type,
-    count = count,
-    countReady = countReady,
+    priority = Priority.values()[priority],
+    type = Type.values()[type],
+    count = count.toString(),
+    countReady = countReady.toString(),
     period = period,
     color = color?.let { Color(it) },
 
@@ -43,10 +43,10 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     id = id,
     title = title,
     _description = description,
-    priority = priority,
-    type = type,
-    count = count,
-    countReady = countReady,
+    priority = Priority.values()[priority],
+    type = Type.values()[type],
+    count = count.toString(),
+    countReady = countReady.toString(),
     period = period,
     color = color?.let { Color(it) }
 )

@@ -11,14 +11,14 @@ enum class Page(
     ) {
         override fun filter(
             habit: Habit
-        ) = habit.type == Type.POSITIVE
+        ) = Type.values()[habit.type] == Type.POSITIVE
     },
     NEGATIVE_HABIT_LIST(
         title = R.string.page_negative
     ) {
         override fun filter(
             habit: Habit
-        ) = habit.type == Type.NEGATIVE
+        ) = Type.values()[habit.type] == Type.NEGATIVE
     };
 
     abstract fun filter(

@@ -30,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import com.masharo.habitstrackercompose.model.Page
@@ -51,33 +52,36 @@ fun HabitsListScreen(
 
     BottomSheetScaffold(
         sheetContent = {
-            OutlinedTextField(
+            Column(
                 modifier = Modifier
-                    .clearFocusOnKeyboardDismiss()
-                    .fillMaxWidth(),
-                label = {
-                    Text("Фильтр")
-                },
-                value = uiState.search,
-                keyboardOptions = KeyboardOptions.Default.copy (
-                    imeAction = ImeAction.Search
-                ),
-                onValueChange = {
-                    vm.searchUpdate(it)
-                }
-            )
-            var dropdownState by remember { mutableStateOf(false) }
-            DropdownMenu(
-                expanded = dropdownState,
-                onDismissRequest = {
-                    dropdownState = false
-                }
+                    .padding(15.dp)
             ) {
-                Text("1")
-                Text("2")
-                Text("3")
+                OutlinedTextField(
+                    modifier = Modifier
+                        .clearFocusOnKeyboardDismiss()
+                        .fillMaxWidth(),
+                    label = {
+                        Text("Фильтр")
+                    },
+                    value = uiState.search,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Search
+                    ),
+                    onValueChange = {
+                        vm.searchUpdate(it)
+                    }
+                )
+                val titleTemplate = "Сортировка по:"
+                val variants = listOf("Дате создания", "Приоритету", "Количеству выполнений")
+                var stateSpinner by remember { mutableStateOf("$titleTemplate ${variants[0]}") }
+                Spinner(
+                    title = stringResource(uiState.columnSort.selectedTitle),
+                    items = ColumnSort.values().map { stringResource(it.title) },
+                    onSelectItem = {
+                        vm.columnSortUpdate(ColumnSort.values()[it])
+                    }
+                )
             }
-            Text(text = "TeST")
         }
     ) {
         Column(

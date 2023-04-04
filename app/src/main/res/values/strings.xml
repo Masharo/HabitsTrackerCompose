@@ -61,6 +61,14 @@
     <string name="mail">naronwaz0\@gmail.com</string>
     <string name="mail_desc">Mail</string>
 
+    <string name="column_id_selected">Сортировка по: дате создания</string>
+    <string name="column_count_selected">Сортировка по: количеству</string>
+    <string name="column_priority_selected">Сортировка по: приоритету</string>
+
+    <string name="column_id_variant">Дата создания</string>
+    <string name="column_count_variant">Количество</string>
+    <string name="column_priority_variant">Приоритет</string>
+
     <string name="name_application_info">Nikita Tokarev</string>
     <string name="body_application_info">¯\\_(ツ)_/¯</string>
     <string name="application_description">Трекер привычек - это таблица-календарь или приложение, в которых вы фиксируете цель, а потом отмечаете, с какой регулярностью над ней работали. Такие приложения помогают формировать полезные привычки и следить за их выполнением.</string>

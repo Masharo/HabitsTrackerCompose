@@ -1,7 +1,9 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.HabitRepository
 import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.Page
@@ -109,10 +111,15 @@ class HabitListViewModel(
     }
 }
 
-enum class ColumnSort {
+enum class ColumnSort(
+   @StringRes val title: Int,
+   @StringRes val selectedTitle: Int
+) {
 
-
-    PRIORITY {
+    PRIORITY(
+        title = R.string.column_priority_variant,
+        selectedTitle = R.string.column_priority_selected
+    ) {
 
         override fun getHabits(
             habitRepository: HabitRepository,
@@ -125,7 +132,10 @@ enum class ColumnSort {
 
     },
 
-    COUNT {
+    COUNT(
+        title = R.string.column_count_variant,
+        selectedTitle = R.string.column_count_selected
+    ) {
 
         override fun getHabits(
             habitRepository: HabitRepository,
@@ -138,7 +148,10 @@ enum class ColumnSort {
 
     },
 
-    ID {
+    ID(
+        title = R.string.column_id_variant,
+        selectedTitle = R.string.column_id_selected
+    ) {
 
         override fun getHabits(
             habitRepository: HabitRepository,
