@@ -1,20 +1,18 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.annotation.StringRes
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.layout.*
-import androidx.compose.ui.platform.*
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -22,13 +20,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.model.Priority
 import com.masharo.habitstrackercompose.model.Type
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
-import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun HabitScreen(
@@ -85,10 +83,13 @@ fun HabitScreen(
             singleLine = false
         )
 
-        HabitSpinnerPriorities(
-            uiState = uiState,
-            onSelectPriority = { priority ->
-                vm.updatePriority(priority)
+        Spinner(
+            title = stringResource(uiState.priority.stringResValue),
+            items = Priority.values().map { priority ->
+                stringResource(priority.stringResSpinner)
+            },
+            onSelectItem = { item ->
+                vm.updatePriority(Priority.values()[item])
             }
         )
 
@@ -204,61 +205,6 @@ private fun HabitTypeRadioButtons(
     }
 }
 
-@Composable
-private fun HabitSpinnerPriorities(
-    modifier: Modifier = Modifier,
-    uiState: HabitUiState,
-    onSelectPriority: (priority: Priority) -> Unit
-) {
-    var isExpandedPriorities by rememberSaveable { mutableStateOf(false) }
-    val arrowRotate by animateFloatAsState(
-        targetValue = if (isExpandedPriorities) 180f else 0f
-    )
-
-    Box(
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .clickable {
-                    isExpandedPriorities = true
-                },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(text = "${stringResource(R.string.priority_title)} ${stringResource(uiState.priority.stringResSpinner)}")
-            Spacer(modifier = Modifier.weight(1f))
-            Image(
-                modifier = Modifier
-                    .rotate(arrowRotate),
-                painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                contentDescription = null
-            )
-        }
-
-        DropdownMenu(
-            modifier = Modifier
-                .fillMaxWidth(),
-            expanded = isExpandedPriorities,
-            onDismissRequest = { isExpandedPriorities = false }
-        ) {
-            Priority.values().forEach { priority ->
-                DropdownMenuItem(
-                    text = {
-                        Text(stringResource(priority.stringResSpinner))
-                    },
-                    onClick = {
-                        onSelectPriority(priority)
-                        isExpandedPriorities = false
-                    }
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OutlineTextFieldHabit(
     modifier: Modifier = Modifier,
