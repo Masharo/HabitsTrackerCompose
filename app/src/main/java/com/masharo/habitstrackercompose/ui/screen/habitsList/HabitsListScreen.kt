@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
-import com.masharo.habitstrackercompose.model.Page
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 

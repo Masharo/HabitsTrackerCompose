@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
+import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
 
 @Entity(tableName = "habits")
