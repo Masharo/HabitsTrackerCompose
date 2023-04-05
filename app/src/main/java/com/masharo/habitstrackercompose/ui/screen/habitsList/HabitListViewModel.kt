@@ -172,8 +172,8 @@ enum class ColumnSort(
 }
 
 enum class TypeSort(
-    @StringRes title: Int,
-    @StringRes selectedTitle: Int
+    @StringRes val title: Int,
+    @StringRes val selectedTitle: Int
 ) {
     ASC(
         title = R.string.type_sort_asc_variant,
@@ -189,4 +189,8 @@ enum class TypeSort(
     };
 
     abstract fun getValue(): Boolean
+
+    companion object {
+        fun getTypeSort(isAsc: Boolean) = if (isAsc) ASC else DESC
+    }
 }

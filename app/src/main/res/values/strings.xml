@@ -75,6 +75,8 @@
     <string name="type_sort_asc_variant">По возрастанию</string>
     <string name="type_sort_desc_variant">По убыванию</string>
 
+
+
     <string name="name_application_info">Nikita Tokarev</string>
     <string name="body_application_info">¯\\_(ツ)_/¯</string>
     <string name="application_description">Трекер привычек - это таблица-календарь или приложение, в которых вы фиксируете цель, а потом отмечаете, с какой регулярностью над ней работали. Такие приложения помогают формировать полезные привычки и следить за их выполнением.</string>

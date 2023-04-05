@@ -79,10 +79,10 @@ fun HabitsListScreen(
                     }
                 )
                 Spinner(
-                    title = "Направление сортировки",
-                    items = listOf("По возрастанию", "По убыванию"),
+                    title = stringResource(uiState.typeSort.selectedTitle),
+                    items = TypeSort.values().map { stringResource(it.title) },
                     onSelectItem = {
-
+                        vm.typeSortUpdate(TypeSort.values()[it])
                     }
                 )
             }
