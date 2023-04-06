@@ -53,11 +53,6 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
                     parametersOf(backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME))
                 }
             ),
-//            viewModel(
-//                factory = HabitViewModelFactory(
-//                    idHabit = backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME)
-//                )
-//            ),
             snackbarHostState = snackbarHostState
         )
     }
