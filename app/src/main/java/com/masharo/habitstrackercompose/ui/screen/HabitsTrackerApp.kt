@@ -18,6 +18,7 @@ import androidx.navigation.compose.rememberNavController
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.navigate.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsTrackerApp(
     modifier: Modifier = Modifier,
@@ -26,6 +27,7 @@ fun HabitsTrackerApp(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentScreen = habitNavigateState(backStackEntry?.destination?.route)
     val snackbarHostState = remember { SnackbarHostState() }
+    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -55,7 +57,8 @@ fun HabitsTrackerApp(
                 .fillMaxSize(),
             floatingActionButton = {
                 FabHabit(
-                    currentScreen = currentScreen,
+                    isNeedFab = currentScreen.isNeedFabAddHabit &&
+                                bottomSheetScaffoldState.bottomSheetState.currentValue != SheetValue.Expanded,
                     onClick = {
                         navController.navigate(HabitNavigateState.AddNewHabit.name)
                     }
@@ -81,6 +84,7 @@ fun HabitsTrackerApp(
             ) {
 
                 navigateToHabitListScreen(
+                    bottomSheetState = bottomSheetScaffoldState,
                     navController = navController
                 )
 
@@ -166,10 +170,10 @@ private fun HabitDrawer(
 
 @Composable
 fun FabHabit(
-    currentScreen: HabitNavigateState,
+    isNeedFab: Boolean,
     onClick: () -> Unit
 ) {
-    if (currentScreen.isNeedFabAddHabit) {
+    if (isNeedFab) {
         FloatingActionButton(
             onClick = onClick
         ) {

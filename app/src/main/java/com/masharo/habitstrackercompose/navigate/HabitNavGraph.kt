@@ -1,5 +1,7 @@
 package com.masharo.habitstrackercompose.navigate
 
+import androidx.compose.material3.BottomSheetScaffoldState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -15,11 +17,14 @@ import org.koin.core.parameter.parametersOf
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
+@OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.navigateToHabitListScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    bottomSheetState: BottomSheetScaffoldState
 ) {
     composable(route = HabitNavigateState.HabitsList.name) {
         HabitsListScreen(
+            bottomSheetState = bottomSheetState,
             onClickHabit = { idHabit ->
                 navController.navigate("${HabitNavigateState.UpdateHabit.name}/${idHabit}")
             }
