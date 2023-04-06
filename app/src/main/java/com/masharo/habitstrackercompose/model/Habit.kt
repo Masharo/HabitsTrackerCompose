@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.masharo.habitstrackercompose.ui.screen.habit.Priority
+import com.masharo.habitstrackercompose.ui.screen.habit.Type
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
 import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort

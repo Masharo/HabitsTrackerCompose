@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.model
+package com.masharo.habitstrackercompose.ui.screen.habit
 
 import androidx.annotation.StringRes
 import com.masharo.habitstrackercompose.R

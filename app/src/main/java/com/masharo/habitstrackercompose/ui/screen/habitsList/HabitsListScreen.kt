@@ -36,9 +36,7 @@ import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalComposeUiApi::class
-)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
@@ -57,10 +55,9 @@ fun HabitsListScreen(
             ) {
                 OutlinedTextField(
                     modifier = Modifier
-                        .clearFocusOnKeyboardDismiss()
                         .fillMaxWidth(),
                     label = {
-                        Text("Фильтр")
+                        Text(stringResource(R.string.search_title))
                     },
                     value = uiState.search,
                     keyboardOptions = KeyboardOptions.Default.copy(
@@ -170,7 +167,7 @@ fun HabitItem(
                 start = sizePadding,
                 end = sizePadding,
                 top = if (isFirstItem) sizePadding else 0.dp,
-                bottom = if (isLastItem) sizePadding else 0.dp
+                bottom = if (isLastItem) 100.dp else 0.dp
             )
             .clickable {
                 onClick()
@@ -237,31 +234,6 @@ fun HabitItem(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-fun Modifier.clearFocusOnKeyboardDismiss (): Modifier = composed {
-    var isFocused by remember { mutableStateOf (false) }
-    var keyboardAppearedSinceLastFocused by remember { mutableStateOf (false) }
-    if (isFocused) {
-        val imeIsVisible = WindowInsets.isImeVisible
-        val focusManager = LocalFocusManager.current
-        LaunchedEffect (imeIsVisible) {
-            if (imeIsVisible) {
-                keyboardAppearedSinceLastFocused = true
-            } else if (keyboardAppearedSinceLastFocused) {
-                focusManager.clearFocus ()
-            }
-        }
-    }
-    onFocusEvent {
-        if (isFocused != it.isFocused) {
-            isFocused = it.isFocused
-            if (isFocused) {
-                keyboardAppearedSinceLastFocused = false
             }
         }
     }

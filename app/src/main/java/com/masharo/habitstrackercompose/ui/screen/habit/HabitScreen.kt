@@ -23,8 +23,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
-import com.masharo.habitstrackercompose.model.Priority
-import com.masharo.habitstrackercompose.model.Type
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory
 

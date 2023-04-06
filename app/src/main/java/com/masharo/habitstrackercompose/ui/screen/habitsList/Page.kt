@@ -3,7 +3,7 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 import androidx.annotation.StringRes
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.Habit
-import com.masharo.habitstrackercompose.model.Type
+import com.masharo.habitstrackercompose.ui.screen.habit.Type
 
 enum class Page(
     @StringRes val title: Int
