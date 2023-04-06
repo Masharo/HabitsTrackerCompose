@@ -7,9 +7,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.ColumnScopeInstance.weight
+import androidx.compose.foundation.layout.RowScopeInstance.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -27,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import com.masharo.habitstrackercompose.model.HabitListUiState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -84,39 +89,13 @@ fun HabitsListScreen(
             modifier = modifier
                 .fillMaxHeight()
         ) {
-            TabRow(
-                selectedTabIndex = pagerState.currentPage,
-                containerColor = MaterialTheme.colorScheme.secondaryContainer
-            ) {
-                uiState.pages.forEachIndexed { index, title ->
-                    Tab(
-                        selected = pagerState.currentPage == index,
-                        onClick = {
-                            scope.launch {
-                                pagerState.animateScrollToPage(index)
-                            }
-                        },
-                        text = {
-                            Text(
-                                text = stringResource(title),
-                                style = MaterialTheme.typography.labelLarge
-                            )
-                        }
-                    )
-                }
-            }
-
-            HorizontalPager(
-                modifier = modifier
+            HabitsTypeTabRow(
+                modifier = Modifier
                     .weight(1f),
-                state = pagerState,
-                pageCount = uiState.countPage
-            ) { page ->
-                val habitsPage = when (Page.values()[page]) {
-                    Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
-                    else -> uiState.habitsNegative
-                }
-
+                pagerState = pagerState,
+                uiState = uiState,
+                scope = scope
+            ) {
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxHeight(),
@@ -135,6 +114,46 @@ fun HabitsListScreen(
                 }
             }
         }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun HabitsTypeTabRow(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    uiState: HabitListUiState,
+    scope: CoroutineScope,
+    content: @Composable () -> Unit
+) {
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        containerColor = MaterialTheme.colorScheme.secondaryContainer
+    ) {
+        uiState.pages.forEachIndexed { index, title ->
+            Tab(
+                selected = pagerState.currentPage == index,
+                onClick = {
+                    scope.launch {
+                        pagerState.animateScrollToPage(index)
+                    }
+                },
+                text = {
+                    Text(
+                        text = stringResource(title),
+                        style = MaterialTheme.typography.labelLarge
+                    )
+                }
+            )
+        }
+    }
+
+    HorizontalPager(
+        modifier = modifier,
+        state = pagerState,
+        pageCount = uiState.countPage
+    ) {
+
     }
 }
 
