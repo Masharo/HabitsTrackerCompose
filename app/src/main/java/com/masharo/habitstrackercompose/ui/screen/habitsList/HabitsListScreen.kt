@@ -7,8 +7,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.ColumnScopeInstance.weight
-import androidx.compose.foundation.layout.RowScopeInstance.weight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.pager.HorizontalPager
@@ -50,39 +48,10 @@ fun HabitsListScreen(
     BottomSheetScaffold(
         scaffoldState = bottomSheetState,
         sheetContent = {
-            Column(
-                modifier = Modifier
-                    .padding(15.dp)
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    label = {
-                        Text(stringResource(R.string.search_title))
-                    },
-                    value = uiState.search,
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        imeAction = ImeAction.Search
-                    ),
-                    onValueChange = {
-                        vm.searchUpdate(it)
-                    }
-                )
-                Spinner(
-                    title = stringResource(uiState.columnSort.selectedTitle),
-                    items = ColumnSort.values().map { stringResource(it.title) },
-                    onSelectItem = {
-                        vm.columnSortUpdate(ColumnSort.values()[it])
-                    }
-                )
-                Spinner(
-                    title = stringResource(uiState.typeSort.selectedTitle),
-                    items = TypeSort.values().map { stringResource(it.title) },
-                    onSelectItem = {
-                        vm.typeSortUpdate(TypeSort.values()[it])
-                    }
-                )
-            }
+            SearchAndSortHabit(
+                uiState = uiState,
+                vm = vm
+            )
         }
     ) {
         Column(
@@ -95,24 +64,82 @@ fun HabitsListScreen(
                 pagerState = pagerState,
                 uiState = uiState,
                 scope = scope
-            ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.spacedBy(7.dp)
-                ) {
-                    itemsIndexed(habitsPage) { index, habit ->
-                        HabitItem(
-                            habit = habit,
-                            onClick = {
-                                onClickHabit(habit.id)
-                            },
-                            isFirstItem = index == 0,
-                            isLastItem = index == habitsPage.lastIndex
-                        )
-                    }
-                }
+            ) { page ->
+                HabitsPage(
+                    page = page,
+                    uiState = uiState,
+                    onClickHabit = onClickHabit
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun SearchAndSortHabit(
+    uiState: HabitListUiState,
+    vm: HabitListViewModel
+) {
+    Column(
+        modifier = Modifier
+            .padding(15.dp)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth(),
+            label = {
+                Text(stringResource(R.string.search_title))
+            },
+            value = uiState.search,
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Search
+            ),
+            onValueChange = {
+                vm.searchUpdate(it)
+            }
+        )
+        Spinner(
+            title = stringResource(uiState.columnSort.selectedTitle),
+            items = ColumnSort.values().map { stringResource(it.title) },
+            onSelectItem = {
+                vm.columnSortUpdate(ColumnSort.values()[it])
+            }
+        )
+        Spinner(
+            title = stringResource(uiState.typeSort.selectedTitle),
+            items = TypeSort.values().map { stringResource(it.title) },
+            onSelectItem = {
+                vm.typeSortUpdate(TypeSort.values()[it])
+            }
+        )
+    }
+}
+
+@Composable
+private fun HabitsPage(
+    page: Int,
+    uiState: HabitListUiState,
+    onClickHabit: (idHabit: Long) -> Unit
+) {
+    val habitsPage = when (Page.values()[page]) {
+        Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
+        else -> uiState.habitsNegative
+    }
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(7.dp)
+    ) {
+        itemsIndexed(habitsPage) { index, habit ->
+            HabitItem(
+                habit = habit,
+                onClick = {
+                    onClickHabit(habit.id)
+                },
+                isFirstItem = index == 0,
+                isLastItem = index == habitsPage.lastIndex
+            )
         }
     }
 }
@@ -124,7 +151,7 @@ private fun HabitsTypeTabRow(
     pagerState: PagerState,
     uiState: HabitListUiState,
     scope: CoroutineScope,
-    content: @Composable () -> Unit
+    content: @Composable (page: Int) -> Unit
 ) {
     TabRow(
         selectedTabIndex = pagerState.currentPage,
@@ -151,10 +178,9 @@ private fun HabitsTypeTabRow(
     HorizontalPager(
         modifier = modifier,
         state = pagerState,
-        pageCount = uiState.countPage
-    ) {
-
-    }
+        pageCount = uiState.countPage,
+        pageContent = content
+    )
 }
 
 @Composable
@@ -165,15 +191,7 @@ fun HabitItem(
     isFirstItem: Boolean,
     isLastItem: Boolean
 ) {
-    var isVisibleOptional by rememberSaveable {
-        mutableStateOf(false)
-    }
-
     val sizePadding = 10.dp
-
-    val arrowRotate by animateFloatAsState(
-        targetValue = if (isVisibleOptional) 180f else 0f
-    )
 
     Card(
         modifier = modifier
@@ -214,42 +232,73 @@ fun HabitItem(
                     ),
                 verticalArrangement = Arrangement.spacedBy(2.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = habit.title
-                    )
-                    Spacer(
-                        modifier = Modifier.weight(1f)
-                    )
-                    Image(
-                        modifier = Modifier
-                            .clickable { isVisibleOptional = !isVisibleOptional }
-                            .rotate(arrowRotate),
-                        painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
-                        contentDescription = stringResource(R.string.dropdown_habit_description)
-                    )
+
+                val isVisibleOptional = rememberSaveable {
+                    mutableStateOf(false)
                 }
 
-                AnimatedVisibility(
-                    visible = isVisibleOptional
-                ) {
-                    Column {
-                        Text(text = habit.description)
-                        Text(text = stringResource(habit.priority.stringResValue))
-                        Text(text = stringResource(habit.type.stringResValue))
-                        Text(text = stringResource(R.string.period_title, habit.period))
-                        Text(
-                            text = stringResource(
-                                R.string.count_ready_habit,
-                                habit.countReady,
-                                habit.count
-                            )
-                        )
-                    }
-                }
+                HabitItemVisibleParam(
+                    isVisibleOptional = isVisibleOptional,
+                    habit = habit
+                )
+
+                HabitItemOptionalParam(
+                    isVisibleOptional = isVisibleOptional,
+                    habit = habit
+                )
             }
         }
+    }
+}
+
+@Composable
+private fun HabitItemOptionalParam(
+    isVisibleOptional: MutableState<Boolean>,
+    habit: HabitListItemUiState
+) {
+    AnimatedVisibility(
+        visible = isVisibleOptional.value
+    ) {
+        Column {
+            Text(text = habit.description)
+            Text(text = stringResource(habit.priority.stringResValue))
+            Text(text = stringResource(habit.type.stringResValue))
+            Text(text = stringResource(R.string.period_title, habit.period))
+            Text(
+                text = stringResource(
+                    R.string.count_ready_habit,
+                    habit.countReady,
+                    habit.count
+                )
+            )
+        }
+    }
+}
+
+@Composable
+private fun HabitItemVisibleParam(
+    isVisibleOptional: MutableState<Boolean>,
+    habit: HabitListItemUiState
+) {
+    val arrowRotate by animateFloatAsState(
+        targetValue = if (isVisibleOptional.value) 180f else 0f
+    )
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = habit.title
+        )
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+        Image(
+            modifier = Modifier
+                .clickable { isVisibleOptional.value = !isVisibleOptional.value }
+                .rotate(arrowRotate),
+            painter = painterResource(R.drawable.baseline_keyboard_arrow_down_24),
+            contentDescription = stringResource(R.string.dropdown_habit_description)
+        )
     }
 }
