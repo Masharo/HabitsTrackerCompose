@@ -35,7 +35,7 @@ class HabitListViewModel(
     )
 
     init {
-        habitsObserver()
+        updateHabits()
     }
 
     fun searchUpdate(search: String) {
@@ -65,7 +65,7 @@ class HabitListViewModel(
         habitListUpdate()
     }
 
-    private fun habitsObserver() {
+    private fun updateHabits() {
         viewModelScope.launch {
             habits.collect {
                 _uiState.update { habitsCurrent ->
@@ -96,7 +96,7 @@ class HabitListViewModel(
                 initialValue = listOf()
             )
         }
-        habitsObserver()
+        updateHabits()
     }
 
     companion object {
