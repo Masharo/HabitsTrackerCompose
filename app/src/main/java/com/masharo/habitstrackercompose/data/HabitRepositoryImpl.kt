@@ -1,5 +1,6 @@
 package com.masharo.habitstrackercompose.data
 
+import androidx.lifecycle.LiveData
 import com.masharo.habitstrackercompose.model.Habit
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ class HabitRepositoryImpl(
     override fun getAllHabitsLikeTitleOrderByPriority(
         title: String,
         isAsc: Boolean
-    ): Flow<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderByPriority(
+    ): LiveData<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderByPriority(
         title = titleTemplate(title),
         isAsc = isAsc
     )
@@ -20,7 +21,7 @@ class HabitRepositoryImpl(
     override fun getAllHabitsLikeTitleOrderById(
         title: String,
         isAsc: Boolean
-    ): Flow<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderById(
+    ): LiveData<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderById(
         title = titleTemplate(title),
         isAsc = isAsc
     )
@@ -28,7 +29,7 @@ class HabitRepositoryImpl(
     override fun getAllHabitsLikeTitleOrderByCount(
         title: String,
         isAsc: Boolean
-    ): Flow<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderByCount(
+    ): LiveData<List<Habit>> = habitDao.getAllHabitsLikeTitleOrderByCount(
         title = titleTemplate(title),
         isAsc = isAsc
     )

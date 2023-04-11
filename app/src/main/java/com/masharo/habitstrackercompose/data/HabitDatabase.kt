@@ -23,6 +23,7 @@ abstract class HabitDatabase : RoomDatabase() {
                         klass = HabitDatabase::class.java,
                         name = "habit_database"
                     )
+                    .allowMainThreadQueries()
                     .build()
                     .also {
                         INSTANCE = it
