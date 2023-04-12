@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.data.HabitRepository
 import com.masharo.habitstrackercompose.model.Habit
@@ -20,7 +21,7 @@ enum class ColumnSort(
             habitRepository: HabitRepository,
             search: String,
             isAsc: Boolean
-        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByPriority(
+        ): LiveData<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByPriority(
             title = search,
             isAsc = isAsc
         )
@@ -36,7 +37,7 @@ enum class ColumnSort(
             habitRepository: HabitRepository,
             search: String,
             isAsc: Boolean
-        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByCount(
+        ): LiveData<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderByCount(
             title = search,
             isAsc = isAsc
         )
@@ -52,7 +53,7 @@ enum class ColumnSort(
             habitRepository: HabitRepository,
             search: String,
             isAsc: Boolean
-        ): Flow<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderById(
+        ): LiveData<List<Habit>> = habitRepository.getAllHabitsLikeTitleOrderById(
             title = search,
             isAsc = isAsc
         )
@@ -63,7 +64,7 @@ enum class ColumnSort(
         habitRepository: HabitRepository,
         search: String,
         isAsc: Boolean
-    ): Flow<List<Habit>>
+    ): LiveData<List<Habit>>
 
     companion object {
 

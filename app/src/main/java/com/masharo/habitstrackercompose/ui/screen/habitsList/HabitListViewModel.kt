@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.HabitRepository
 import com.masharo.habitstrackercompose.model.toHabitListItemUiState
@@ -18,7 +19,9 @@ class HabitListViewModel(
         habitRepository = habitRepository,
         search = START_SEARCH,
         isAsc = TypeSort.defaultValue().getValue()
-    ).stateIn(
+    )
+    .asFlow()
+    .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
         initialValue = listOf()
@@ -86,11 +89,13 @@ class HabitListViewModel(
 
     private fun habitListUpdate() {
         with(_uiState.value) {
-            habits = columnSort.getHabits(
+            habits = columnSort.getHabits(//TODO("Вроде как повторяется так что нужно вынести")
                 habitRepository = habitRepository,
                 search = search,
                 isAsc = typeSort.getValue()
-            ).stateIn(
+            )
+            .asFlow()
+            .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = listOf()
