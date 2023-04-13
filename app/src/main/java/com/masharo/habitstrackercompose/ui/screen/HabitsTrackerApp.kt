@@ -31,25 +31,10 @@ fun HabitsTrackerApp(
 
     ModalNavigationDrawer(
         drawerContent = {
-            ModalDrawerSheet(
-                modifier = Modifier
-                    .width(IntrinsicSize.Min)
-            ) {
-                HabitDrawer(
-                    topHabitScreen = currentScreen,
-                    navigateBackToStart = {
-                        navController.popBackStack(
-                            route = HabitNavigateState.HabitsList.name,
-                            inclusive = false
-                        )
-                    },
-                    navigateToApplicationInfo = {
-                        navController.navigate(
-                            route = HabitNavigateState.ApplicationInfo.name
-                        )
-                    }
-                )
-            }
+            HabitDrawer(
+                currentScreen = currentScreen,
+                navController = navController
+            )
         }
     ) {
         Scaffold(
@@ -75,37 +60,81 @@ fun HabitsTrackerApp(
                 )
             }
         ) { contentPadding ->
-            NavHost(
+            HabitNavHost(
                 navController = navController,
-                startDestination = HabitNavigateState.Splash.name,
-                modifier = modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
-
-                navigateToHabitListScreen(
-                    bottomSheetState = bottomSheetScaffoldState,
-                    navController = navController
-                )
-
-                navigateToUpdateHabitScreen(
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
-
-                navigateToAddNewHabit(
-                    navController = navController,
-                    snackbarHostState = snackbarHostState
-                )
-
-                navigateToApplicationInfo()
-
-                navigateToSplash(
-                    navController = navController
-                )
-
-            }
+                modifier = modifier,
+                contentPadding = contentPadding,
+                bottomSheetScaffoldState = bottomSheetScaffoldState,
+                snackbarHostState = snackbarHostState
+            )
         }
+    }
+}
+
+@Composable
+private fun HabitDrawer(
+    currentScreen: HabitNavigateState,
+    navController: NavHostController
+) {
+    ModalDrawerSheet(
+        modifier = Modifier
+            .width(IntrinsicSize.Min)
+    ) {
+        HabitDrawer(
+            topHabitScreen = currentScreen,
+            navigateBackToStart = {
+                navController.popBackStack(
+                    route = HabitNavigateState.HabitsList.name,
+                    inclusive = false
+                )
+            },
+            navigateToApplicationInfo = {
+                navController.navigate(
+                    route = HabitNavigateState.ApplicationInfo.name
+                )
+            }
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HabitNavHost(
+    navController: NavHostController,
+    modifier: Modifier,
+    contentPadding: PaddingValues,
+    bottomSheetScaffoldState: BottomSheetScaffoldState,
+    snackbarHostState: SnackbarHostState
+) {
+    NavHost(
+        navController = navController,
+        startDestination = HabitNavigateState.Splash.name,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(contentPadding)
+    ) {
+
+        navigateToHabitListScreen(
+            bottomSheetState = bottomSheetScaffoldState,
+            navController = navController
+        )
+
+        navigateToUpdateHabitScreen(
+            navController = navController,
+            snackbarHostState = snackbarHostState
+        )
+
+        navigateToAddNewHabit(
+            navController = navController,
+            snackbarHostState = snackbarHostState
+        )
+
+        navigateToApplicationInfo()
+
+        navigateToSplash(
+            navController = navController
+        )
+
     }
 }
 

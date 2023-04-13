@@ -17,7 +17,7 @@ import com.masharo.habitstrackercompose.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreenHabit(
+internal fun SplashScreenHabit(
     modifier: Modifier = Modifier,
     navigateToNextScreen: () -> Unit
 ) {
