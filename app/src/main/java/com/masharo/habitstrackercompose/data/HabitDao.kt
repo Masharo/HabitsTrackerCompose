@@ -3,7 +3,6 @@ package com.masharo.habitstrackercompose.data
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.masharo.habitstrackercompose.model.Habit
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HabitDao {

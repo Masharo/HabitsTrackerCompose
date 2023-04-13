@@ -1,12 +1,10 @@
 package com.masharo.habitstrackercompose.ui.screen.habit
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.masharo.core.ui.OutlineTextFieldMinimalistic
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.model.HabitUiState
@@ -36,24 +35,44 @@ fun HabitScreen(
     val uiState by vm.uiState.collectAsState()
     var isOpenColorPicker by rememberSaveable { mutableStateOf(false) }
 
-    if (uiState.isError) {
-        val message = stringResource(R.string.error_message_input_habit_data)
-        val okButton = stringResource(R.string.error_message_ok)
+    if (uiState.isError) ShowNotValidInputSnackbar(
+        snackbarHostState = snackbarHostState,
+        updateStatus = vm::updateIsError
+    )
 
-        LaunchedEffect(snackbarHostState) {
-            val snackbarResult = snackbarHostState.showSnackbar(
-                message = message,
-                actionLabel = okButton,
-                duration = SnackbarDuration.Short
+    if (isOpenColorPicker) {
+        ColorPickerDialogScreen(
+            onClickSave = vm::updateColor,
+            dialogClose = {
+                isOpenColorPicker = false
+            },
+            vm = viewModel(
+                factory = ColorPickerViewModelFactory(
+                    color = uiState.color
+                )
             )
-
-            when (snackbarResult) {
-                SnackbarResult.Dismissed -> vm.updateIsError(false)
-                SnackbarResult.ActionPerformed -> vm.updateIsError(false)
-            }
-        }
+        )
     }
 
+    HabitInputFields(
+        modifier = modifier,
+        uiState = uiState,
+        vm = vm,
+        navigateBack = navigateBack,
+        updateIsOpenColorPickerState = {
+            isOpenColorPicker = it
+        }
+    )
+}
+
+@Composable
+private fun HabitInputFields(
+    modifier: Modifier,
+    uiState: HabitUiState,
+    vm: HabitViewModel,
+    navigateBack: () -> Unit,
+    updateIsOpenColorPickerState: (Boolean) -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -62,23 +81,14 @@ fun HabitScreen(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
 
-        OutlineTextFieldHabit(
-            value = uiState.title,
-            onValueChange = {
-                vm.updateTitle(it)
-            },
-            isError = uiState.isTitleError,
-            label = R.string.title_habit
+        TextFieldTitle(
+            uiState = uiState,
+            updateTitle = vm::updateTitle
         )
 
-        OutlineTextFieldHabit(
-            value = uiState.description,
-            onValueChange = {
-                vm.updateDescription(it)
-            },
-            isError = uiState.isDescriptionError,
-            label = R.string.description_habit,
-            singleLine = false
+        TextFieldDescription(
+            uiState = uiState,
+            updateDescription = vm::updateDescription
         )
 
         Spinner(
@@ -91,96 +101,168 @@ fun HabitScreen(
             }
         )
 
-        HabitTypeRadioButtons(vm, uiState)
-
-        OutlineTextFieldHabit(
-            value = uiState.count,
-            onValueChange = {
-                vm.updateCount(it)
-            },
-            keyboardType = KeyboardType.Number,
-            isError = uiState.isCountError,
-            label = R.string.need_count
+        HabitTypeRadioButtons(
+            uiState = uiState,
+            updateType = vm::updateType
         )
 
-        OutlineTextFieldHabit(
-            value = uiState.period,
-            onValueChange = {
-                vm.updatePeriod(it)
-            },
-            imeAction = ImeAction.Done,
-            isError = uiState.isPeriodError,
-            label = R.string.period_input
+        TextFieldCount(
+            uiState = uiState,
+            updateCount = vm::updateCount
         )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    isOpenColorPicker = true
-                }
-                .height(IntrinsicSize.Min),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(
-                        horizontal = 25.dp,
-                        vertical = 5.dp
-                    ),
-                text = stringResource(R.string.color_background_habit)
-            )
-            uiState.color?.let { color ->
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            color = color,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                )
-            }
-        }
+        TextFieldPeriod(
+            uiState = uiState,
+            updatePeriod = vm::updatePeriod
+        )
+
+        ColorSelectItem(
+            uiState = uiState,
+            updateIsOpenColorPickerState = updateIsOpenColorPickerState
+        )
 
         Spacer(
             modifier = Modifier
                 .weight(1f)
         )
 
-        Button(
-            onClick = {
-                vm.saveState(navigateBack)
-            }
-        ) {
-            Text(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                text = stringResource(R.string.button_save_habit),
-                textAlign = TextAlign.Center
-            )
+        ButtonSave {
+            vm.saveState(navigateBack)
         }
     }
+}
 
-    if (isOpenColorPicker) {
-        ColorPickerDialogScreen(
-            onClickSave = { color ->
-                vm.updateColor(color)
-            },
-            dialogClose = {
-                isOpenColorPicker = false
-            },
-            vm = viewModel(
-                factory = ColorPickerViewModelFactory(
-                    color = uiState.color
-                )
-            )
+@Composable
+private fun ButtonSave(
+    saveHabit: () -> Unit,
+) {
+    Button(
+        onClick = saveHabit
+    ) {
+        Text(
+            modifier = Modifier
+                .fillMaxWidth(),
+            text = stringResource(R.string.button_save_habit),
+            textAlign = TextAlign.Center
         )
     }
 }
 
 @Composable
+private fun TextFieldTitle(
+    uiState: HabitUiState,
+    updateTitle: (String) -> Unit
+) {
+    OutlineTextFieldMinimalistic(
+        value = uiState.title,
+        onValueChange = updateTitle,
+        isError = uiState.isTitleError,
+        label = R.string.title_habit
+    )
+}
+
+@Composable
+private fun TextFieldDescription(
+    uiState: HabitUiState,
+    updateDescription: (String) -> Unit
+) {
+    OutlineTextFieldMinimalistic(
+        value = uiState.description,
+        onValueChange = updateDescription,
+        isError = uiState.isDescriptionError,
+        label = R.string.description_habit,
+        singleLine = false
+    )
+}
+
+@Composable
+private fun TextFieldCount(
+    uiState: HabitUiState,
+    updateCount: (String) -> Unit
+) {
+    OutlineTextFieldMinimalistic(
+        value = uiState.count,
+        onValueChange = updateCount,
+        keyboardType = KeyboardType.Number,
+        isError = uiState.isCountError,
+        label = R.string.need_count
+    )
+}
+
+@Composable
+private fun TextFieldPeriod(
+    uiState: HabitUiState,
+    updatePeriod: (String) -> Unit
+) {
+    OutlineTextFieldMinimalistic(
+        value = uiState.period,
+        onValueChange = updatePeriod,
+        imeAction = ImeAction.Done,
+        isError = uiState.isPeriodError,
+        label = R.string.period_input
+    )
+}
+
+@Composable
+private fun ColorSelectItem(
+    uiState: HabitUiState,
+    updateIsOpenColorPickerState: (Boolean) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                updateIsOpenColorPickerState(true)
+            }
+            .height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            modifier = Modifier
+                .padding(
+                    horizontal = 25.dp,
+                    vertical = 5.dp
+                ),
+            text = stringResource(R.string.color_background_habit)
+        )
+        uiState.color?.let { color ->
+            Spacer(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        color = color,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+            )
+        }
+    }
+}
+
+@Composable
+private fun ShowNotValidInputSnackbar(
+    snackbarHostState: SnackbarHostState,
+    updateStatus: (Boolean) -> Unit
+) {
+    val message = stringResource(R.string.error_message_input_habit_data)
+    val okButton = stringResource(R.string.error_message_ok)
+
+    LaunchedEffect(snackbarHostState) {
+        val snackbarResult = snackbarHostState.showSnackbar(
+            message = message,
+            actionLabel = okButton,
+            duration = SnackbarDuration.Short
+        )
+
+        when (snackbarResult) {
+            SnackbarResult.Dismissed, SnackbarResult.ActionPerformed ->
+                updateStatus(false)
+        }
+    }
+}
+
+@Composable
 private fun HabitTypeRadioButtons(
-    vm: HabitViewModel,
+    updateType: (Type) -> Unit,
     uiState: HabitUiState
 ) {
     Type.values().forEach { type ->
@@ -188,50 +270,19 @@ private fun HabitTypeRadioButtons(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    vm.updateType(type)
+                    updateType(type)
                 },
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
                 selected = uiState.type == type,
                 onClick = {
-                    vm.updateType(type)
+                    updateType(type)
                 }
             )
             Text(text = stringResource(type.stringResRadioButton))
         }
     }
-}
-
-@Composable
-fun OutlineTextFieldHabit(
-    modifier: Modifier = Modifier,
-    value: String,
-    isError: Boolean,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    imeAction: ImeAction = ImeAction.Next,
-    onValueChange: (String) -> Unit,
-    @StringRes label: Int,
-    singleLine: Boolean = true
-) {
-    OutlinedTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(0.dp),
-        value = value,
-        singleLine = singleLine,
-        isError = isError,
-        onValueChange = {
-            onValueChange(it)
-        },
-        keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = keyboardType,
-            imeAction = imeAction
-        ),
-        label = {
-            Text(text = stringResource(label))
-        }
-    )
 }
 
 @Preview(

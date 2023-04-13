@@ -50,7 +50,9 @@ fun HabitsListScreen(
         sheetContent = {
             SearchAndSortHabit(
                 uiState = uiState,
-                vm = vm
+                searchText = vm::searchUpdate,
+                columnSort = vm::columnSortUpdate,
+                typeSort = vm::typeSortUpdate
             )
         }
     ) {
@@ -78,7 +80,9 @@ fun HabitsListScreen(
 @Composable
 private fun SearchAndSortHabit(
     uiState: HabitListUiState,
-    vm: HabitListViewModel
+    searchText: (String) -> Unit,
+    columnSort: (ColumnSort) -> Unit,
+    typeSort: (TypeSort) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -94,22 +98,20 @@ private fun SearchAndSortHabit(
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Search
             ),
-            onValueChange = {
-                vm.searchUpdate(it)
-            }
+            onValueChange = searchText
         )
         Spinner(
             title = stringResource(uiState.columnSort.selectedTitle),
             items = ColumnSort.values().map { stringResource(it.title) },
             onSelectItem = {
-                vm.columnSortUpdate(ColumnSort.values()[it])
+                columnSort(ColumnSort.values()[it])
             }
         )
         Spinner(
             title = stringResource(uiState.typeSort.selectedTitle),
             items = TypeSort.values().map { stringResource(it.title) },
             onSelectItem = {
-                vm.typeSortUpdate(TypeSort.values()[it])
+                typeSort(TypeSort.values()[it])
             }
         )
     }
