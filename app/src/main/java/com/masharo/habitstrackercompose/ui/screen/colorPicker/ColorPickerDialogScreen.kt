@@ -64,68 +64,97 @@ internal fun ColorPickerDialogScreen(
                     text = stringResource(R.string.color_background_habit),
                     style = MaterialTheme.typography.titleMedium
                 )
+
                 Spacer(
                     modifier = modifierSelectColor
                         .size(65.dp)
                 )
-                Row {
-                    //rgb
-                    Text(
-                        text = stringResource(R.string.rgb_template, uiState.rgbText),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                    Spacer(Modifier.weight(1f))
-                    //hsv
-                    Text(
-                        text = stringResource(R.string.hsv_template, uiState.hsvText),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
 
-                GradientLine(
-                    vm,
-                    padding,
-                    spaceItems,
-                    uiState,
-                    sizeWindowColor
+                SelectColorInfo(
+                    rgbText = uiState.rgbText,
+                    hsvText = uiState.hsvText
                 )
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceAround
-                ) {
-                    TextButton(
-                        onClick = {
-                            vm.updateColor(null)
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.color_picker_default_color),
-                            maxLines = 1,
-                            style = MaterialTheme.typography.labelSmall
-                        )
+                GradientLine(
+                    vm = vm,
+                    padding = padding,
+                    spaceItems = spaceItems,
+                    uiState = uiState,
+                    sizeWindowColor = sizeWindowColor
+                )
+
+                ButtonsSaveOrDefaultColor(
+                    updateColorToDefaultValue = {
+                        vm.updateColor(null)
+                    },
+                    save = {
+                        onClickSave(uiState.color)
+                        dialogClose()
                     }
-                    TextButton(
-                        onClick = {
-                            onClickSave(uiState.color)
-                            dialogClose()
-                        }
-                    ) {
-                        Text(
-                            text = stringResource(R.string.color_picker_save),
-                            maxLines = 1,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                    }
-                }
+                )
             }
         }
     }
 }
 
 @Composable
+private fun SelectColorInfo(
+    modifier: Modifier = Modifier,
+    rgbText: String,
+    hsvText: String
+) {
+    Row(
+        modifier = modifier
+    ) {
+        //rgb
+        Text(
+            text = stringResource(R.string.rgb_template, rgbText),
+            style = MaterialTheme.typography.bodySmall
+        )
+        Spacer(Modifier.weight(1f))
+        //hsv
+        Text(
+            text = stringResource(R.string.hsv_template, hsvText),
+            style = MaterialTheme.typography.bodySmall
+        )
+    }
+}
+
+@Composable
+private fun ButtonsSaveOrDefaultColor(
+    modifier: Modifier = Modifier,
+    updateColorToDefaultValue: () -> Unit,
+    save: () -> Unit
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        TextButton(
+            onClick = updateColorToDefaultValue
+        ) {
+            Text(
+                text = stringResource(R.string.color_picker_default_color),
+                maxLines = 1,
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
+        TextButton(
+            onClick = save
+        ) {
+            Text(
+                text = stringResource(R.string.color_picker_save),
+                maxLines = 1,
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
+    }
+}
+
+@Composable
 private fun GradientLine(
+    modifier: Modifier = Modifier,
     vm: ColorPickerViewModel,
     padding: Dp,
     spaceItems: Dp,
@@ -136,7 +165,7 @@ private fun GradientLine(
     val scrollStateGradient = rememberScrollState()
 
     Row(
-        modifier = Modifier
+        modifier = modifier
             .horizontalScroll(scrollStateGradient)
             .drawWithCache {
                 onDrawBehind {
@@ -153,36 +182,53 @@ private fun GradientLine(
         horizontalArrangement = Arrangement.spacedBy(spaceItems)
     ) {
         repeat(uiState.countRectangle) {
-            var positionGradientLine = 0f
-            var centerGradientWidth = 0
-
-            Spacer(
-                modifier = Modifier
-                    .size(sizeWindowColor)
-                    .border(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(10.dp)
-                    )
-                    .clickable {
-                        val widthLocateClick =
-                            scrollStateGradient.value + positionGradientLine
-                            + centerGradientWidth - padding.value
-                        vm.updateColor(
-                            colorPosition = widthLocateClick,
-                            widthGradient = widthGradient.toFloat()
-                        )
-                    }
-                    .onGloballyPositioned { coords ->
-                        positionGradientLine = coords
-                            .parentCoordinates
-                            ?.positionInWindow()
-                            ?.x ?: 0f
-                    }
-                    .onSizeChanged { sizes ->
-                        centerGradientWidth = sizes.width / 2
-                    }
-            )
+            ColorItem(
+                sizeWindowColor = sizeWindowColor,
+                scrollStateGradient = scrollStateGradient,
+                padding = padding
+            ) { colorPosition ->
+                vm.updateColor(
+                    colorPosition = colorPosition,
+                    widthGradient = widthGradient.toFloat()
+                )
+            }
         }
     }
+}
+
+@Composable
+private fun ColorItem(
+    modifier: Modifier = Modifier,
+    sizeWindowColor: Dp,
+    scrollStateGradient: ScrollState,
+    padding: Dp,
+    updateColor: (colorPosition: Float) -> Unit
+) {
+    var positionGradientLine = 0f
+    var centerGradientWidth = 0
+
+    Spacer(
+        modifier = modifier
+            .size(sizeWindowColor)
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(10.dp)
+            )
+            .clickable {
+                val widthLocateClick =
+                    scrollStateGradient.value + positionGradientLine
+                    + centerGradientWidth - padding.value
+                updateColor(widthLocateClick)
+            }
+            .onGloballyPositioned { coords ->
+                positionGradientLine = coords
+                    .parentCoordinates
+                    ?.positionInWindow()
+                    ?.x ?: 0f
+            }
+            .onSizeChanged { sizes ->
+                centerGradientWidth = sizes.width / 2
+            }
+    )
 }

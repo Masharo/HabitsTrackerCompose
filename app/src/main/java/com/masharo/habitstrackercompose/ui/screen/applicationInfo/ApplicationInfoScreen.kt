@@ -17,7 +17,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.model.Contact
 import com.masharo.habitstrackercompose.ui.theme.BGBusinessCard
 import com.masharo.habitstrackercompose.ui.theme.BGBusinessCardLines
 import com.masharo.habitstrackercompose.ui.theme.GreenBusinessCard
@@ -133,31 +132,36 @@ fun BusinessCardBody(
             modifier = Modifier
                 .weight(1f)
         )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    bottom = 30.dp
-                ),
-            verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            ContactHabit(
-                image = R.drawable.ic_baseline_phone_24,
-                data = R.string.phone_number,
-                description = R.string.phone_number_desc
-            )
-            ContactHabit(
-                image = R.drawable.ic_baseline_share_24,
-                data = R.string.share,
-                description = R.string.share_desc
-            )
-            ContactHabit(
-                image = R.drawable.ic_baseline_mail_24,
-                data = R.string.mail,
-                description = R.string.mail_desc
-            )
-        }
+        MyContacts()
+    }
+}
+
+@Composable
+private fun MyContacts() {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                bottom = 30.dp
+            ),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        ContactHabit(
+            image = R.drawable.ic_baseline_phone_24,
+            data = R.string.phone_number,
+            description = R.string.phone_number_desc
+        )
+        ContactHabit(
+            image = R.drawable.ic_baseline_share_24,
+            data = R.string.share,
+            description = R.string.share_desc
+        )
+        ContactHabit(
+            image = R.drawable.ic_baseline_mail_24,
+            data = R.string.mail,
+            description = R.string.mail_desc
+        )
     }
 }
 
