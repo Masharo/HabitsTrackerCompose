@@ -1,9 +1,11 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.HabitRepository
+import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.toHabitListItemUiState
 import com.masharo.habitstrackercompose.model.toHabitListUiState
 import kotlinx.coroutines.flow.*
@@ -15,10 +17,10 @@ class HabitListViewModel(
 
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
-    private var habits = ColumnSort.defaultValue().getHabits(
-        habitRepository = habitRepository,
-        search = START_SEARCH,
-        isAsc = TypeSort.defaultValue().getValue()
+    private var habits = getHabits(
+        columnSort = ColumnSort.defaultValue(),
+        typeSort = TypeSort.defaultValue(),
+        search = START_SEARCH
     )
     .asFlow()
     .stateIn(
@@ -87,19 +89,39 @@ class HabitListViewModel(
 
     val uiState = _uiState.asStateFlow()
 
-    private fun habitListUpdate() {
-        with(_uiState.value) {
-            habits = columnSort.getHabits(//TODO("Вроде как повторяется так что нужно вынести")
-                habitRepository = habitRepository,
-                search = search,
+    private fun getHabits(
+        columnSort: ColumnSort,
+        typeSort: TypeSort,
+        search: String
+    ): LiveData<List<Habit>> =
+        when (columnSort) {
+            ColumnSort.PRIORITY -> habitRepository.getAllHabitsLikeTitleOrderByPriority(
+                title = search,
                 isAsc = typeSort.getValue()
             )
-            .asFlow()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = listOf()
+            ColumnSort.ID -> habitRepository.getAllHabitsLikeTitleOrderById(
+                title = search,
+                isAsc = typeSort.getValue()
             )
+            ColumnSort.COUNT -> habitRepository.getAllHabitsLikeTitleOrderByCount(
+                title = search,
+                isAsc = typeSort.getValue()
+            )
+        }
+
+    private fun habitListUpdate() {
+        with(_uiState.value) {
+            habits = getHabits(
+                    columnSort = columnSort,
+                    typeSort = typeSort,
+                    search = search
+                )
+                .asFlow()
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                    initialValue = listOf()
+                )
         }
         updateHabits()
     }

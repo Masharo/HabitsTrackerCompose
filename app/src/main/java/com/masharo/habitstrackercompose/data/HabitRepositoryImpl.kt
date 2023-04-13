@@ -2,7 +2,6 @@ package com.masharo.habitstrackercompose.data
 
 import androidx.lifecycle.LiveData
 import com.masharo.habitstrackercompose.model.Habit
-import kotlinx.coroutines.flow.Flow
 
 class HabitRepositoryImpl(
     private val habitDao: HabitDao
