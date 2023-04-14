@@ -11,7 +11,7 @@ interface HabitRepository {
 
     fun getAllHabitsLikeTitleOrderByCount(title: String, isAsc: Boolean): LiveData<List<Habit>>
 
-    fun getHabitById(id: Long): Habit?
+    suspend fun getHabitById(id: Long): Habit?
 
     suspend fun update(habit: Habit)
 

@@ -33,7 +33,7 @@ class HabitRepositoryImpl(
         isAsc = isAsc
     )
 
-    override fun getHabitById(id: Long): Habit? = habitDao.getHabitById(id)
+    override suspend fun getHabitById(id: Long): Habit? = habitDao.getHabitById(id)
 
     override suspend fun update(habit: Habit) = habitDao.update(habit)
 

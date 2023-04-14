@@ -8,10 +8,10 @@ import com.masharo.habitstrackercompose.model.Habit
 interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(habit: Habit)
+    suspend fun insert(habit: Habit)
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
-    fun update(habit: Habit)
+    suspend fun update(habit: Habit)
 
     @Query("""  
         SELECT * 
@@ -44,6 +44,6 @@ interface HabitDao {
     fun getAllHabitsLikeTitleOrderByCount(title: String, isAsc: Boolean): LiveData<List<Habit>>
 
     @Query("SELECT * FROM habits WHERE id_habit = :id LIMIT 1")
-    fun getHabitById(id: Long): Habit?
+    suspend fun getHabitById(id: Long): Habit?
 
 }
