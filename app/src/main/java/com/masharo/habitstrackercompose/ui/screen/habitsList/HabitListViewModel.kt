@@ -18,16 +18,16 @@ class HabitListViewModel(
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
     private var habits = getHabits(
-        columnSort = ColumnSort.defaultValue(),
-        typeSort = TypeSort.defaultValue(),
-        search = START_SEARCH
-    )
-    .asFlow()
-    .stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-        initialValue = listOf()
-    )
+            columnSort = ColumnSort.defaultValue(),
+            typeSort = TypeSort.defaultValue(),
+            search = START_SEARCH
+        )
+        .asFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+            initialValue = listOf()
+        )
 
     private val _uiState = MutableStateFlow(
         habits.value.toHabitListUiState(
