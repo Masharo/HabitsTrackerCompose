@@ -156,7 +156,7 @@ class HabitViewModel(
                     )
                 }
             } else {
-                viewModelScope.launch {
+                viewModelScope.launch(Dispatchers.IO) {
                     idHabit?.let { id ->
                             habitRepository.update(this@with.toHabit(id))
                     } ?: habitRepository.insert(this@with.toHabit())

@@ -2,6 +2,8 @@ package com.masharo.habitstrackercompose.data
 
 import androidx.lifecycle.LiveData
 import com.masharo.habitstrackercompose.model.Habit
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
     private val habitDao: HabitDao
@@ -33,10 +35,22 @@ class HabitRepositoryImpl(
         isAsc = isAsc
     )
 
-    override suspend fun getHabitById(id: Long): Habit? = habitDao.getHabitById(id)
+    override suspend fun getHabitById(id: Long): Habit? {
+       return withContext(Dispatchers.IO) {
+           habitDao.getHabitById(id)
+       }
+    }
 
-    override suspend fun update(habit: Habit) = habitDao.update(habit)
+    override suspend fun update(habit: Habit) {
+        withContext(Dispatchers.IO) {
+            habitDao.update(habit)
+        }
+    }
 
-    override suspend fun insert(habit: Habit) = habitDao.insert(habit)
+    override suspend fun insert(habit: Habit) {
+        withContext(Dispatchers.IO) {
+            habitDao.insert(habit)
+        }
+    }
 
 }
