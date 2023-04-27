@@ -20,7 +20,7 @@ class HabitViewModel(
 
     init {
         idHabit?.let { id ->
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 habitRepository.getHabitById(id)?.let { habit ->
                     _uiState.update {
                         habit.toHabitUiState()
@@ -156,7 +156,7 @@ class HabitViewModel(
                     )
                 }
             } else {
-                viewModelScope.launch(Dispatchers.IO) {
+                viewModelScope.launch {
                     idHabit?.let { id ->
                             habitRepository.update(this@with.toHabit(id))
                     } ?: habitRepository.insert(this@with.toHabit())
