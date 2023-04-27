@@ -55,10 +55,9 @@ fun HabitsTrackerApp(
                 )
             },
             topBar = {
-                if (currentScreen.isHaveTopAppBar)
-                    HabitsTrackerAppBar(
-                        currentScreen = currentScreen
-                    )
+                HabitsTrackerAppBar(
+                    currentScreen = currentScreen
+                )
             }
         ) { contentPadding ->
             HabitNavHost(
