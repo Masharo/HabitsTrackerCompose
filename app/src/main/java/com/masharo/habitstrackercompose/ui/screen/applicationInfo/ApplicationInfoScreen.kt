@@ -21,7 +21,6 @@ import com.masharo.habitstrackercompose.ui.theme.BGBusinessCard
 import com.masharo.habitstrackercompose.ui.theme.BGBusinessCardLines
 import com.masharo.habitstrackercompose.ui.theme.GreenBusinessCard
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ApplicationInfoScreen(
     modifier: Modifier = Modifier
@@ -44,20 +43,27 @@ fun ApplicationInfoScreen(
                 .fillMaxWidth()
                 .height(10.dp)
         )
-        HorizontalPager(
-            modifier = Modifier,
-            pageCount = 2
-        ) { page ->
-            when (page) {
-                0 -> {
-                    AppDescription()
-                }
-                1 -> {
-                    BusinessCardBody(
-                        name = stringResource(R.string.name_application_info),
-                        profession = stringResource(R.string.body_application_info)
-                    )
-                }
+        AppHabitTrackerInfoHorizontalPager()
+    }
+}
+
+@Composable
+@OptIn(ExperimentalFoundationApi::class)
+private fun AppHabitTrackerInfoHorizontalPager() {
+    HorizontalPager(
+        modifier = Modifier,
+        pageCount = 2
+    ) { page ->
+        when (page) {
+            0 -> {
+                AppDescription()
+            }
+
+            1 -> {
+                BusinessCardBody(
+                    name = stringResource(R.string.name_application_info),
+                    profession = stringResource(R.string.body_application_info)
+                )
             }
         }
     }

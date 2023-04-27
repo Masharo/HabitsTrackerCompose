@@ -5,11 +5,12 @@ import com.masharo.habitstrackercompose.R
 
 enum class HabitNavigateState(
     @StringRes val screenTitle: Int? = null,
-    val isNeedFabAddHabit: Boolean = false
+    val isHaveFabAddHabit: Boolean = false,
+    val isHaveTopAppBar: Boolean = true
 ) {
     Home(
         screenTitle = R.string.app_bar_name_screen_list_habits,
-        isNeedFabAddHabit = true
+        isHaveFabAddHabit = true
     ),
     AddNewHabit(
         screenTitle = R.string.app_bar_name_screen_new_habit_add

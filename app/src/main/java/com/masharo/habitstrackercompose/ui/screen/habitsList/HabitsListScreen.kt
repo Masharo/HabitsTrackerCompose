@@ -64,7 +64,8 @@ fun HabitsListScreen(
                 modifier = Modifier
                     .weight(1f),
                 pagerState = pagerState,
-                uiState = uiState,
+                pages = uiState.pages,
+                countPage = uiState.countPage,
                 scope = scope
             ) { page ->
                 HabitsPage(
@@ -151,7 +152,8 @@ private fun HabitsPage(
 private fun HabitsTypeTabRow(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    uiState: HabitListUiState,
+    pages: Iterable<Int>,
+    countPage: Int,
     scope: CoroutineScope,
     content: @Composable (page: Int) -> Unit
 ) {
@@ -159,7 +161,7 @@ private fun HabitsTypeTabRow(
         selectedTabIndex = pagerState.currentPage,
         containerColor = MaterialTheme.colorScheme.secondaryContainer
     ) {
-        uiState.pages.forEachIndexed { index, title ->
+        pages.forEachIndexed { index, title ->
             Tab(
                 selected = pagerState.currentPage == index,
                 onClick = {
@@ -180,7 +182,7 @@ private fun HabitsTypeTabRow(
     HorizontalPager(
         modifier = modifier,
         state = pagerState,
-        pageCount = uiState.countPage,
+        pageCount = countPage,
         pageContent = content
     )
 }

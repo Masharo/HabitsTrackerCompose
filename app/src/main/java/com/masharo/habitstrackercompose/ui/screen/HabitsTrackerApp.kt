@@ -42,7 +42,7 @@ fun HabitsTrackerApp(
                 .fillMaxSize(),
             floatingActionButton = {
                 FabHabit(
-                    isNeedFab = currentScreen.isNeedFabAddHabit &&
+                    isNeedFab = currentScreen.isHaveFabAddHabit &&
                                 bottomSheetScaffoldState.bottomSheetState.currentValue != SheetValue.Expanded,
                     onClick = {
                         navController.navigate(HabitNavigateState.AddNewHabit.name)
@@ -55,9 +55,10 @@ fun HabitsTrackerApp(
                 )
             },
             topBar = {
-                HabitsTrackerAppBar(
-                    currentScreen = currentScreen
-                )
+                if (currentScreen.isHaveTopAppBar)
+                    HabitsTrackerAppBar(
+                        currentScreen = currentScreen
+                    )
             }
         ) { contentPadding ->
             HabitNavHost(
