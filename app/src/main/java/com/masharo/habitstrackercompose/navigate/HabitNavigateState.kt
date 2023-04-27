@@ -7,8 +7,7 @@ enum class HabitNavigateState(
     @StringRes val screenTitle: Int? = null,
     val isNeedFabAddHabit: Boolean = false
 ) {
-    Splash,
-    HabitsList(
+    Home(
         screenTitle = R.string.app_bar_name_screen_list_habits,
         isNeedFabAddHabit = true
     ),
@@ -28,5 +27,5 @@ fun habitNavigateState(state: String?) =
     HabitNavigateState.valueOf(
         value = state?.replace(Regex("""/.*"""), "")
                 ?:
-                HabitNavigateState.HabitsList.name
+                HabitNavigateState.Home.name
     )

@@ -84,7 +84,7 @@ private fun HabitDrawer(
             topHabitScreen = currentScreen,
             navigateBackToStart = {
                 navController.popBackStack(
-                    route = HabitNavigateState.HabitsList.name,
+                    route = HabitNavigateState.Home.name,
                     inclusive = false
                 )
             },
@@ -108,7 +108,7 @@ private fun HabitNavHost(
 ) {
     NavHost(
         navController = navController,
-        startDestination = HabitNavigateState.Splash.name,
+        startDestination = HabitNavigateState.Home.name,
         modifier = modifier
             .fillMaxSize()
             .padding(contentPadding)
@@ -130,10 +130,6 @@ private fun HabitNavHost(
         )
 
         navigateToApplicationInfo()
-
-        navigateToSplash(
-            navController = navController
-        )
 
     }
 }

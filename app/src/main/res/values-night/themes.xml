@@ -3,4 +3,8 @@
     <style name="Theme.HabitsTrackerCompose" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:statusBarColor">@color/md_theme_dark_primary</item>
     </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground">
+        <item name="android:windowBackground">@color/md_theme_dark_primary</item>
+    </style>
 </resources>

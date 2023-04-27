@@ -11,7 +11,6 @@ import androidx.navigation.navArgument
 import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInfoScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
-import com.masharo.habitstrackercompose.ui.screen.splash.SplashScreenHabit
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -22,7 +21,7 @@ fun NavGraphBuilder.navigateToHabitListScreen(
     navController: NavHostController,
     bottomSheetState: BottomSheetScaffoldState
 ) {
-    composable(route = HabitNavigateState.HabitsList.name) {
+    composable(route = HabitNavigateState.Home.name) {
         HabitsListScreen(
             bottomSheetState = bottomSheetState,
             onClickHabit = { idHabit ->
@@ -76,18 +75,5 @@ fun NavGraphBuilder.navigateToAddNewHabit(
 fun NavGraphBuilder.navigateToApplicationInfo() {
     composable(route = HabitNavigateState.ApplicationInfo.name) {
         ApplicationInfoScreen()
-    }
-}
-
-fun NavGraphBuilder.navigateToSplash(
-    navController: NavHostController
-) {
-    composable(route = HabitNavigateState.Splash.name) {
-        SplashScreenHabit(
-            navigateToNextScreen = {
-                navController.popBackStack()
-                navController.navigate(HabitNavigateState.HabitsList.name)
-            }
-        )
     }
 }
