@@ -3,6 +3,8 @@ package com.masharo.habitstrackercompose.data.worker
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.masharo.habitstrackercompose.data.db.HabitDao
+import com.masharo.habitstrackercompose.data.model.toHabitsDB
 import com.masharo.habitstrackercompose.data.network.HabitApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,11 +16,14 @@ class GetHabitsWorker(
     params: WorkerParameters
 ) : CoroutineWorker(appContext, params), KoinComponent {
 
-    private val habitApiService: HabitApiService by inject()
+    private val apiService: HabitApiService by inject()
+    private val dao: HabitDao by inject()
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
-            habitApiService.getHabits()
+            val habits = apiService.getHabits().toHabitsDB()
+            dao.deleteAll()
+            dao.insert(*habits.toTypedArray())
             Result.success()
         }
     }

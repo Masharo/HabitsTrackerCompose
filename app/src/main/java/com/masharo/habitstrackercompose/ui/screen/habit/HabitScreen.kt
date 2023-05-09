@@ -40,6 +40,8 @@ fun HabitScreen(
         updateStatus = vm::updateIsError
     )
 
+    if (uiState.isNavigateToHabitsList) navigateBack()
+
     if (isOpenColorPicker) {
         ColorPickerDialogScreen(
             onClickSave = vm::updateColor,
@@ -58,7 +60,6 @@ fun HabitScreen(
         modifier = modifier,
         uiState = uiState,
         vm = vm,
-        navigateBack = navigateBack,
         updateIsOpenColorPickerState = {
             isOpenColorPicker = it
         }
@@ -70,7 +71,6 @@ private fun HabitInputFields(
     modifier: Modifier,
     uiState: HabitUiState,
     vm: HabitViewModel,
-    navigateBack: () -> Unit,
     updateIsOpenColorPickerState: (Boolean) -> Unit
 ) {
     Column(
@@ -126,10 +126,9 @@ private fun HabitInputFields(
                 .weight(1f)
         )
 
-        ButtonSave {
-            vm.saveState()
-            navigateBack()
-        }
+        ButtonSave(
+            saveHabit = vm::saveState
+        )
     }
 }
 

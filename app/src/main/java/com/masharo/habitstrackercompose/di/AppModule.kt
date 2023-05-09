@@ -9,7 +9,8 @@ val appModule = module {
 
     viewModel<HabitListViewModel> {
         HabitListViewModel(
-            habitRepository = get()
+            dbHabitRepository = get(),
+            networkHabitRepository = get()
         )
     }
 

@@ -14,9 +14,10 @@ import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
 
 @Entity(tableName = "habits")
-data class Habit(
+data class HabitDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_habit")      val id: Long = 0,
+    @ColumnInfo(name = "uid")           val uid: String? = null,
     @ColumnInfo(name = "title")         val title: String = "",
     @ColumnInfo(name = "description")   val description: String = "",
     @ColumnInfo(name = "priority")      val priority: Int = 1,
@@ -27,7 +28,7 @@ data class Habit(
     @ColumnInfo(name = "color")         val color: Int? = null
 )
 
-fun Habit.toHabitUiState() = HabitUiState(
+fun HabitDB.toHabitUiState() = HabitUiState(
     title = title,
     description = description,
     priority = Priority.values()[priority],
@@ -46,7 +47,7 @@ fun Habit.toHabitUiState() = HabitUiState(
     isError = false
 )
 
-fun Habit.toHabitListItemUiState() = HabitListItemUiState(
+fun HabitDB.toHabitListItemUiState() = HabitListItemUiState(
     id = id,
     title = title,
     _description = description,
@@ -58,11 +59,11 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     color = color?.let { Color(it) }
 )
 
-fun List<Habit>.toHabitListItemUiState(
-    filter: (Habit) -> Boolean
+fun List<HabitDB>.toHabitListItemUiState(
+    filter: (HabitDB) -> Boolean
 ) = this.filter { filter(it) }.map { it.toHabitListItemUiState() }
 
-fun List<Habit>.toHabitListUiState(
+fun List<HabitDB>.toHabitListUiState(
     pages: Iterable<Int>,
     countPage: Int,
     search: String,

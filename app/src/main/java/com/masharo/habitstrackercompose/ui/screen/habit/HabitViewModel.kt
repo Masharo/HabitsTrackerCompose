@@ -160,6 +160,11 @@ class HabitViewModel(
                     } ?: habitRepository.insert(this@with.toHabit())
                 }
 
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isNavigateToHabitsList = true
+                    )
+                }
             }
         }
     }

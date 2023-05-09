@@ -5,14 +5,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.db.DBHabitRepository
-import com.masharo.habitstrackercompose.data.model.Habit
+import com.masharo.habitstrackercompose.data.model.HabitDB
 import com.masharo.habitstrackercompose.data.model.toHabitListItemUiState
 import com.masharo.habitstrackercompose.data.model.toHabitListUiState
+import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
-    private val habitRepository: DBHabitRepository
+    private val dbHabitRepository: DBHabitRepository,
+    private val networkHabitRepository: NetworkHabitRepository
 ) : ViewModel() {
 
     private val countPage = Page.values().size
@@ -40,6 +42,7 @@ class HabitListViewModel(
     )
 
     init {
+        networkHabitRepository.downloadHabits()
         updateHabits()
     }
 
@@ -93,17 +96,17 @@ class HabitListViewModel(
         columnSort: ColumnSort,
         typeSort: TypeSort,
         search: String
-    ): LiveData<List<Habit>> =
+    ): LiveData<List<HabitDB>> =
         when (columnSort) {
-            ColumnSort.PRIORITY -> habitRepository.getAllHabitsLikeTitleOrderByPriority(
+            ColumnSort.PRIORITY -> dbHabitRepository.getAllHabitsLikeTitleOrderByPriority(
                 title = search,
                 isAsc = typeSort.getValue()
             )
-            ColumnSort.ID -> habitRepository.getAllHabitsLikeTitleOrderById(
+            ColumnSort.ID -> dbHabitRepository.getAllHabitsLikeTitleOrderById(
                 title = search,
                 isAsc = typeSort.getValue()
             )
-            ColumnSort.COUNT -> habitRepository.getAllHabitsLikeTitleOrderByCount(
+            ColumnSort.COUNT -> dbHabitRepository.getAllHabitsLikeTitleOrderByCount(
                 title = search,
                 isAsc = typeSort.getValue()
             )
