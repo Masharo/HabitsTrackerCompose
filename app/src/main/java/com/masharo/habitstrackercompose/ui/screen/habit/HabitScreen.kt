@@ -127,7 +127,8 @@ private fun HabitInputFields(
         )
 
         ButtonSave {
-            vm.saveState(navigateBack)
+            vm.saveState()
+            navigateBack()
         }
     }
 }

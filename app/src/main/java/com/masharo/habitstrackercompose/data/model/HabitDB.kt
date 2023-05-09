@@ -1,9 +1,12 @@
-package com.masharo.habitstrackercompose.model
+package com.masharo.habitstrackercompose.data.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import com.masharo.habitstrackercompose.model.HabitListUiState
+import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort

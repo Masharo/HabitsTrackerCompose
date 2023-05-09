@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
-import com.masharo.habitstrackercompose.data.HabitRepository
-import com.masharo.habitstrackercompose.model.Habit
-import com.masharo.habitstrackercompose.model.toHabitListItemUiState
-import com.masharo.habitstrackercompose.model.toHabitListUiState
+import com.masharo.habitstrackercompose.data.db.DBHabitRepository
+import com.masharo.habitstrackercompose.data.model.Habit
+import com.masharo.habitstrackercompose.data.model.toHabitListItemUiState
+import com.masharo.habitstrackercompose.data.model.toHabitListUiState
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
-    private val habitRepository: HabitRepository
+    private val habitRepository: DBHabitRepository
 ) : ViewModel() {
 
     private val countPage = Page.values().size

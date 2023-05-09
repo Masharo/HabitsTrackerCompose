@@ -2,10 +2,11 @@
 <resources>
     <style name="Theme.HabitsTrackerCompose" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:statusBarColor">@color/md_theme_light_primary</item>
-        <item name="android:windowLightStatusBar">true</item>-->
     </style>
 
     <style name="Theme.App.Starting" parent="Theme.SplashScreen.IconBackground" >
         <item name="android:windowBackground">@drawable/splash_screen_light</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
     </style>
 </resources>

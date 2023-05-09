@@ -1,10 +1,7 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.annotation.StringRes
-import androidx.lifecycle.LiveData
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.data.HabitRepository
-import com.masharo.habitstrackercompose.model.Habit
 
 enum class ColumnSort(
     @StringRes val title: Int,

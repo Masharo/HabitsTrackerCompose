@@ -1,13 +1,13 @@
-package com.masharo.habitstrackercompose.data
+package com.masharo.habitstrackercompose.data.db
 
 import androidx.lifecycle.LiveData
-import com.masharo.habitstrackercompose.model.Habit
+import com.masharo.habitstrackercompose.data.model.Habit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class HabitRepositoryImpl(
+class DBHabitRepositoryImpl(
     private val habitDao: HabitDao
-) : HabitRepository{
+) : DBHabitRepository {
 
     private fun titleTemplate(title: String) = "%$title%"
 

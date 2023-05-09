@@ -2,6 +2,7 @@ package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.masharo.habitstrackercompose.data.model.Habit
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
 

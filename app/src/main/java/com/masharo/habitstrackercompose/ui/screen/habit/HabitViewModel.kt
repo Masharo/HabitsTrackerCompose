@@ -3,15 +3,15 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masharo.habitstrackercompose.data.*
+import com.masharo.habitstrackercompose.data.db.DBHabitRepository
+import com.masharo.habitstrackercompose.data.model.toHabitUiState
 import com.masharo.habitstrackercompose.model.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitViewModel(
     private val idHabit: Long? = null,
-    private val habitRepository: HabitRepository
+    private val habitRepository: DBHabitRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -128,9 +128,7 @@ class HabitViewModel(
         }
     }
 
-    fun saveState(
-        navigateBack: () -> Unit
-    ) {
+    fun saveState() {
         with(uiState.value) {
 
             val isTitleErrorCurrent = title.isEmpty()
@@ -160,8 +158,6 @@ class HabitViewModel(
                     idHabit?.let { id ->
                             habitRepository.update(this@with.toHabit(id))
                     } ?: habitRepository.insert(this@with.toHabit())
-
-                    navigateBack()
                 }
 
             }

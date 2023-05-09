@@ -1,8 +1,8 @@
-package com.masharo.habitstrackercompose.data
+package com.masharo.habitstrackercompose.data.db
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.masharo.habitstrackercompose.model.Habit
+import com.masharo.habitstrackercompose.data.model.Habit
 
 @Dao
 interface HabitDao {
