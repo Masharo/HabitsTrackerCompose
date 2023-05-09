@@ -5,26 +5,31 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.db.DBHabitRepository
 import com.masharo.habitstrackercompose.data.model.toHabitUiState
+import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
 import com.masharo.habitstrackercompose.model.*
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class HabitViewModel(
     private val idHabit: Long? = null,
-    private val habitRepository: DBHabitRepository
+    private val dbHabitRepository: DBHabitRepository,
+    private val networkHabitRepository: NetworkHabitRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         value = HabitUiState()
     )
 
+    private var uid = ""
+
     init {
         idHabit?.let { id ->
             viewModelScope.launch {
-                habitRepository.getHabitById(id)?.let { habit ->
+                dbHabitRepository.getHabitById(id)?.let { habit ->
                     _uiState.update {
                         habit.toHabitUiState()
                     }
+                    uid = habit.uid
                 }
             }
         }
@@ -156,8 +161,12 @@ class HabitViewModel(
             } else {
                 viewModelScope.launch {
                     idHabit?.let { id ->
-                            habitRepository.update(this@with.toHabit(id))
-                    } ?: habitRepository.insert(this@with.toHabit())
+                        dbHabitRepository.update(this@with.toHabit(id, uid))
+                        networkHabitRepository.updateHabit(id)
+                    } ?: run {
+                        val id = dbHabitRepository.insert(this@with.toHabit())
+                        networkHabitRepository.createHabit(id)
+                    }
                 }
 
                 _uiState.update { currentState ->

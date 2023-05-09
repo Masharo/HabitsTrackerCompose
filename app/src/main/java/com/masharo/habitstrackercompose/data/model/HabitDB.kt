@@ -12,12 +12,13 @@ import com.masharo.habitstrackercompose.ui.screen.habit.Type
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
 import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
+import java.util.Calendar
 
 @Entity(tableName = "habits")
 data class HabitDB(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_habit")      val id: Long = 0,
-    @ColumnInfo(name = "uid")           val uid: String? = null,
+    @ColumnInfo(name = "uid")           val uid: String = "",
     @ColumnInfo(name = "title")         val title: String = "",
     @ColumnInfo(name = "description")   val description: String = "",
     @ColumnInfo(name = "priority")      val priority: Int = 1,
@@ -77,4 +78,17 @@ fun List<HabitDB>.toHabitListUiState(
     columnSort = columnSort,
     habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
     habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }
+)
+
+fun HabitDB.toHabitNetwork() = HabitNetwork(
+    uid = uid,
+    color = color,
+    count = count,
+    date = (Calendar.getInstance().timeInMillis / 1000).toInt(),
+    description = description,
+    doneDate = IntArray(countReady) { 1 }.toList(),
+    frequency = 1,
+    priority = priority,
+    title = title,
+    type = type
 )

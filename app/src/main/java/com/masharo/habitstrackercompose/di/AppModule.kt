@@ -17,7 +17,8 @@ val appModule = module {
     viewModel<HabitViewModel> { params ->
         HabitViewModel(
             idHabit = params.getOrNull(),
-            habitRepository = get()
+            dbHabitRepository = get(),
+            networkHabitRepository = get()
         )
     }
 

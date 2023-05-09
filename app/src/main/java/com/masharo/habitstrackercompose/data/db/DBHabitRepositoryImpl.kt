@@ -47,9 +47,9 @@ class DBHabitRepositoryImpl(
         }
     }
 
-    override suspend fun insert(habit: HabitDB) {
-        withContext(Dispatchers.IO) {
-            habitDao.insert(habit)
+    override suspend fun insert(habit: HabitDB): Long {
+        return withContext(Dispatchers.IO) {
+            habitDao.insertHabit(habit)
         }
     }
 

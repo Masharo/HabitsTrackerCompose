@@ -27,8 +27,9 @@ data class HabitUiState(
     val isNavigateToHabitsList: Boolean = false
 )
 
-fun HabitUiState.toHabit() = HabitDB(
+fun HabitUiState.toHabit(uid: String = "") = HabitDB(
     id = 0,
+    uid = uid,
     title = title,
     description = description,
     priority = Priority.values().indexOf(priority),
@@ -39,8 +40,9 @@ fun HabitUiState.toHabit() = HabitDB(
     color = color?.toArgb()
 )
 
-fun HabitUiState.toHabit(id: Long) = HabitDB(
+fun HabitUiState.toHabit(id: Long, uid: String = "") = HabitDB(
     id = id,
+    uid = uid,
     title = title,
     description = description,
     priority = Priority.values().indexOf(priority),

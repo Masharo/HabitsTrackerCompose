@@ -17,7 +17,7 @@ data class HabitNetwork(
     val title: String,
     @IntRange(from = 0, to = 1)
     val type: Int,
-    val uid: String
+    val uid: String = ""
 )
 
 fun HabitNetwork.toHabitDB() = HabitDB(

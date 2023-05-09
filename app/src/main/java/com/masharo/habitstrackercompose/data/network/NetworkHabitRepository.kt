@@ -4,8 +4,8 @@ interface NetworkHabitRepository {
 
     fun downloadHabits()
 
-    fun updateHabit()
+    fun updateHabit(id: Long)
 
-    fun saveHabit()
+    fun createHabit(id: Long)
 
 }

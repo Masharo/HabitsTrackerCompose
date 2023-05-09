@@ -8,7 +8,10 @@ import com.masharo.habitstrackercompose.data.model.HabitDB
 interface HabitDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(vararg habits: HabitDB)
+    suspend fun insertHabits(vararg habits: HabitDB)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertHabit(habit: HabitDB): Long
 
     @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun update(habit: HabitDB)

@@ -15,6 +15,7 @@ interface DBHabitRepository {
 
     suspend fun update(habit: HabitDB)
 
-    suspend fun insert(habit: HabitDB)
+
+    suspend fun insert(habit: HabitDB): Long
 
 }
