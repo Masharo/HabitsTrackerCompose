@@ -111,9 +111,14 @@ private fun HabitInputFields(
             updateCount = vm::updateCount
         )
 
-        TextFieldPeriod(
-            uiState = uiState,
-            updatePeriod = vm::updatePeriod
+        Spinner(
+            title = stringResource(uiState.period.stringResValue),
+            items = Period.values().map { period ->
+                stringResource(period.stringResSpinner)
+            },
+            onSelectItem = { item ->
+                vm.updatePeriod(Period.values()[item])
+            }
         )
 
         ColorSelectItem(
@@ -186,20 +191,6 @@ private fun TextFieldCount(
         keyboardType = KeyboardType.Number,
         isError = uiState.isCountError,
         label = R.string.need_count
-    )
-}
-
-@Composable
-private fun TextFieldPeriod(
-    uiState: HabitUiState,
-    updatePeriod: (String) -> Unit
-) {
-    OutlineTextFieldMinimalistic(
-        value = uiState.period,
-        onValueChange = updatePeriod,
-        imeAction = ImeAction.Done,
-        isError = uiState.isPeriodError,
-        label = R.string.period_input
     )
 }
 

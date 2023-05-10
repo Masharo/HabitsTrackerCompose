@@ -24,6 +24,16 @@
     <string name="need_count">Количество выполнений</string>
     <string name="period_input">Период</string>
 
+    <string name="period_day">День</string>
+    <string name="period_week">Неделя</string>
+    <string name="period_mouth">Месяц</string>
+    <string name="period_year">Год</string>
+
+    <string name="period_day_spinner_title">Период: День</string>
+    <string name="period_week_spinner_title">Период: Неделя</string>
+    <string name="period_mouth_spinner_title">Период: Месяц</string>
+    <string name="period_year_spinner_title">Период: Год</string>
+
     <string name="priority_title">Приоритет:</string>
 
     <string name="count_ready_habit">Выполнено: %1$s из %2$s</string>

@@ -91,11 +91,10 @@ class HabitViewModel(
             count.matches(Regex("""^0.*"""))
         )
 
-    fun updatePeriod(period: String) {
+    fun updatePeriod(period: Period) {
         _uiState.update { currentState ->
             currentState.copy(
                 period = period,
-                isPeriodError = false,
                 isError = false
             )
         }
@@ -140,13 +139,11 @@ class HabitViewModel(
             val isDescriptionErrorCurrent = description.isEmpty()
             val isCountErrorCurrent = count.isEmpty() || count.toInt() < 0
             val isCountReadyErrorCurrent = countReady.isEmpty() || countReady.toInt() < 0
-            val isPeriodErrorCurrent = period.isEmpty()
 
             if (isTitleErrorCurrent ||
                 isDescriptionErrorCurrent ||
                 isCountErrorCurrent ||
-                isCountReadyErrorCurrent ||
-                isPeriodErrorCurrent
+                isCountReadyErrorCurrent
             ) {
                 _uiState.update { currentState ->
                     currentState.copy(
@@ -154,7 +151,6 @@ class HabitViewModel(
                         isDescriptionError = isDescriptionErrorCurrent,
                         isCountError = isCountErrorCurrent,
                         isCountReadyError = isCountReadyErrorCurrent,
-                        isPeriodError = isPeriodErrorCurrent,
                         isError = true
                     )
                 }

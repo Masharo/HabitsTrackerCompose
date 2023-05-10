@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import com.masharo.habitstrackercompose.model.HabitListUiState
 import com.masharo.habitstrackercompose.model.HabitUiState
+import com.masharo.habitstrackercompose.ui.screen.habit.Period
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
@@ -26,7 +27,7 @@ data class HabitDB(
     @ColumnInfo(name = "type")          val type: Int = 0,
     @ColumnInfo(name = "count")         val count: Int = 0,
     @ColumnInfo(name = "count_ready")   val countReady: Int = 0,
-    @ColumnInfo(name = "period")        val period: String = "",
+    @ColumnInfo(name = "period")        val period: Int = 1,
     @ColumnInfo(name = "color")         val color: Int? = null
 )
 
@@ -37,14 +38,13 @@ fun HabitDB.toHabitUiState() = HabitUiState(
     type = Type.values()[type],
     count = count.toString(),
     countReady = countReady.toString(),
-    period = period,
+    period = Period.values()[period],
     color = color?.let { Color(it) },
 
     isTitleError = false,
     isDescriptionError = false,
     isCountError = false,
     isCountReadyError = false,
-    isPeriodError = false,
 
     isError = false
 )
@@ -57,7 +57,7 @@ fun HabitDB.toHabitListItemUiState() = HabitListItemUiState(
     type = Type.values()[type],
     count = count.toString(),
     countReady = countReady.toString(),
-    period = period,
+    period = Period.values()[period],
     color = color?.let { Color(it) }
 )
 
@@ -88,7 +88,7 @@ fun HabitDB.toHabitNetwork() = HabitNetwork(
     date = date,
     description = description,
     doneDate = IntArray(countReady) { 1 }.toList(),
-    frequency = 1,
+    frequency = period,
     priority = priority,
     title = title,
     type = type

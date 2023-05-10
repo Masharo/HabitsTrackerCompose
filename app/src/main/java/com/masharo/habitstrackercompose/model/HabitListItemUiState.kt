@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
+import com.masharo.habitstrackercompose.ui.screen.habit.Period
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
 
@@ -12,7 +13,7 @@ data class HabitListItemUiState(
     val type: Type = Type.POSITIVE,
     val count: String = "",
     val countReady: String = "0",
-    val period: String = "",
+    val period: Period = Period.WEEK,
     val color: Color? = null
 ) {
     val description = if (_description.length < 50) _description else "${_description.substring(0, 50)}..."

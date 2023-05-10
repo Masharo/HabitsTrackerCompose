@@ -28,8 +28,7 @@ fun HabitNetwork.toHabitDB() = HabitDB(
     type        = type,
     count       = count,
     countReady  = doneDate.size,
-    period      = "",
-//    period      = frequency,
+    period      = frequency,
     color       = color
 )
 
