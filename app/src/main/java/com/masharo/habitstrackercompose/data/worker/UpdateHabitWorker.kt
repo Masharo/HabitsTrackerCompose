@@ -26,7 +26,8 @@ class UpdateHabitWorker(
         return withContext(Dispatchers.IO) {
             try {
                 val habit = db.getHabitById(id) ?: return@withContext Result.failure()
-                api.addOrUpdateHabit(habit.toHabitNetwork())
+                if (habit.uid.isEmpty()) return@withContext Result.retry()
+                api.createOrUpdateHabit(habit.toHabitNetwork())
                 Result.success()
             } catch (ex: IOException) {
                 Result.retry()

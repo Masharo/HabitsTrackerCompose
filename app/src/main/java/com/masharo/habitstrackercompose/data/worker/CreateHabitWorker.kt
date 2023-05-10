@@ -26,7 +26,7 @@ class CreateHabitWorker(
         return withContext(Dispatchers.IO) {
             try {
                 val habit = db.getHabitById(id) ?: return@withContext Result.failure()
-                val habitNetworkUID = api.addOrUpdateHabit(habit.toHabitNetwork())
+                val habitNetworkUID = api.createOrUpdateHabit(habit.toHabitNetwork())
                 db.update(
                     habit.copy(
                         uid = habitNetworkUID.uid

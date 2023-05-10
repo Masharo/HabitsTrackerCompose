@@ -12,6 +12,6 @@ interface HabitApiService {
     suspend fun getHabits(): List<HabitNetwork>
 
     @PUT("habit")
-    suspend fun addOrUpdateHabit(@Body habit: HabitNetwork): HabitNetworkUID
+    suspend fun createOrUpdateHabit(@Body habit: HabitNetwork): HabitNetworkUID
 
 }
