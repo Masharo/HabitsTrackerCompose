@@ -8,10 +8,11 @@ import com.masharo.habitstrackercompose.data.model.toHabitsDB
 import com.masharo.habitstrackercompose.data.network.HabitApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okio.IOException
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
-class GetHabitsWorker(
+class DownloadHabitsWorker(
     appContext: Context,
     params: WorkerParameters
 ) : CoroutineWorker(appContext, params), KoinComponent {
@@ -21,10 +22,16 @@ class GetHabitsWorker(
 
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
-            val habits = api.getHabits().toHabitsDB()
-            db.deleteAll()
-            db.insertHabits(*habits.toTypedArray())
-            Result.success()
+            try {
+                val habits = api.getHabits().toHabitsDB()
+                db.deleteAll()
+                db.insertHabits(*habits.toTypedArray())
+                Result.success()
+            } catch (ex: IOException) {
+                Result.retry()
+            } catch (ex: Exception) {
+                Result.failure()
+            }
         }
     }
 

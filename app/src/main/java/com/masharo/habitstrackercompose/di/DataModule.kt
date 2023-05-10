@@ -13,10 +13,8 @@ import com.masharo.habitstrackercompose.data.network.HabitHeaderInterceptor
 import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
 import com.masharo.habitstrackercompose.data.network.NetworkHabitRepositoryImpl
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -46,7 +44,7 @@ val dataModule = module {
         )
     }
 
-    factory<HabitApiService> {
+    single<HabitApiService> {
         Retrofit
             .Builder()
                 .addConverterFactory(Json.asConverterFactory(HABIT_API_TYPE_DATA.toMediaType()))
