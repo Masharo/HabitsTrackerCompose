@@ -3,6 +3,7 @@ package com.masharo.habitstrackercompose.navigate
 import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.MutableState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -19,14 +20,16 @@ const val ID_HABIT_PARAM_NAME = "idHabit"
 @OptIn(ExperimentalMaterial3Api::class)
 fun NavGraphBuilder.navigateToHabitListScreen(
     navController: NavHostController,
-    bottomSheetState: BottomSheetScaffoldState
+    bottomSheetState: BottomSheetScaffoldState,
+    isNeedRefresh: MutableState<Boolean>
 ) {
     composable(route = HabitNavigateState.Home.name) {
         HabitsListScreen(
             bottomSheetState = bottomSheetState,
             onClickHabit = { idHabit ->
                 navController.navigate("${HabitNavigateState.UpdateHabit.name}/${idHabit}")
-            }
+            },
+            isNeedRefresh = isNeedRefresh
         )
     }
 }

@@ -42,9 +42,12 @@ class HabitListViewModel(
     )
 
     init {
-        networkHabitRepository.downloadHabits()
+        networkUpdateHabits()
         updateHabits()
     }
+
+    fun networkUpdateHabits() = networkHabitRepository.downloadHabits()
+
 
     fun searchUpdate(search: String) {
         _uiState.update { stateCurrent ->

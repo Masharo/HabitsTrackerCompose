@@ -39,11 +39,17 @@ fun HabitsListScreen(
     modifier: Modifier = Modifier,
     vm: HabitListViewModel = koinViewModel(),
     onClickHabit: (idHabit: Long) -> Unit,
-    bottomSheetState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    bottomSheetState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
+    isNeedRefresh: MutableState<Boolean>
 ) {
     val uiState by vm.uiState.collectAsState()
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
+
+    if (isNeedRefresh.value) {
+        vm.networkUpdateHabits()
+        isNeedRefresh.value = false
+    }
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetState,

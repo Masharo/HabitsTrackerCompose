@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,6 +39,7 @@ fun HabitsTrackerApp(
     val currentScreen = habitNavigateState(backStackEntry?.destination?.route)
     val snackbarHostState = remember { SnackbarHostState() }
     val bottomSheetScaffoldState = rememberBottomSheetScaffoldState()
+    val isNeedRefresh = remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -65,7 +68,10 @@ fun HabitsTrackerApp(
             },
             topBar = {
                 HabitsTrackerAppBar(
-                    currentScreen = currentScreen
+                    currentScreen = currentScreen,
+                    isClickRefresh = {
+                        isNeedRefresh.value = true
+                    }
                 )
             }
         ) { contentPadding ->
@@ -74,7 +80,8 @@ fun HabitsTrackerApp(
                 modifier = modifier,
                 contentPadding = contentPadding,
                 bottomSheetScaffoldState = bottomSheetScaffoldState,
-                snackbarHostState = snackbarHostState
+                snackbarHostState = snackbarHostState,
+                isNeedRefresh = isNeedRefresh
             )
         }
     }
@@ -113,7 +120,8 @@ private fun HabitNavHost(
     modifier: Modifier,
     contentPadding: PaddingValues,
     bottomSheetScaffoldState: BottomSheetScaffoldState,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
+    isNeedRefresh: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
@@ -125,7 +133,8 @@ private fun HabitNavHost(
 
         navigateToHabitListScreen(
             bottomSheetState = bottomSheetScaffoldState,
-            navController = navController
+            navController = navController,
+            isNeedRefresh = isNeedRefresh
         )
 
         navigateToUpdateHabitScreen(
@@ -277,13 +286,26 @@ fun SnackbarHostHabit(
 @Composable
 fun HabitsTrackerAppBar(
     modifier: Modifier = Modifier,
-    currentScreen: HabitNavigateState
+    currentScreen: HabitNavigateState,
+    isClickRefresh: () -> Unit
 ) {
     TopAppBar(
         modifier = modifier,
         title = {
             currentScreen.screenTitle?.let { title ->
                 Text(text = stringResource(title))
+            }
+        },
+        actions = {
+            if (currentScreen.isHaveRefreshButton) {
+                IconButton(
+                    onClick = isClickRefresh
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Refresh,
+                        contentDescription = null
+                    )
+                }
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
