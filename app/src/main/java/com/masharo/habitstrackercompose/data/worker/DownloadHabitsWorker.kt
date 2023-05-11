@@ -23,7 +23,6 @@ class DownloadHabitsWorker(
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
-                //Можно сравнить даты максимального из локальной бд и запуска
                 val habits = api.getHabits().toHabitsDB()
                 db.deleteAll()
                 db.insertHabits(*habits.toTypedArray())
