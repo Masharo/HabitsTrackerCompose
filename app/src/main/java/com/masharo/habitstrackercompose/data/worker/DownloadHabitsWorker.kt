@@ -23,7 +23,11 @@ class DownloadHabitsWorker(
     override suspend fun doWork(): Result {
         return withContext(Dispatchers.IO) {
             try {
-                val habits = api.getHabits().toHabitsDB()
+                val response = api.getHabits()
+                response.errorBody()?.let {
+                    return@withContext Result.retry()
+                }
+                val habits = response.body()!!.toHabitsDB()
                 db.deleteAll()
                 db.insertHabits(*habits.toTypedArray())
                 Result.success()
