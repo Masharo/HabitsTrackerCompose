@@ -30,13 +30,15 @@ class CreateHabitWorker(
                 response.errorBody()?.let {
                     return@withContext Result.retry()
                 }
-                val habitNetworkUID = response.body()!!
-                db.update(
-                    habit.copy(
-                        uid = habitNetworkUID.uid
+                response.body()?.let { habitNetworkUID ->
+                    db.update(
+                        habit.copy(
+                            uid = habitNetworkUID.uid
+                        )
                     )
-                )
-                Result.success()
+                    return@withContext Result.success()
+                }
+                Result.failure()
             } catch (ex: IOException) {
                 Result.retry()
             } catch (ex: Exception) {

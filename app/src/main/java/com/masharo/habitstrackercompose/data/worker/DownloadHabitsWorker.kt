@@ -27,10 +27,12 @@ class DownloadHabitsWorker(
                 response.errorBody()?.let {
                     return@withContext Result.retry()
                 }
-                val habits = response.body()!!.toHabitsDB()
-                db.deleteAll()
-                db.insertHabits(*habits.toTypedArray())
-                Result.success()
+                response.body()?.toHabitsDB()?.let { habits ->
+                    db.deleteAll()
+                    db.insertHabits(*habits.toTypedArray())
+                    return@withContext Result.success()
+                }
+                Result.failure()
             } catch (ex: IOException) {
                 Result.retry()
             } catch (ex: Exception) {
