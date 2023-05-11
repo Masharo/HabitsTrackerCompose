@@ -2,11 +2,16 @@ package com.masharo.habitstrackercompose.ui.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -15,8 +20,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.masharo.habitstrackercompose.R
 import com.masharo.habitstrackercompose.navigate.*
+
+private const val AVATAR_URL = "https://avatars.githubusercontent.com/u/44152085?s=400&u=0ad4e9d9b5deb38e02daf6fbdc3d44799cdcd570&v=4"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -147,9 +156,31 @@ private fun HabitDrawer(
 
     Column(
         modifier = modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+            .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        AsyncImage(
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(AVATAR_URL)
+                .crossfade(true)
+                .build(),
+            modifier = Modifier
+                .size(150.dp)
+                .border(
+                    width = 2.dp,
+                    color = MaterialTheme.colorScheme.secondary,
+                    shape = CircleShape
+                )
+                .clip(CircleShape),
+            alignment = Alignment.Center,
+            placeholder = painterResource(R.drawable.loading_img),
+            error = painterResource(R.drawable.ic_connection_error),
+            contentScale = ContentScale.Crop,
+            contentDescription = stringResource(R.string.description_avatar)
+        )
+
         Text(
             modifier = Modifier
                 .padding(
