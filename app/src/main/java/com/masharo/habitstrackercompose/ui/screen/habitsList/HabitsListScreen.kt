@@ -273,7 +273,7 @@ private fun HabitItemOptionalParam(
             Text(text = habit.description)
             Text(text = stringResource(habit.priority.stringResValue))
             Text(text = stringResource(habit.type.stringResValue))
-            Text(text = stringResource(R.string.period_title, habit.period))
+            Text(text = stringResource(habit.period.stringResValue))
             Text(
                 text = stringResource(
                     R.string.count_ready_habit,
