@@ -1,15 +1,18 @@
 package com.masharo.habitstrackercompose.ui.screen.habitsList
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.data.db.DBHabitRepository
 import com.masharo.habitstrackercompose.data.model.HabitDB
 import com.masharo.habitstrackercompose.data.model.toHabitListItemUiState
 import com.masharo.habitstrackercompose.data.model.toHabitListUiState
 import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
@@ -24,7 +27,6 @@ class HabitListViewModel(
             typeSort = TypeSort.defaultValue(),
             search = START_SEARCH
         )
-        .asFlow()
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
@@ -99,7 +101,7 @@ class HabitListViewModel(
         columnSort: ColumnSort,
         typeSort: TypeSort,
         search: String
-    ): LiveData<List<HabitDB>> =
+    ): Flow<List<HabitDB>> =
         when (columnSort) {
             ColumnSort.PRIORITY -> dbHabitRepository.getAllHabitsLikeTitleOrderByPriority(
                 title = search,
@@ -122,7 +124,6 @@ class HabitListViewModel(
                     typeSort = typeSort,
                     search = search
                 )
-                .asFlow()
                 .stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
