@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.0'
     id 'com.google.devtools.ksp' version "1.8.0-1.0.9"
+    id 'kotlin-kapt'
 }
 
 android {
@@ -91,6 +92,7 @@ dependencies {
 
     //Dagger
     implementation "com.google.dagger:dagger:2.46.1"
+    kapt "com.google.dagger:dagger-compiler:2.46.1"
 
     //WorkManager
     implementation "androidx.work:work-runtime-ktx:$workmanager_version"

@@ -1,24 +1,39 @@
 package com.masharo.habitstrackercompose.app
 
 import android.app.Application
-import com.masharo.habitstrackercompose.di.appModule
-import com.masharo.habitstrackercompose.di.dataModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
-import org.koin.core.logger.Level
+import android.content.Context
+import com.masharo.habitstrackercompose.di.dagger.AppComponent
+import com.masharo.habitstrackercompose.di.dagger.DaggerAppComponent
+import com.masharo.habitstrackercompose.di.dagger.ViewModelComponent
 
 class App : Application() {
+
+    lateinit var appComponent: AppComponent
+    lateinit var viewModelComponent: ViewModelComponent
 
     override fun onCreate() {
         super.onCreate()
 
-        startKoin {
-            androidLogger(Level.DEBUG)
-            androidContext(this@App)
-            modules(listOf(appModule, dataModule))
-        }
+        appComponent = DaggerAppComponent
+            .builder()
+            .context(applicationContext)
+            .build()
 
+        viewModelComponent = appComponent
+            .viewModelComponent()
+            .build()
     }
 
 }
+
+val Context.toApplicationContext: Context
+    get() = when(this) {
+        is App -> this
+        else -> applicationContext
+    }
+
+val Context.appComponent: AppComponent
+    get() = toApplicationContext.appComponent
+
+val Context.viewModelComponent: AppComponent
+    get() = toApplicationContext.viewModelComponent
