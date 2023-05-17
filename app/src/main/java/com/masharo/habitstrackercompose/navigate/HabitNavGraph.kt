@@ -4,11 +4,15 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.masharo.habitstrackercompose.app.appComponent
+import com.masharo.habitstrackercompose.app.viewModelComponent
 import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInfoScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
@@ -69,6 +73,10 @@ fun NavGraphBuilder.navigateToAddNewHabit(
             navigateBack = {
                 navController.navigateUp()
             },
+//            vm by viewModel {
+//                LocalContext.current.viewModelComponent.
+//            },
+            LocalContext.current.viewModelComponent.
             vm = koinViewModel(),
             snackbarHostState = snackbarHostState
         )

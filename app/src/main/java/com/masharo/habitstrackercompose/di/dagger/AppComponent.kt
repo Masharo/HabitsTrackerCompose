@@ -1,6 +1,7 @@
 package com.masharo.habitstrackercompose.di.dagger
 
 import android.content.Context
+import com.masharo.habitstrackercompose.navigate.HabitNavigateState
 import dagger.BindsInstance
 import dagger.Component
 

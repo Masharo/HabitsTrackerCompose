@@ -10,7 +10,7 @@ import dagger.assisted.AssistedInject
 
 @Suppress("UNCHECKED_CAST")
 class HabitViewModelFactory @AssistedInject constructor(
-    @Assisted("idHabit") private val idHabit: Long? = null,
+    @Assisted("idHabit") private val idHabit: Long,
     private val dbHabitRepository: DBHabitRepository,
     private val networkHabitRepository: NetworkHabitRepository
 ) : ViewModelProvider.NewInstanceFactory() {
@@ -23,8 +23,8 @@ class HabitViewModelFactory @AssistedInject constructor(
         ) as T
 
     @AssistedFactory
-    interface Params {
-        fun create(@Assisted("idHabit") idHabit: Long? = null): HabitViewModel
+    interface Factory {
+        fun create(@Assisted("idHabit") idHabit: Long): HabitViewModelFactory
     }
 
 }

@@ -5,6 +5,4 @@ import dagger.Module
 @Module(subcomponents = [ViewModelComponent::class])
 class AppModule {
 
-
-
 }

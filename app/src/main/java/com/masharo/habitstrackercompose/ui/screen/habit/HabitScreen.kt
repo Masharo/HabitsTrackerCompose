@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -21,6 +22,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.core.ui.OutlineTextFieldMinimalistic
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.app.appComponent
 import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory

@@ -9,7 +9,9 @@ import com.masharo.habitstrackercompose.di.dagger.ViewModelComponent
 class App : Application() {
 
     lateinit var appComponent: AppComponent
+        private set
     lateinit var viewModelComponent: ViewModelComponent
+        private set
 
     override fun onCreate() {
         super.onCreate()
