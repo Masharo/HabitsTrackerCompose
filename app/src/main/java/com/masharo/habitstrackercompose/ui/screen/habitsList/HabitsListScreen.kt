@@ -37,7 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun HabitsListScreen(
     modifier: Modifier = Modifier,
-    vm: HabitListViewModel = koinViewModel(),
+    vm: HabitListViewModel,
     onClickHabit: (idHabit: Long) -> Unit,
     bottomSheetState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
     isNeedRefresh: MutableState<Boolean>

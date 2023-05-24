@@ -30,7 +30,6 @@ class DataModule
 class DBModule {
 
     @Provides
-    @Singleton
     fun provideHabitDao(context: Context): HabitDao {
         return Room
             .databaseBuilder(
@@ -43,7 +42,6 @@ class DBModule {
     }
 
     @Provides
-    @Singleton
     fun provideDBHabitRepository(habitDao: HabitDao): DBHabitRepository {
         return DBHabitRepositoryImpl(habitDao = habitDao)
     }
@@ -54,13 +52,11 @@ class DBModule {
 class NetworkModule {
 
     @Provides
-    @Singleton
     fun provideNetworkHabitRepository(context: Context): NetworkHabitRepository {
         return NetworkHabitRepositoryImpl(context = context)
     }
 
     @Provides
-    @Singleton
     fun provideHabitApiService(): HabitApiService {
         return Retrofit
             .Builder()
