@@ -1,23 +1,15 @@
 package com.masharo.habitstrackercompose.di.dagger
 
 import android.content.Context
-import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.Test
-import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.Test2
-import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.ViewModel
-import com.masharo.habitstrackercompose.navigate.HabitNavigateState
+import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.ViewModelComponent
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitListViewModel
 import dagger.BindsInstance
 import dagger.Component
 
-@ViewModel
-@Component(modules = [AppModule::class, DataModule::class, DomainModule::class, ViewModelModule::class])
+@Component(modules = [AppModule::class, DataModule::class, DomainModule::class])
 interface AppComponent {
 
-//    fun viewModelComponent(): ViewModelComponent.Builder
-
-    fun inject(test: Test)
-
-    fun inject(test: Test2)
+    fun viewModelComponent(): ViewModelComponent.Builder
 
     @Component.Builder
     interface Builder {
@@ -28,7 +20,5 @@ interface AppComponent {
         fun build(): AppComponent
 
     }
-
-    fun getHabitListViewModel(): HabitListViewModel
 
 }

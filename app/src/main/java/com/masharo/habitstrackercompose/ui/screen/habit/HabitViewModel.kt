@@ -13,11 +13,16 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-class HabitViewModel(
-    private val idHabit: Long? = null,
+class HabitViewModel @AssistedInject constructor(
+    @Assisted("idHabit") private val idHabit: Long? = null,
     private val dbHabitRepository: DBHabitRepository,
     private val networkHabitRepository: NetworkHabitRepository
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(@Assisted("idHabit") idHabit: Long?): HabitViewModel
+    }
 
     private val _uiState = MutableStateFlow(
         value = HabitUiState()

@@ -22,9 +22,9 @@ class App : Application() {
             .context(applicationContext)
             .build()
 
-//        viewModelComponent = appComponent
-//            .viewModelComponent()
-//            .build()
+        viewModelComponent = appComponent
+            .viewModelComponent()
+            .build()
 
     }
 
@@ -34,4 +34,10 @@ val Context.appComponent: AppComponent
     get() = when(this) {
         is App -> appComponent
         else -> this.applicationContext.appComponent
+    }
+
+val Context.viewModelComponent: ViewModelComponent
+    get() = when(this) {
+        is App -> viewModelComponent
+        else -> this.applicationContext.viewModelComponent
     }
