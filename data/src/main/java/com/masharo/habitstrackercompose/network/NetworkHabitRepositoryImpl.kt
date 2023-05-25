@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.data.network
+package com.masharo.habitstrackercompose.network
 
 import android.content.Context
 import androidx.work.Constraints
@@ -8,9 +8,9 @@ import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.masharo.habitstrackercompose.data.worker.CreateHabitWorker
-import com.masharo.habitstrackercompose.data.worker.DownloadHabitsWorker
-import com.masharo.habitstrackercompose.data.worker.UpdateHabitWorker
+import com.masharo.habitstrackercompose.worker.CreateHabitWorker
+import com.masharo.habitstrackercompose.worker.DownloadHabitsWorker
+import com.masharo.habitstrackercompose.worker.UpdateHabitWorker
 
 class NetworkHabitRepositoryImpl(
     context: Context

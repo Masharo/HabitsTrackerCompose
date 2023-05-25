@@ -1,7 +1,7 @@
-package com.masharo.habitstrackercompose.data.db
+package com.masharo.habitstrackercompose.db
 
 import androidx.room.*
-import com.masharo.habitstrackercompose.data.model.HabitDB
+import com.masharo.habitstrackercompose.model.HabitDB
 import kotlinx.coroutines.flow.Flow
 
 @Dao

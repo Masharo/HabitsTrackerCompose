@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.data.model
+package com.masharo.habitstrackercompose.model
 
 import kotlinx.serialization.Serializable
 

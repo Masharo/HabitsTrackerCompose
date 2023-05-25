@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.data.network
+package com.masharo.habitstrackercompose.network
 
 const val HABIT_API_BASE_URL = "https://droid-test-server.doubletapp.ru/api/"
 const val HABIT_API_TYPE_DATA = "application/json"

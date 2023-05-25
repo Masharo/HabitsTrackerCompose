@@ -1,12 +1,12 @@
-package com.masharo.habitstrackercompose.data.worker
+package com.masharo.habitstrackercompose.worker
 
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.masharo.habitstrackercompose.data.db.HabitDao
-import com.masharo.habitstrackercompose.data.model.toHabitNetwork
-import com.masharo.habitstrackercompose.data.network.HABIT_ID
-import com.masharo.habitstrackercompose.data.network.HabitApiService
+import com.masharo.habitstrackercompose.db.HabitDao
+import com.masharo.habitstrackercompose.model.toHabitNetwork
+import com.masharo.habitstrackercompose.network.HABIT_ID
+import com.masharo.habitstrackercompose.network.HabitApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.IOException

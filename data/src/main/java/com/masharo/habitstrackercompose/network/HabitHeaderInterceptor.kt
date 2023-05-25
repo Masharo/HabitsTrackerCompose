@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.data.network
+package com.masharo.habitstrackercompose.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -3,9 +3,9 @@ package com.masharo.habitstrackercompose.ui.screen.habit
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masharo.habitstrackercompose.data.db.DBHabitRepository
-import com.masharo.habitstrackercompose.data.model.toHabitUiState
-import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
+import com.masharo.habitstrackercompose.db.DBHabitRepository
+import com.masharo.habitstrackercompose.model.toHabitUiState
+import com.masharo.habitstrackercompose.network.NetworkHabitRepository
 import com.masharo.habitstrackercompose.model.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 
 class HabitViewModel @AssistedInject constructor(
     @Assisted("idHabit") private val idHabit: Long? = null,
-    private val dbHabitRepository: DBHabitRepository,
-    private val networkHabitRepository: NetworkHabitRepository
+    private val dbHabitRepository: com.masharo.habitstrackercompose.db.DBHabitRepository,
+    private val networkHabitRepository: com.masharo.habitstrackercompose.network.NetworkHabitRepository
 ) : ViewModel() {
 
     @AssistedFactory

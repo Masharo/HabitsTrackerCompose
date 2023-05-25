@@ -1,6 +1,6 @@
-package com.masharo.habitstrackercompose.data.db
+package com.masharo.habitstrackercompose.db
 
-import com.masharo.habitstrackercompose.data.model.HabitDB
+import com.masharo.habitstrackercompose.model.HabitDB
 import kotlinx.coroutines.flow.Flow
 
 interface DBHabitRepository {

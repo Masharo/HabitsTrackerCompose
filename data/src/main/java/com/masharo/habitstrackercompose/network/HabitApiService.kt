@@ -1,7 +1,7 @@
-package com.masharo.habitstrackercompose.data.network
+package com.masharo.habitstrackercompose.network
 
-import com.masharo.habitstrackercompose.data.model.HabitNetwork
-import com.masharo.habitstrackercompose.data.model.HabitNetworkUID
+import com.masharo.habitstrackercompose.model.HabitNetwork
+import com.masharo.habitstrackercompose.model.HabitNetworkUID
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET

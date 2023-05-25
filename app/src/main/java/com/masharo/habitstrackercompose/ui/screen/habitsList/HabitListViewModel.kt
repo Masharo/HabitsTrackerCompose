@@ -2,11 +2,11 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masharo.habitstrackercompose.data.db.DBHabitRepository
-import com.masharo.habitstrackercompose.data.model.HabitDB
-import com.masharo.habitstrackercompose.data.model.toHabitListItemUiState
-import com.masharo.habitstrackercompose.data.model.toHabitListUiState
-import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
+import com.masharo.habitstrackercompose.db.DBHabitRepository
+import com.masharo.habitstrackercompose.model.HabitDB
+import com.masharo.habitstrackercompose.model.toHabitListItemUiState
+import com.masharo.habitstrackercompose.model.toHabitListUiState
+import com.masharo.habitstrackercompose.network.NetworkHabitRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -17,8 +17,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class HabitListViewModel @Inject constructor(
-    private val dbHabitRepository: DBHabitRepository,
-    private val networkHabitRepository: NetworkHabitRepository
+    private val dbHabitRepository: com.masharo.habitstrackercompose.db.DBHabitRepository,
+    private val networkHabitRepository: com.masharo.habitstrackercompose.network.NetworkHabitRepository
 ) : ViewModel() {
 
     private val countPage = Page.values().size
@@ -102,7 +102,7 @@ class HabitListViewModel @Inject constructor(
         columnSort: ColumnSort,
         typeSort: TypeSort,
         search: String
-    ): Flow<List<HabitDB>> =
+    ): Flow<List<com.masharo.habitstrackercompose.model.HabitDB>> =
         when (columnSort) {
             ColumnSort.PRIORITY -> dbHabitRepository.getAllHabitsLikeTitleOrderByPriority(
                 title = search,

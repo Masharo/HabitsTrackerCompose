@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.data.model
+package com.masharo.habitstrackercompose.model
 
 import androidx.compose.ui.graphics.Color
 import androidx.room.ColumnInfo

@@ -2,17 +2,17 @@ package com.masharo.habitstrackercompose.di
 
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.masharo.habitstrackercompose.data.db.HabitDao
-import com.masharo.habitstrackercompose.data.db.HabitDatabase
-import com.masharo.habitstrackercompose.data.db.DBHabitRepository
-import com.masharo.habitstrackercompose.data.db.DBHabitRepositoryImpl
-import com.masharo.habitstrackercompose.data.db.HABIT_DB_NAME
-import com.masharo.habitstrackercompose.data.network.HABIT_API_BASE_URL
-import com.masharo.habitstrackercompose.data.network.HABIT_API_TYPE_DATA
-import com.masharo.habitstrackercompose.data.network.HabitApiService
-import com.masharo.habitstrackercompose.data.network.HabitHeaderInterceptor
-import com.masharo.habitstrackercompose.data.network.NetworkHabitRepository
-import com.masharo.habitstrackercompose.data.network.NetworkHabitRepositoryImpl
+import com.masharo.habitstrackercompose.db.HabitDao
+import com.masharo.habitstrackercompose.db.HabitDatabase
+import com.masharo.habitstrackercompose.db.DBHabitRepository
+import com.masharo.habitstrackercompose.db.DBHabitRepositoryImpl
+import com.masharo.habitstrackercompose.db.HABIT_DB_NAME
+import com.masharo.habitstrackercompose.network.HABIT_API_BASE_URL
+import com.masharo.habitstrackercompose.network.HABIT_API_TYPE_DATA
+import com.masharo.habitstrackercompose.network.HabitApiService
+import com.masharo.habitstrackercompose.network.HabitHeaderInterceptor
+import com.masharo.habitstrackercompose.network.NetworkHabitRepository
+import com.masharo.habitstrackercompose.network.NetworkHabitRepositoryImpl
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -22,37 +22,37 @@ import retrofit2.Retrofit
 
 val dataModule = module {
 
-    single<HabitDao> {
+    single<com.masharo.habitstrackercompose.db.HabitDao> {
         Room
             .databaseBuilder(
                 context = get(),
-                klass = HabitDatabase::class.java,
-                name = HABIT_DB_NAME
+                klass = com.masharo.habitstrackercompose.db.HabitDatabase::class.java,
+                name = com.masharo.habitstrackercompose.db.HABIT_DB_NAME
             )
             .build()
             .habitDao()
     }
 
-    single<DBHabitRepository> {
-        DBHabitRepositoryImpl(
+    single<com.masharo.habitstrackercompose.db.DBHabitRepository> {
+        com.masharo.habitstrackercompose.db.DBHabitRepositoryImpl(
             habitDao = get()
         )
     }
 
-    single<NetworkHabitRepository> {
-        NetworkHabitRepositoryImpl(
+    single<com.masharo.habitstrackercompose.network.NetworkHabitRepository> {
+        com.masharo.habitstrackercompose.network.NetworkHabitRepositoryImpl(
             context = get()
         )
     }
 
-    single<HabitApiService> {
+    single<com.masharo.habitstrackercompose.network.HabitApiService> {
         Retrofit
             .Builder()
-                .addConverterFactory(Json.asConverterFactory(HABIT_API_TYPE_DATA.toMediaType()))
-                .baseUrl(HABIT_API_BASE_URL)
+                .addConverterFactory(Json.asConverterFactory(com.masharo.habitstrackercompose.network.HABIT_API_TYPE_DATA.toMediaType()))
+                .baseUrl(com.masharo.habitstrackercompose.network.HABIT_API_BASE_URL)
                 .client(
                     OkHttpClient.Builder()
-                        .addInterceptor(HabitHeaderInterceptor())
+                        .addInterceptor(com.masharo.habitstrackercompose.network.HabitHeaderInterceptor())
                         .addInterceptor(
                             HttpLoggingInterceptor().apply {
                                 HttpLoggingInterceptor.Level.BODY
@@ -61,7 +61,7 @@ val dataModule = module {
                         .build()
                 )
                 .build()
-            .create(HabitApiService::class.java)
+            .create(com.masharo.habitstrackercompose.network.HabitApiService::class.java)
     }
 
 }
