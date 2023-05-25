@@ -10,16 +10,19 @@ import com.masharo.habitstrackercompose.network.HabitApiService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.IOException
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import javax.inject.Inject
 
 class CreateHabitWorker(
     appContext: Context,
     params: WorkerParameters
-) : CoroutineWorker(appContext, params), KoinComponent {
+) : CoroutineWorker(appContext, params) {
 
-    private val api: HabitApiService by inject()
-    private val db: HabitDao by inject()
+    @Inject lateinit var api: HabitApiService
+    @Inject lateinit var db: HabitDao
+
+    init {
+
+    }
 
     override suspend fun doWork(): Result {
         val id = inputData.getLong(HABIT_ID, 0)

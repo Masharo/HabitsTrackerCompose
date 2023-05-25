@@ -88,6 +88,8 @@ dependencies {
     //Koin
     implementation "io.insert-koin:koin-core:$koin_version"
     implementation "io.insert-koin:koin-android:3.4.0"
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+    implementation "io.insert-koin:koin-androidx-workmanager:$koin_version"
     implementation "io.insert-koin:koin-androidx-compose:$koin_android_compose_version"
 
     //Dagger
@@ -114,4 +116,5 @@ dependencies {
 
     //Project
     implementation project(path: ':core')
+    implementation project(path: ':data')
 }
