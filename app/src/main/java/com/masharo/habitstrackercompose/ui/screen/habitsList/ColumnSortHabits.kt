@@ -2,8 +2,9 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.annotation.StringRes
 import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.model.ColumnSort
 
-enum class ColumnSort(
+enum class ColumnSortHabits(
     @StringRes val title: Int,
     @StringRes val selectedTitle: Int
 ) {
@@ -28,4 +29,11 @@ enum class ColumnSort(
         fun defaultValue() = ID
 
     }
+
+}
+
+fun ColumnSortHabits.toColumnSort() = when(this) {
+    ColumnSortHabits.PRIORITY   -> ColumnSort.PRIORITY
+    ColumnSortHabits.COUNT      -> ColumnSort.COUNT
+    ColumnSortHabits.ID         -> ColumnSort.ID
 }

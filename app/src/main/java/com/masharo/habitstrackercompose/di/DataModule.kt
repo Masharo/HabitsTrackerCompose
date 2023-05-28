@@ -2,7 +2,6 @@ package com.masharo.habitstrackercompose.di
 
 import androidx.room.Room
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
-import com.masharo.habitstrackercompose.db.DBHabitRepository
 import com.masharo.habitstrackercompose.db.DBHabitRepositoryImpl
 import com.masharo.habitstrackercompose.db.HABIT_DB_NAME
 import com.masharo.habitstrackercompose.db.HabitDao
@@ -11,8 +10,9 @@ import com.masharo.habitstrackercompose.network.HABIT_API_BASE_URL
 import com.masharo.habitstrackercompose.network.HABIT_API_TYPE_DATA
 import com.masharo.habitstrackercompose.network.HabitApiService
 import com.masharo.habitstrackercompose.network.HabitHeaderInterceptor
-import com.masharo.habitstrackercompose.network.NetworkHabitRepository
 import com.masharo.habitstrackercompose.network.NetworkHabitRepositoryImpl
+import com.masharo.habitstrackercompose.repository.DBHabitRepository
+import com.masharo.habitstrackercompose.repository.NetworkHabitRepository
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient

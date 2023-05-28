@@ -8,6 +8,7 @@ import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.masharo.habitstrackercompose.repository.NetworkHabitRepository
 import com.masharo.habitstrackercompose.worker.CreateHabitWorker
 import com.masharo.habitstrackercompose.worker.DownloadHabitsWorker
 import com.masharo.habitstrackercompose.worker.UpdateHabitWorker

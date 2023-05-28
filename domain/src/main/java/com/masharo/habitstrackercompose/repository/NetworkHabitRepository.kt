@@ -1,4 +1,4 @@
-package com.masharo.habitstrackercompose.network
+package com.masharo.habitstrackercompose.repository
 
 interface NetworkHabitRepository {
 

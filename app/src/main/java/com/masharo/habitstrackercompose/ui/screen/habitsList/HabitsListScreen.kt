@@ -31,7 +31,6 @@ import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import com.masharo.habitstrackercompose.model.HabitListUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -47,7 +46,7 @@ fun HabitsListScreen(
     val scope = rememberCoroutineScope()
 
     if (isNeedRefresh.value) {
-        vm.networkUpdateHabits()
+        vm.updateLocalCacheHabits()
         isNeedRefresh.value = false
     }
 
@@ -88,7 +87,7 @@ fun HabitsListScreen(
 private fun SearchAndSortHabit(
     uiState: HabitListUiState,
     searchText: (String) -> Unit,
-    columnSort: (ColumnSort) -> Unit,
+    columnSort: (ColumnSortHabits) -> Unit,
     typeSort: (TypeSort) -> Unit
 ) {
     Column(
@@ -108,10 +107,10 @@ private fun SearchAndSortHabit(
             onValueChange = searchText
         )
         Spinner(
-            title = stringResource(uiState.columnSort.selectedTitle),
-            items = ColumnSort.values().map { stringResource(it.title) },
+            title = stringResource(uiState.columnSortHabits.selectedTitle),
+            items = ColumnSortHabits.values().map { stringResource(it.title) },
             onSelectItem = {
-                columnSort(ColumnSort.values()[it])
+                columnSort(ColumnSortHabits.values()[it])
             }
         )
         Spinner(

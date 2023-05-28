@@ -33,3 +33,29 @@ fun HabitDB.toHabitNetwork() = HabitNetwork(
     title = title,
     type = type
 )
+
+fun Habit.toHabitDB() = HabitDB(
+    id = id,
+    uid = uid,
+    title = title,
+    description = description,
+    priority = priority,
+    type = type,
+    count = count,
+    countReady = countReady,
+    period = period,
+    color = color
+)
+
+fun HabitDB.toHabit() = Habit(
+    id = id,
+    uid = uid,
+    title = title,
+    description = description,
+    priority = priority,
+    type = type,
+    count = count,
+    countReady = countReady,
+    period = period,
+    color = color
+)

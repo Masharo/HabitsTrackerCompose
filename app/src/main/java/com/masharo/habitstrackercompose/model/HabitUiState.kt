@@ -5,7 +5,7 @@ import androidx.compose.ui.graphics.toArgb
 import com.masharo.habitstrackercompose.ui.screen.habit.Period
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
-import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSort
+import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSortHabits
 import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
 
@@ -29,7 +29,7 @@ data class HabitUiState(
     val isNavigateToHabitsList: Boolean = false
 )
 
-fun HabitUiState.toHabit(uid: String = "") = com.masharo.habitstrackercompose.model.HabitDB(
+fun HabitUiState.toHabit(uid: String = "") = Habit(
     id = 0,
     uid = uid,
     title = title,
@@ -43,7 +43,7 @@ fun HabitUiState.toHabit(uid: String = "") = com.masharo.habitstrackercompose.mo
 )
 
 fun HabitUiState.toHabit(id: Long, uid: String = "") =
-    com.masharo.habitstrackercompose.model.HabitDB(
+    Habit(
         id = id,
         uid = uid,
         title = title,
@@ -56,7 +56,7 @@ fun HabitUiState.toHabit(id: Long, uid: String = "") =
         color = color?.toArgb()
     )
 
-fun HabitDB.toHabitUiState() = HabitUiState(
+fun Habit.toHabitUiState() = HabitUiState(
     title = title,
     description = description,
     priority = Priority.values()[priority],
@@ -74,7 +74,7 @@ fun HabitDB.toHabitUiState() = HabitUiState(
     isError = false
 )
 
-fun HabitDB.toHabitListItemUiState() = HabitListItemUiState(
+fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     id = id,
     title = title,
     _description = description,
@@ -86,22 +86,22 @@ fun HabitDB.toHabitListItemUiState() = HabitListItemUiState(
     color = color?.let { Color(it) }
 )
 
-fun List<HabitDB>.toHabitListItemUiState(
-    filter: (HabitDB) -> Boolean
+fun List<Habit>.toHabitListItemUiState(
+    filter: (Habit) -> Boolean
 ) = this.filter { filter(it) }.map { it.toHabitListItemUiState() }
 
-fun List<HabitDB>.toHabitListUiState(
+fun List<Habit>.toHabitListUiState(
     pages: Iterable<Int>,
     countPage: Int,
     search: String,
     isAsc: Boolean,
-    columnSort: ColumnSort
+    columnSortHabits: ColumnSortHabits
 ) = HabitListUiState(
     pages = pages,
     countPage = countPage,
     search = search,
     typeSort = TypeSort.getTypeSort(isAsc),
-    columnSort = columnSort,
+    columnSortHabits = columnSortHabits,
     habitsPositive = this.filter { Page.POSITIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() },
     habitsNegative = this.filter { Page.NEGATIVE_HABIT_LIST.filter(it) }.map { it.toHabitListItemUiState() }
 )

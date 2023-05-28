@@ -2,11 +2,12 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.masharo.habitstrackercompose.db.DBHabitRepository
-import com.masharo.habitstrackercompose.model.HabitDB
+import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.toHabitListItemUiState
 import com.masharo.habitstrackercompose.model.toHabitListUiState
-import com.masharo.habitstrackercompose.network.NetworkHabitRepository
+import com.masharo.habitstrackercompose.usecase.GetHabitsListFromCacheUseCase
+import com.masharo.habitstrackercompose.usecase.UpdateLocalCacheHabitsUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,17 +15,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class HabitListViewModel @Inject constructor(
-    private val dbHabitRepository: com.masharo.habitstrackercompose.db.DBHabitRepository,
-    private val networkHabitRepository: com.masharo.habitstrackercompose.network.NetworkHabitRepository
+class HabitListViewModel(
+    private val getHabitsListFromCacheUseCase: GetHabitsListFromCacheUseCase,
+    private val updateLocalCacheHabitsUseCase: UpdateLocalCacheHabitsUseCase
 ) : ViewModel() {
 
     private val countPage = Page.values().size
     private val pages = Page.values().map { it.title }
     private var habits = getHabits(
-            columnSort = ColumnSort.defaultValue(),
+            columnSortHabits = ColumnSortHabits.defaultValue(),
             typeSort = TypeSort.defaultValue(),
             search = START_SEARCH
         )
@@ -39,17 +39,17 @@ class HabitListViewModel @Inject constructor(
             countPage = countPage,
             pages = pages,
             search = START_SEARCH,
-            columnSort = ColumnSort.defaultValue(),
+            columnSortHabits = ColumnSortHabits.defaultValue(),
             isAsc = TypeSort.defaultValue().getValue()
         )
     )
 
     init {
-        networkUpdateHabits()
+        updateLocalCacheHabits()
         updateHabits()
     }
 
-    fun networkUpdateHabits() = networkHabitRepository.downloadHabits()
+    fun updateLocalCacheHabits() = updateLocalCacheHabitsUseCase.execute()
 
 
     fun searchUpdate(search: String) {
@@ -70,10 +70,10 @@ class HabitListViewModel @Inject constructor(
         habitListUpdate()
     }
 
-    fun columnSortUpdate(columnSort: ColumnSort) {
+    fun columnSortUpdate(columnSortHabits: ColumnSortHabits) {
         _uiState.update { stateCurrent ->
             stateCurrent.copy(
-                columnSort = columnSort
+                columnSortHabits = columnSortHabits
             )
         }
         habitListUpdate()
@@ -99,29 +99,19 @@ class HabitListViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private fun getHabits(
-        columnSort: ColumnSort,
+        columnSortHabits: ColumnSortHabits,
         typeSort: TypeSort,
         search: String
-    ): Flow<List<com.masharo.habitstrackercompose.model.HabitDB>> =
-        when (columnSort) {
-            ColumnSort.PRIORITY -> dbHabitRepository.getAllHabitsLikeTitleOrderByPriority(
-                title = search,
-                isAsc = typeSort.getValue()
-            )
-            ColumnSort.ID -> dbHabitRepository.getAllHabitsLikeTitleOrderById(
-                title = search,
-                isAsc = typeSort.getValue()
-            )
-            ColumnSort.COUNT -> dbHabitRepository.getAllHabitsLikeTitleOrderByCount(
-                title = search,
-                isAsc = typeSort.getValue()
-            )
-        }
+    ): Flow<List<Habit>> = getHabitsListFromCacheUseCase.execute(
+        search = search,
+        isAsc = typeSort.getValue(),
+        columnSortHabits.toColumnSort()
+    )
 
     private fun habitListUpdate() {
         with(_uiState.value) {
             habits = getHabits(
-                    columnSort = columnSort,
+                    columnSortHabits = columnSortHabits,
                     typeSort = typeSort,
                     search = search
                 )

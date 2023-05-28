@@ -9,16 +9,17 @@ val appModule = module {
 
     viewModel<HabitListViewModel> {
         HabitListViewModel(
-            dbHabitRepository = get(),
-            networkHabitRepository = get()
+            getHabitsListFromCacheUseCase = get(),
+            updateLocalCacheHabitsUseCase = get()
         )
     }
 
     viewModel<HabitViewModel> { params ->
         HabitViewModel(
             idHabit = params.getOrNull(),
-            dbHabitRepository = get(),
-            networkHabitRepository = get()
+            updateHabitUseCase = get(),
+            addHabitUseCase = get(),
+            getHabitFromCacheUseCase = get()
         )
     }
 

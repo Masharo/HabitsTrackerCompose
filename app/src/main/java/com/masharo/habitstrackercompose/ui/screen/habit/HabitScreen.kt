@@ -22,7 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masharo.core.ui.OutlineTextFieldMinimalistic
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
-import com.masharo.habitstrackercompose.app.appComponent
 import com.masharo.habitstrackercompose.model.HabitUiState
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerDialogScreen
 import com.masharo.habitstrackercompose.ui.screen.colorPicker.ColorPickerViewModelFactory

@@ -4,18 +4,16 @@ import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.masharo.habitstrackercompose.app.viewModelComponent
-import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.HabitViewModelSupportInject
-import com.masharo.habitstrackercompose.di.dagger.viewmodelutils.daggerViewModel
 import com.masharo.habitstrackercompose.ui.screen.applicationInfo.ApplicationInfoScreen
 import com.masharo.habitstrackercompose.ui.screen.habit.HabitScreen
 import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitsListScreen
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 const val ID_HABIT_PARAM_NAME = "idHabit"
 
@@ -26,15 +24,12 @@ fun NavGraphBuilder.navigateToHabitListScreen(
     isNeedRefresh: MutableState<Boolean>
 ) {
     composable(route = HabitNavigateState.Home.name) {
-        val context = LocalContext.current
         HabitsListScreen(
             bottomSheetState = bottomSheetState,
             onClickHabit = { idHabit ->
                 navController.navigate("${HabitNavigateState.UpdateHabit.name}/${idHabit}")
             },
-            vm = daggerViewModel {
-                context.viewModelComponent.getHabitListViewModel()
-            },
+            vm = koinViewModel(),
             isNeedRefresh = isNeedRefresh
         )
     }
@@ -52,17 +47,15 @@ fun NavGraphBuilder.navigateToUpdateHabitScreen(
             }
         )
     ) { backStackEntry ->
-        val context = LocalContext.current
         HabitScreen(
             navigateBack = {
                 navController.navigateUp()
             },
-            vm = daggerViewModel {
-                HabitViewModelSupportInject(
-                    viewModelComponent = context.viewModelComponent,
-                    idHabit = backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME)
-                ).getHabitViewModel()
-            },
+            vm = koinViewModel(
+                parameters = {
+                    parametersOf(backStackEntry.arguments?.getLong(ID_HABIT_PARAM_NAME))
+                }
+            ),
             snackbarHostState = snackbarHostState
         )
     }
@@ -73,16 +66,11 @@ fun NavGraphBuilder.navigateToAddNewHabit(
     snackbarHostState: SnackbarHostState
 ) {
     composable(route = HabitNavigateState.AddNewHabit.name) {
-        val context = LocalContext.current
         HabitScreen(
             navigateBack = {
                 navController.navigateUp()
             },
-            vm = daggerViewModel {
-                HabitViewModelSupportInject(
-                    viewModelComponent = context.viewModelComponent
-                ).getHabitViewModel()
-            },
+            vm = koinViewModel(),
             snackbarHostState = snackbarHostState
         )
     }
