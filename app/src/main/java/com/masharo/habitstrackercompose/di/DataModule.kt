@@ -63,5 +63,4 @@ val dataModule = module {
                 .build()
             .create(HabitApiService::class.java)
     }
-
 }

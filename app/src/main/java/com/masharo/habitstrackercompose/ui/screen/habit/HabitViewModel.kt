@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.model.toHabitUiState
 import com.masharo.habitstrackercompose.model.*
+import com.masharo.habitstrackercompose.usecase.AddHabitUseCase
 import com.masharo.habitstrackercompose.usecase.GetHabitFromCacheUseCase
 import com.masharo.habitstrackercompose.usecase.UpdateHabitUseCase
 import kotlinx.coroutines.flow.*
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 class HabitViewModel(
     private val idHabit: Long? = null,
     private val updateHabitUseCase: UpdateHabitUseCase,
-    private val addHabitUseCase: UpdateHabitUseCase,
+    private val addHabitUseCase: AddHabitUseCase,
     private val getHabitFromCacheUseCase: GetHabitFromCacheUseCase
 ) : ViewModel() {
 

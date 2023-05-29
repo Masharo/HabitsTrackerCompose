@@ -4,6 +4,9 @@ import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.repository.DBHabitRepository
 import com.masharo.habitstrackercompose.repository.NetworkHabitRepository
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class UpdateHabitUseCase(
