@@ -10,7 +10,8 @@ val appModule = module {
     viewModel<HabitListViewModel> {
         HabitListViewModel(
             getHabitsListFromCacheUseCase = get(),
-            updateLocalCacheHabitsUseCase = get()
+            updateLocalCacheHabitsUseCase = get(),
+            incReadyCountHabitUseCase = get()
         )
     }
 

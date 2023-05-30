@@ -17,9 +17,10 @@ import androidx.compose.ui.unit.dp
 fun OutlineTextFieldMinimalistic(
     modifier: Modifier = Modifier,
     value: String,
-    isError: Boolean,
+    isError: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     imeAction: ImeAction = ImeAction.Next,
+    readOnly: Boolean = false,
     onValueChange: (String) -> Unit,
     @StringRes label: Int,
     singleLine: Boolean = true
@@ -30,6 +31,7 @@ fun OutlineTextFieldMinimalistic(
             .padding(0.dp),
         value = value,
         singleLine = singleLine,
+        readOnly = readOnly,
         isError = isError,
         onValueChange = {
             onValueChange(it)

@@ -27,8 +27,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.masharo.core.ui.Spinner
 import com.masharo.habitstrackercompose.R
+import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.HabitListItemUiState
 import com.masharo.habitstrackercompose.model.HabitListUiState
+import com.masharo.habitstrackercompose.model.HabitUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -76,7 +78,8 @@ fun HabitsListScreen(
                 HabitsPage(
                     page = page,
                     uiState = uiState,
-                    onClickHabit = onClickHabit
+                    onClickHabit = onClickHabit,
+                    incCountReady = vm::incCountReady
                 )
             }
         }
@@ -127,7 +130,8 @@ private fun SearchAndSortHabit(
 private fun HabitsPage(
     page: Int,
     uiState: HabitListUiState,
-    onClickHabit: (idHabit: Long) -> Unit
+    onClickHabit: (idHabit: Long) -> Unit,
+    incCountReady: (Long) -> Unit
 ) {
     val habitsPage = when (Page.values()[page]) {
         Page.POSITIVE_HABIT_LIST -> uiState.habitsPositive
@@ -146,7 +150,8 @@ private fun HabitsPage(
                     onClickHabit(habit.id)
                 },
                 isFirstItem = index == 0,
-                isLastItem = index == habitsPage.lastIndex
+                isLastItem = index == habitsPage.lastIndex,
+                incCountReady = { incCountReady(habit.id) }
             )
         }
     }
@@ -198,7 +203,8 @@ fun HabitItem(
     habit: HabitListItemUiState,
     onClick: () -> Unit,
     isFirstItem: Boolean,
-    isLastItem: Boolean
+    isLastItem: Boolean,
+    incCountReady: () -> Unit
 ) {
     val sizePadding = 10.dp
 
@@ -213,8 +219,7 @@ fun HabitItem(
             )
             .clickable {
                 onClick()
-            }
-        ,
+            },
         elevation = cardElevation(
             defaultElevation = 5.dp
         )
@@ -253,7 +258,8 @@ fun HabitItem(
 
                 HabitItemOptionalParam(
                     isVisibleOptional = isVisibleOptional,
-                    habit = habit
+                    habit = habit,
+                    incCountReady = { incCountReady() }
                 )
             }
         }
@@ -263,6 +269,7 @@ fun HabitItem(
 @Composable
 private fun HabitItemOptionalParam(
     isVisibleOptional: MutableState<Boolean>,
+    incCountReady: () -> Unit,
     habit: HabitListItemUiState
 ) {
     AnimatedVisibility(
@@ -280,6 +287,15 @@ private fun HabitItemOptionalParam(
                     habit.count
                 )
             )
+            OutlinedButton(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                onClick = { incCountReady() }
+            ) {
+                Text(
+                    text = "Выполнил"
+                )
+            }
         }
     }
 }

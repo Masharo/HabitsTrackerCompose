@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.toArgb
 import com.masharo.habitstrackercompose.ui.screen.habit.Period
 import com.masharo.habitstrackercompose.ui.screen.habit.Priority
 import com.masharo.habitstrackercompose.ui.screen.habit.Type
+import com.masharo.habitstrackercompose.ui.screen.habit.toHabitType
+import com.masharo.habitstrackercompose.ui.screen.habit.toType
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSortHabits
 import com.masharo.habitstrackercompose.ui.screen.habitsList.Page
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
@@ -35,7 +37,7 @@ fun HabitUiState.toHabit(uid: String = "") = Habit(
     title = title,
     description = description,
     priority = Priority.values().indexOf(priority),
-    type = Type.values().indexOf(type),
+    type = type.toHabitType(),
     count = count.toInt(),
     countReady = countReady.toInt(),
     period = Period.values().indexOf(period),
@@ -49,7 +51,7 @@ fun HabitUiState.toHabit(id: Long, uid: String = "") =
         title = title,
         description = description,
         priority = Priority.values().indexOf(priority),
-        type = Type.values().indexOf(type),
+        type = type.toHabitType(),
         count = count.toInt(),
         countReady = countReady.toInt(),
         period = Period.values().indexOf(period),
@@ -60,7 +62,7 @@ fun Habit.toHabitUiState() = HabitUiState(
     title = title,
     description = description,
     priority = Priority.values()[priority],
-    type = Type.values()[type],
+    type = type.toType(),
     count = count.toString(),
     countReady = countReady.toString(),
     period = Period.values()[period],
@@ -79,7 +81,7 @@ fun Habit.toHabitListItemUiState() = HabitListItemUiState(
     title = title,
     _description = description,
     priority = Priority.values()[priority],
-    type = Type.values()[type],
+    type = type.toType(),
     count = count.toString(),
     countReady = countReady.toString(),
     period = Period.values()[period],

@@ -3,22 +3,27 @@ package com.masharo.habitstrackercompose.ui.screen.habitsList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.masharo.habitstrackercompose.model.Habit
+import com.masharo.habitstrackercompose.model.HabitListItemUiState
+import com.masharo.habitstrackercompose.model.HabitListUiState
 import com.masharo.habitstrackercompose.model.toHabitListItemUiState
 import com.masharo.habitstrackercompose.model.toHabitListUiState
 import com.masharo.habitstrackercompose.usecase.GetHabitsListFromCacheUseCase
+import com.masharo.habitstrackercompose.usecase.IncReadyCountHabitUseCase
 import com.masharo.habitstrackercompose.usecase.UpdateLocalCacheHabitsUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HabitListViewModel(
     private val getHabitsListFromCacheUseCase: GetHabitsListFromCacheUseCase,
-    private val updateLocalCacheHabitsUseCase: UpdateLocalCacheHabitsUseCase
+    private val updateLocalCacheHabitsUseCase: UpdateLocalCacheHabitsUseCase,
+    private val incReadyCountHabitUseCase: IncReadyCountHabitUseCase
 ) : ViewModel() {
 
     private val countPage = Page.values().size
@@ -122,6 +127,12 @@ class HabitListViewModel(
                 )
         }
         updateHabits()
+    }
+
+    fun incCountReady(habitId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            incReadyCountHabitUseCase.execute(habitId)
+        }
     }
 
     companion object {

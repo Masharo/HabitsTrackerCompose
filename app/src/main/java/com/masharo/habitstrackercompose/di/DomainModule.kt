@@ -3,6 +3,7 @@ package com.masharo.habitstrackercompose.di
 import com.masharo.habitstrackercompose.usecase.AddHabitUseCase
 import com.masharo.habitstrackercompose.usecase.GetHabitFromCacheUseCase
 import com.masharo.habitstrackercompose.usecase.GetHabitsListFromCacheUseCase
+import com.masharo.habitstrackercompose.usecase.IncReadyCountHabitUseCase
 import com.masharo.habitstrackercompose.usecase.UpdateHabitUseCase
 import com.masharo.habitstrackercompose.usecase.UpdateLocalCacheHabitsUseCase
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,15 @@ val domainModule = module {
 
     factory<GetHabitFromCacheUseCase> {
         GetHabitFromCacheUseCase(
-            dbHabitRepository = get(),
+            dbRepository = get(),
+            dispatcher = Dispatchers.IO
+        )
+    }
+
+    factory<IncReadyCountHabitUseCase> {
+        IncReadyCountHabitUseCase(
+            dbRepository = get(),
+            networkRepository = get(),
             dispatcher = Dispatchers.IO
         )
     }

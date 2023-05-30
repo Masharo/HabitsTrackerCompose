@@ -122,6 +122,10 @@ private fun HabitInputFields(
             }
         )
 
+        TextFieldCountReady(
+            uiState = uiState
+        )
+
         ColorSelectItem(
             uiState = uiState,
             updateIsOpenColorPickerState = updateIsOpenColorPickerState
@@ -192,6 +196,18 @@ private fun TextFieldCount(
         keyboardType = KeyboardType.Number,
         isError = uiState.isCountError,
         label = R.string.need_count
+    )
+}
+
+@Composable
+private fun TextFieldCountReady(
+    uiState: HabitUiState
+) {
+    OutlineTextFieldMinimalistic(
+        readOnly = true,
+        value = uiState.countReady,
+        label = R.string.count_ready,
+        onValueChange = {}
     )
 }
 

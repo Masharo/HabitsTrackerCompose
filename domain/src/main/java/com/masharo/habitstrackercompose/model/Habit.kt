@@ -6,7 +6,7 @@ data class Habit(
     val title: String,
     val description: String,
     val priority: Int,
-    val type: Int,
+    val type: HabitType,
     val count: Int,
     val period: Int,
     var countReady: Int,
