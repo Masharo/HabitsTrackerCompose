@@ -48,9 +48,10 @@ fun HabitsListScreen(
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
 
-    if (uiState.message != HabitMessage.NONE) ShowHabitMessageSnackbar(
+    if (uiState.message !is None) ShowHabitMessageSnackbar(
         snackbarHostState = snackbarHostState,
-        updateStatus = vm::messageStatusToNone
+        updateStatus = vm::messageStatusToNone,
+        messageState = uiState.message
     )
 
     if (isNeedRefresh.value) {
@@ -95,9 +96,16 @@ fun HabitsListScreen(
 @Composable
 private fun ShowHabitMessageSnackbar(
     snackbarHostState: SnackbarHostState,
+    messageState: HabitMessage,
     updateStatus: () -> Unit
 ) {
-    val message = stringResource(R.string.error_message_input_habit_data)
+    val message = when (messageState) {
+        is GoodHabitMoreUi -> stringResource(R.string.good_message_more)
+        is GoodHabitLessUi -> stringResource(R.string.good_message_less, messageState.count)
+        is BadHabitMoreUi ->  stringResource(R.string.bad_message_more)
+        is BadHabitLessUi ->  stringResource(R.string.bad_message_less, messageState.count)
+        is None -> return
+    }
     val okButton = stringResource(R.string.error_message_ok)
 
     LaunchedEffect(snackbarHostState) {

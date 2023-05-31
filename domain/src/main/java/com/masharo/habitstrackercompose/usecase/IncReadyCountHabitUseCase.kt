@@ -1,5 +1,9 @@
 package com.masharo.habitstrackercompose.usecase
 
+import com.masharo.habitstrackercompose.model.BadHabitLess
+import com.masharo.habitstrackercompose.model.BadHabitMore
+import com.masharo.habitstrackercompose.model.GoodHabitLess
+import com.masharo.habitstrackercompose.model.GoodHabitMore
 import com.masharo.habitstrackercompose.model.HabitType
 import com.masharo.habitstrackercompose.model.IncAnswer
 import com.masharo.habitstrackercompose.repository.DBHabitRepository
@@ -23,11 +27,11 @@ class IncReadyCountHabitUseCase(
         }
 
         return  if (newHabit.type == HabitType.POSITIVE) {
-                    if (newHabit.count > newHabit.countReady) IncAnswer.GOOD_HABIT_LESS
-                    else IncAnswer.GOOD_HABIT_MORE
+                    if (newHabit.count > newHabit.countReady) GoodHabitLess(count = newHabit.count - newHabit.countReady)
+                    else GoodHabitMore
                 } else {
-                    if (newHabit.count > newHabit.countReady) IncAnswer.BAD_HABIT_LESS
-                    else IncAnswer.BAD_HABIT_MORE
+                    if (newHabit.count > newHabit.countReady) BadHabitLess(count = newHabit.count - newHabit.countReady)
+                    else BadHabitMore
                 }
     }
 

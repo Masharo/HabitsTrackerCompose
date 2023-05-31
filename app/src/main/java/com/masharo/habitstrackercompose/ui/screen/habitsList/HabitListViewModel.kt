@@ -57,7 +57,7 @@ class HabitListViewModel(
     fun messageStatusToNone() {
         _uiState.update { stateCurrent ->
             stateCurrent.copy(
-                message = HabitMessage.NONE
+                message = None
             )
         }
     }
@@ -139,7 +139,12 @@ class HabitListViewModel(
 
     fun incCountReady(habitId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            incReadyCountHabitUseCase.execute(habitId)
+            val message = incReadyCountHabitUseCase.execute(habitId)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    message = message.toHabitMessage()
+                )
+            }
         }
     }
 

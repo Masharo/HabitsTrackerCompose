@@ -1,8 +1,8 @@
 package com.masharo.habitstrackercompose.model
 
-enum class IncAnswer {
-    GOOD_HABIT_MORE,
-    GOOD_HABIT_LESS,
-    BAD_HABIT_MORE,
-    BAD_HABIT_LESS
-}
+sealed class IncAnswer
+
+object GoodHabitMore : IncAnswer()
+class GoodHabitLess(val count: Int) : IncAnswer()
+object BadHabitMore : IncAnswer()
+class BadHabitLess(val count: Int) : IncAnswer()

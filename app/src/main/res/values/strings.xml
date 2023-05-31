@@ -95,4 +95,9 @@
     <string name="name_application_info">Nikita Tokarev</string>
     <string name="body_application_info">¯\\_(ツ)_/¯</string>
     <string name="application_description">Трекер привычек - это таблица-календарь или приложение, в которых вы фиксируете цель, а потом отмечаете, с какой регулярностью над ней работали. Такие приложения помогают формировать полезные привычки и следить за их выполнением.</string>
+
+    <string name="bad_message_less">Можете выполнить еще %1$s раз</string>
+    <string name="bad_message_more">Хватит это делать</string>
+    <string name="good_message_less">Стоит выполнить еще %1$s раз</string>
+    <string name="good_message_more">You are breathtaking!</string>
 </resources>
