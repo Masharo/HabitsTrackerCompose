@@ -54,6 +54,14 @@ class HabitListViewModel(
         updateHabits()
     }
 
+    fun messageStatusToNone() {
+        _uiState.update { stateCurrent ->
+            stateCurrent.copy(
+                message = HabitMessage.NONE
+            )
+        }
+    }
+
     fun updateLocalCacheHabits() = updateLocalCacheHabitsUseCase.execute()
 
 

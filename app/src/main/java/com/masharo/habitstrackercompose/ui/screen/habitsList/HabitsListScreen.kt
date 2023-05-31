@@ -41,11 +41,17 @@ fun HabitsListScreen(
     vm: HabitListViewModel,
     onClickHabit: (idHabit: Long) -> Unit,
     bottomSheetState: BottomSheetScaffoldState = rememberBottomSheetScaffoldState(),
-    isNeedRefresh: MutableState<Boolean>
+    isNeedRefresh: MutableState<Boolean>,
+    snackbarHostState: SnackbarHostState
 ) {
     val uiState by vm.uiState.collectAsState()
     val pagerState = rememberPagerState()
     val scope = rememberCoroutineScope()
+
+    if (uiState.message != HabitMessage.NONE) ShowHabitMessageSnackbar(
+        snackbarHostState = snackbarHostState,
+        updateStatus = vm::messageStatusToNone
+    )
 
     if (isNeedRefresh.value) {
         vm.updateLocalCacheHabits()
@@ -82,6 +88,28 @@ fun HabitsListScreen(
                     incCountReady = vm::incCountReady
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun ShowHabitMessageSnackbar(
+    snackbarHostState: SnackbarHostState,
+    updateStatus: () -> Unit
+) {
+    val message = stringResource(R.string.error_message_input_habit_data)
+    val okButton = stringResource(R.string.error_message_ok)
+
+    LaunchedEffect(snackbarHostState) {
+        val snackbarResult = snackbarHostState.showSnackbar(
+            message = message,
+            actionLabel = okButton,
+            duration = SnackbarDuration.Short
+        )
+
+        when (snackbarResult) {
+            SnackbarResult.Dismissed, SnackbarResult.ActionPerformed ->
+                updateStatus()
         }
     }
 }
@@ -293,7 +321,7 @@ private fun HabitItemOptionalParam(
                 onClick = { incCountReady() }
             ) {
                 Text(
-                    text = "Выполнил"
+                    text = stringResource(R.string.ready)
                 )
             }
         }

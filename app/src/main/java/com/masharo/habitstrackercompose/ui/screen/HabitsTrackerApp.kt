@@ -134,7 +134,8 @@ private fun HabitNavHost(
         navigateToHabitListScreen(
             bottomSheetState = bottomSheetScaffoldState,
             navController = navController,
-            isNeedRefresh = isNeedRefresh
+            isNeedRefresh = isNeedRefresh,
+            snackbarHostState = snackbarHostState
         )
 
         navigateToUpdateHabitScreen(

@@ -21,7 +21,8 @@ const val ID_HABIT_PARAM_NAME = "idHabit"
 fun NavGraphBuilder.navigateToHabitListScreen(
     navController: NavHostController,
     bottomSheetState: BottomSheetScaffoldState,
-    isNeedRefresh: MutableState<Boolean>
+    isNeedRefresh: MutableState<Boolean>,
+    snackbarHostState: SnackbarHostState
 ) {
     composable(route = HabitNavigateState.Home.name) {
         HabitsListScreen(
@@ -30,7 +31,8 @@ fun NavGraphBuilder.navigateToHabitListScreen(
                 navController.navigate("${HabitNavigateState.UpdateHabit.name}/${idHabit}")
             },
             vm = koinViewModel(),
-            isNeedRefresh = isNeedRefresh
+            isNeedRefresh = isNeedRefresh,
+            snackbarHostState = snackbarHostState
         )
     }
 }

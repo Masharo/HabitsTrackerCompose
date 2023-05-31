@@ -2,6 +2,7 @@ package com.masharo.habitstrackercompose.model
 
 import androidx.annotation.StringRes
 import com.masharo.habitstrackercompose.ui.screen.habitsList.ColumnSortHabits
+import com.masharo.habitstrackercompose.ui.screen.habitsList.HabitMessage
 import com.masharo.habitstrackercompose.ui.screen.habitsList.TypeSort
 
 data class HabitListUiState(
@@ -15,5 +16,7 @@ data class HabitListUiState(
     //BottomSheet
     val search: String,
     val typeSort: TypeSort,
-    val columnSortHabits: ColumnSortHabits
+    val columnSortHabits: ColumnSortHabits,
+
+    val message: HabitMessage = HabitMessage.NONE
 )
