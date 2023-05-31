@@ -8,4 +8,6 @@ interface NetworkHabitRepository {
 
     fun createHabit(id: Long)
 
+    suspend fun incCountReadyHabit(uid: String)
+
 }

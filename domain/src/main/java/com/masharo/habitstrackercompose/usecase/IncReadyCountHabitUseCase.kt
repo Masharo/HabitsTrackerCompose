@@ -1,13 +1,11 @@
 package com.masharo.habitstrackercompose.usecase
 
-import com.masharo.habitstrackercompose.model.Habit
 import com.masharo.habitstrackercompose.model.HabitType
 import com.masharo.habitstrackercompose.model.IncAnswer
 import com.masharo.habitstrackercompose.repository.DBHabitRepository
 import com.masharo.habitstrackercompose.repository.NetworkHabitRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
-import java.lang.RuntimeException
 
 class IncReadyCountHabitUseCase(
     private val dbRepository: DBHabitRepository,
@@ -21,7 +19,7 @@ class IncReadyCountHabitUseCase(
 
         withContext(dispatcher) {
             dbRepository.update(newHabit)
-            networkRepository.updateHabit(habit.id)
+            networkRepository.incCountReadyHabit(newHabit.uid)
         }
 
         return  if (newHabit.type == HabitType.POSITIVE) {

@@ -8,13 +8,16 @@ import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.masharo.habitstrackercompose.model.HabitCountDoneNetwork
 import com.masharo.habitstrackercompose.repository.NetworkHabitRepository
 import com.masharo.habitstrackercompose.worker.CreateHabitWorker
 import com.masharo.habitstrackercompose.worker.DownloadHabitsWorker
 import com.masharo.habitstrackercompose.worker.UpdateHabitWorker
+import java.util.Calendar
 
 class NetworkHabitRepositoryImpl(
-    context: Context
+    context: Context,
+    private val habitApiService: HabitApiService
 ) : NetworkHabitRepository {
 
     private val workManager = WorkManager.getInstance(context)
@@ -41,6 +44,15 @@ class NetworkHabitRepositoryImpl(
 
     override fun createHabit(id: Long) {
         createOrUpdateHabit<CreateHabitWorker>(id)
+    }
+
+    override suspend fun incCountReadyHabit(uid: String) {
+        habitApiService.incCountDoneHabit(
+            HabitCountDoneNetwork(
+                dateVersion = (Calendar.getInstance().timeInMillis / 1000).toInt(),
+                uid = uid
+            )
+        )
     }
 
     private inline fun <reified W : ListenableWorker> createOrUpdateHabit(id: Long) {

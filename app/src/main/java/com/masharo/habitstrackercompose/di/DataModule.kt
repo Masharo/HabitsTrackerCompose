@@ -41,7 +41,8 @@ val dataModule = module {
 
     single<NetworkHabitRepository> {
         NetworkHabitRepositoryImpl(
-            context = get()
+            context = get(),
+            habitApiService = get()
         )
     }
 
